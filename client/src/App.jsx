@@ -2,7 +2,6 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Error, ProtectedRoute, Register } from './pages'
 import {
-  MyBets,
   Home,
   Layout,
   Leaderboard,

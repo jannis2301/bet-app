@@ -69,11 +69,9 @@ const UserBets = () => {
 
           return (
             <div
-              className="game-box"
-              style={{
-                gridTemplateColumns: '5fr 1fr 4fr 1fr',
-                alignItems: 'center',
-              }}
+              className={`game-box ${
+                matchesHaveFinished ? 'points-earned' : ''
+              }`}
               key={matchID}
             >
               <span className="home-team">
