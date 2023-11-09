@@ -31,6 +31,15 @@ if (process.env.NODE_ENV !== 'production') {
 app.use(express.json())
 app.use(cookieParser())
 app.use(helmet())
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", 'https://api.openligadb.de'],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+    },
+  })
+)
 app.use(mongoSanitize())
 
 // only when ready to deploy
