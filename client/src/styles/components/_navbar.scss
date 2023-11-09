@@ -1,0 +1,160 @@
+// Navbar
+
+.header {
+  width: 100%;
+  padding: 15px 0;
+  color: white;
+  background: var(--blue);
+}
+
+.nav {
+  width: 90vw;
+  max-width: var(--maxNavWidth);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  margin: 0;
+  flex: 1;
+}
+
+.nav-links {
+  flex: 5;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.nav-links a.active {
+  color: yellow;
+}
+
+.hamburger-menu {
+  display: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.hamburger-menu span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  margin: 0 0 5px;
+  background: var(--white);
+}
+
+.btn-container {
+  position: relative;
+  flex: 2;
+  @include flex-center;
+}
+
+.dropdown {
+  &.show-dropdown {
+    visibility: visible;
+  }
+}
+
+.dropdown,
+.user-bets {
+  position: absolute;
+  top: 2rem;
+  left: 0px;
+  width: 100%;
+  padding: 0.5rem;
+  text-align: center;
+  visibility: hidden;
+  border-radius: var(--radius5);
+  z-index: 12;
+}
+
+.user-bets {
+  display: grid;
+  max-width: 8rem;
+  width: 100dvw;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  gap: 0.8rem;
+  box-shadow: var(--boxShadow);
+  background: var(--lightBlue);
+  &.show-user-bets {
+    visibility: visible;
+  }
+}
+
+.user-btn {
+  @include flex-center;
+  @include seoClickable;
+  gap: 2px;
+
+  &:hover {
+    background: transparent;
+  }
+}
+
+.dropdown-btn {
+  background: var(--lightBlue);
+  border: none;
+  text-transform: capitalize;
+  box-shadow: var(--boxShadow);
+  cursor: pointer;
+  @include seoClickable;
+}
+
+.placeBet-btn {
+  margin-block: 1rem;
+  @include seoClickable;
+}
+
+.user-bets-box {
+  position: relative;
+}
+
+.bets-btn {
+  padding: 0;
+  @include flex-center;
+  border: none;
+  background: transparent;
+  color: var(--text-clr);
+  cursor: pointer;
+  @include seoClickable;
+}
+
+@media (max-width: 550px) {
+  .hamburger-menu {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+
+    &.open {
+      display: block;
+      width: 100%;
+      height: calc(100vh - 61px);
+      padding: 20px 0;
+      position: absolute;
+      top: 61px;
+      left: 0;
+      background: var(--blue);
+      z-index: 10;
+    }
+  }
+
+  .nav-links li:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+
+  .user-bets-box {
+    @include flex-center;
+  }
+
+  .user-bets {
+    background: var(--blue);
+    box-shadow: none;
+  }
+}

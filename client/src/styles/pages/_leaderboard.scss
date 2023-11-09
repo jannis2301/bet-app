@@ -1,0 +1,19 @@
+// Leaderboard
+
+table {
+  border-collapse: collapse;
+
+  th {
+    background: var(--blue);
+  }
+
+  th,
+  td {
+    padding: 5px;
+    border: 1px solid var(--gray);
+  }
+}
+
+.ranking {
+  width: 50px;
+}

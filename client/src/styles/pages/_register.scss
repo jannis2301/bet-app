@@ -1,0 +1,39 @@
+// Register
+
+.register-box {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+
+  h1 {
+    margin-block: 1rem;
+    padding: 5px 2vw;
+    box-shadow: var(--boxShadow);
+    background: var(--blue);
+    border: 1px solid var(--white);
+    border-radius: var(--radius5);
+    outline: 4px solid var(--blue);
+  }
+
+  .form-container {
+    display: grid;
+    place-items: center;
+  }
+
+  .form {
+    display: grid;
+    place-items: center;
+    grid-gap: 20px;
+  }
+
+  .btn {
+    margin-top: 1rem;
+    @include seoClickable;
+  }
+
+  .member-btn {
+    margin-left: 10px;
+    @include seoClickable;
+  }
+}

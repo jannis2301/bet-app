@@ -1,0 +1,22 @@
+// Loading
+
+.loading-box {
+  width: 100%;
+  height: 100dvh;
+  background: var(--bg-clr);
+}
+
+.loading {
+  --circle-size: 3.5rem;
+  position: fixed;
+  top: 50%;
+  left: calc(50% - (var(--circle-size) * 0.5));
+  transform: translate(-50%, -50%);
+  border: 5px solid var(--white);
+  border-top: 5px solid var(--lightBlue);
+  border-radius: 50%;
+  width: var(--circle-size);
+  height: var(--circle-size);
+  animation: rotate 1s linear infinite;
+  z-index: 10;
+}

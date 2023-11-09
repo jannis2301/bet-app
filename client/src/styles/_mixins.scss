@@ -1,0 +1,18 @@
+@mixin flex-center() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin seoClickable() {
+  &::after {
+    --minSize: 3rem;
+    content: '';
+    width: var(--minSize);
+    height: var(--minSize);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

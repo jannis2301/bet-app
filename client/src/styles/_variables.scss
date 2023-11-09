@@ -1,0 +1,22 @@
+:root {
+  // Variables
+  --text-clr: #fff;
+  --bg-clr: #222;
+  --alert-bg: #afa9a9;
+  --danger: #c30000;
+  --success: #4caf50;
+  --white: #fff;
+  --blue: #008080;
+  --lightBlue: #04a1a1;
+  --gray: gray;
+  --yellow: yellow;
+
+  // General Variables
+  --maxNavWidth: 900px;
+  --maxMatchWidth: 550px;
+  --boxShadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  --textShadow: -1px 1px 3px rgba(0, 0, 0, 0.2);
+  --letterSpacing: 1px;
+  --radius5: 5px;
+  --transition: all 0.2s ease-in-out;
+}

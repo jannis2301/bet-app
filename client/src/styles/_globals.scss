@@ -1,0 +1,95 @@
+html {
+  font-size: 100%;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  text-shadow: var(--textShadow);
+  color: var(--text-clr);
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+
+  background: var(--bg-clr);
+}
+
+section {
+  padding-block: 1rem;
+  min-height: 100vh;
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: var(--letterSpacing);
+}
+
+h1 {
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+}
+
+p,
+ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+form {
+  width: 90vw;
+  max-width: var(--fixedWidth);
+  transition: var(--transition);
+}
+
+input {
+  border: none;
+  padding: 10px;
+  border-radius: var(--radius5);
+  &:focus {
+    outline: none;
+  }
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.btn {
+  position: relative;
+  padding: 10px;
+  border-radius: var(--radius5);
+  border: none;
+  background: var(--blue);
+  color: var(--white);
+  transition: var(--transition);
+  cursor: pointer;
+
+  @include seoClickable;
+
+  &:hover {
+    background: var(--lightBlue);
+  }
+}
+
+a {
+  text-decoration: none;
+  color: var(--white);
+}

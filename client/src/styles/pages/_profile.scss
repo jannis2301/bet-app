@@ -1,0 +1,31 @@
+// Profile
+.profile-box {
+  form {
+    margin: 0 auto;
+    display: grid;
+    place-items: center;
+  }
+
+  .form-center {
+    padding: 0 0 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+  }
+
+  .label-box {
+    display: grid;
+    justify-items: flex-start;
+    grid-gap: 10px;
+  }
+
+  h1 {
+    margin-block: 1rem;
+  }
+
+  @media (max-width: 500px) {
+    .form-center {
+      grid-template-columns: 1fr;
+    }
+  }
+}

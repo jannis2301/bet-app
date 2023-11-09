@@ -1,0 +1,30 @@
+// Placebet
+
+.placebets-box .game-score {
+  grid-template-columns: 10fr repeat(3, 1fr) 10fr;
+  place-items: center;
+}
+
+.placebets-box label {
+  display: none;
+}
+
+.input-number {
+  --input-size: clamp(1.9rem, 4vw, 3rem);
+  width: var(--input-size);
+  height: var(--input-size);
+  padding: 0.5rem;
+  text-align: center;
+
+  /* Chrome, Safari, Edge, Opera */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+}

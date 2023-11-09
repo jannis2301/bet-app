@@ -1,0 +1,23 @@
+@import 'styles/_variables.scss';
+@import 'styles/_mixins.scss';
+@import 'styles/_animations.scss';
+@import 'styles/_globals.scss';
+
+// Pages
+@import 'styles/pages/_leaderboard.scss';
+@import 'styles/pages/_placebet.scss';
+@import 'styles/pages/_profile.scss';
+@import 'styles/pages/_register.scss';
+
+// Components
+@import 'styles/components/_alert.scss';
+@import 'styles/components/_matches.scss';
+@import 'styles/components/_navbar.scss';
+@import 'styles/components/_loading.scss';
+
+// Register Container background-image
+.register-box {
+  background: var(--blue) url('assets/images/register-bg.jpeg') no-repeat 50%
+    50%;
+  background-size: cover;
+}
