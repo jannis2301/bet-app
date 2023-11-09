@@ -65,7 +65,7 @@ const UserBets = () => {
           )
 
           const correspondingBet = bets.find((bet) => bet.matchID === matchID)
-          const { homeScore, awayScore, pointsEarned } = correspondingBet || {}
+          const { homeScore, awayScore, pointsEarned } = correspondingBet || []
 
           return (
             <div
