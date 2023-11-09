@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react'
 import { Navigate } from 'react-router-dom'
-import { debounce } from 'lodash'
 import { useAppContext } from '../context/appContext'
 import Loading from '../components/Loading'
 
