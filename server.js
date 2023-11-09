@@ -5,7 +5,6 @@ dotenv.config()
 const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
 const path = require('path')
-const { fileURLToPath } = require('url')
 require('express-async-errors')
 const { initializeCron } = require('./scheduler/matchCompareScheduler')
 
@@ -34,7 +33,7 @@ app.use(cookieParser())
 app.use(helmet())
 app.use(mongoSanitize())
 
-const directoryPath = path.dirname(fileURLToPath(import.meta.url))
+const directoryPath = path.dirname(__dirname)
 // only when ready to deploy
 app.use(express.static(path.resolve(directoryPath, './client/dist')))
 
