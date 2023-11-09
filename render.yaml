@@ -1,0 +1,33 @@
+services:
+  - name: web
+    env: node
+    buildCommand: yarn run setup-production
+    startCommand: node server.js
+    readyTimeout: 300
+    healthCheckPath: /healthcheck
+
+    # Node.js environment configuration
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5050
+      - key: MONGODB_URI
+        value: ${MONGODB_URI}
+      -key: JWT_SECRET
+        value: ${JWT_SECRET}
+      -key: JWT_LIFETIME
+        value: ${JWT_LIFETIME}
+
+    # The following lines are for frontend build using Vite
+    - name: web
+    env: node
+    buildCommand: yarn build-client
+    readyTimeout: 300
+
+# Database configurations
+databases:
+  - name: mongodb
+    plan: mongodb:7.0
+    config:
+      MONGODB_URI: ${MONGODB_URI}
