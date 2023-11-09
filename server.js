@@ -37,7 +37,13 @@ app.use(
       defaultSrc: ["'self'", 'https://api.openligadb.de'],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", 'data:', 'https://i.imgur.com'],
+      imgSrc: [
+        "'self'",
+        'data:',
+        'https://i.imgur.com',
+        'https://upload.wikimedia.org', // Allow images from Wikimedia
+        'https://i.imgur.com', // Specific Imgur URL
+      ],
     },
   })
 )
