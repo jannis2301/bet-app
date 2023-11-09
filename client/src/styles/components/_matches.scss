@@ -13,6 +13,11 @@
   }
 }
 
+.points-earned {
+  grid-template-columns: 5fr 1fr 4fr 1fr;
+  align-items: center;
+}
+
 .game-box span {
   @include flex-center;
 }
@@ -49,7 +54,7 @@
 .matches-box,
 .matchday-headline,
 .leaderboard-table {
-  width: 95dvw;
+  width: 90dvw;
   max-width: var(--maxMatchWidth);
   margin: 0 auto;
 }
@@ -71,4 +76,11 @@
   cursor: pointer;
   @include flex-center;
   @include seoClickable;
+}
+.prev-btn p,
+.next-btn p {
+  display: none;
+  @media (min-width: 550px) {
+    display: block;
+  }
 }
