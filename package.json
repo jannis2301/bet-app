@@ -4,6 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "setup-production": "yarn run install-client && yarn run build-client && yarn install",
+    "install-client": "cd client && yarn install",
+    "build-client": "cd client && yarn run build",
     "start": "nodemon server",
     "client": "cd client && yarn start",
     "dev": "concurrently --kill-others-on-fail \"yarn nodemon server\" \"yarn run client\""
