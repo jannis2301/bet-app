@@ -34,16 +34,15 @@ app.use(helmet())
 app.use(mongoSanitize())
 
 // only when ready to deploy
-const directoryPath = path.dirname(__dirname)
-const distPath = path.join(directoryPath, 'client', 'dist')
-app.use(express.static(distPath))
+const directoryPath = path.join(__dirname, 'client', 'dist')
+app.use(express.static(directoryPath))
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(directoryPath, 'index.html'))
+})
 
 app.use('/api/auth', authRouter)
 app.use('/api/bets', betsRouter)
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(distPath, './client/dist/', 'index.html'))
-})
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
