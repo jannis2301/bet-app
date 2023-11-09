@@ -34,15 +34,15 @@ app.use(cookieParser())
 app.use(helmet())
 app.use(mongoSanitize())
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const directoryPath = path.dirname(fileURLToPath(import.meta.url))
 // only when ready to deploy
-app.use(express.static(path.resolve(__dirname, './client/dist')))
+app.use(express.static(path.resolve(directoryPath, './client/dist')))
 
 app.use('/api/auth', authRouter)
 app.use('/api/bets', betsRouter)
 
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './client/dist/', 'index.html'))
+  res.sendFile(path.resolve(directoryPath, './client/dist/', 'index.html'))
 })
 
 app.use(notFoundMiddleware)
