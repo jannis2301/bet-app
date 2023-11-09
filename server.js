@@ -36,13 +36,13 @@ app.use(mongoSanitize())
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // only when ready to deploy
-app.use(express.static(path.resolve(__dirname, './client/build')))
+app.use(express.static(path.resolve(__dirname, './client/dist')))
 
 app.use('/api/auth', authRouter)
 app.use('/api/bets', betsRouter)
 
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './client/build/', 'index.html'))
+  res.sendFile(path.resolve(__dirname, './client/dist/', 'index.html'))
 })
 
 app.use(notFoundMiddleware)
