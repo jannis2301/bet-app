@@ -61,8 +61,6 @@ const PlaceBet = () => {
   }
 
   const checkIfBetHasBeenPlaced = () => {
-    if (!(allBetsPlaced.length > 0)) return
-
     const hasBetForMatchday = allBetsPlaced?.some(
       (bet) => bet.matchDay === currentMatchday
     )
