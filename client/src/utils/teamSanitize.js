@@ -1,4 +1,4 @@
-import Union from '../../public/team-images/union-icon.png'
+import Union from '../assets/images/union-icon.png'
 
 const teamSanitization = (team1, team2) => {
   switch (true) {
