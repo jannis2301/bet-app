@@ -22,7 +22,6 @@ const betsRouter = require('./routes/betsRoutes')
 // middleware
 const notFoundMiddleware = require('./middleware/not-found')
 const errorHandlerMiddleware = require('./middleware/error-handler')
-const authenticateUser = require('./middleware/auth')
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))
@@ -50,13 +49,15 @@ app.use(
 )
 app.use(mongoSanitize())
 
-// only when ready to deploy
-const directoryPath = path.join(__dirname, 'client', 'dist')
-app.use(express.static(directoryPath))
+if (process.env.NODE_ENV === 'production') {
+  // only when ready to deploy
+  const directoryPath = path.join(__dirname, 'client', 'dist')
+  app.use(express.static(directoryPath))
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(directoryPath, 'index.html'))
-})
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(directoryPath, 'index.html'))
+  })
+}
 
 app.use('/api/auth', authRouter)
 app.use('/api/bets', betsRouter)
