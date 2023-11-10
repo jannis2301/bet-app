@@ -70,6 +70,7 @@ const Register = () => {
               value={values.name}
               onChange={handleChange}
               placeholder="Enter your name..."
+              autoComplete="name"
               required
             />
           )}
@@ -80,6 +81,7 @@ const Register = () => {
             value={values.email}
             onChange={handleChange}
             placeholder="Enter your email..."
+            autoComplete="email"
             required
           />
           {/* password input */}
@@ -90,6 +92,9 @@ const Register = () => {
             onChange={handleChange}
             placeholder="Enter your password..."
             minLength={8}
+            autoComplete={`${
+              values.isMember ? 'current-password' : 'new-password'
+            }`}
             required
           />
           <button type="submit" className="btn btn-block" disabled={isLoading}>
