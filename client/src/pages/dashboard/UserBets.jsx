@@ -21,13 +21,13 @@ const UserBets = () => {
   }, [userId])
 
   useEffect(() => {
-    const matchDayBets = allBetsPlaced.filter(
-      (bet) => bet.matchDay === bundesligaMatchday
-    )
+    const matchDayBets =
+      allBetsPlaced &&
+      allBetsPlaced.filter((bet) => bet.matchDay === bundesligaMatchday)
     setBets(matchDayBets)
   }, [allBetsPlaced, bundesligaMatchday])
 
-  const selectedUser = allUsers.find((user) => user._id === userId)
+  const selectedUser = allUsers && allUsers.find((user) => user._id === userId)
   let displayName = selectedUser ? selectedUser.name : ''
 
   // Check if the last character of the name is not 's'
@@ -57,64 +57,67 @@ const UserBets = () => {
         </button>
       </div>
       <div className="matches-box">
-        {bundesligaMatches.map((match) => {
-          const { matchID, team1, team2 } = match
-          teamSanitization(team1, team2)
-          const matchesHaveFinished = bundesligaMatches.every(
-            (match) => match.matchIsFinished === true
-          )
+        {bundesligaMatches &&
+          bundesligaMatches.map((match) => {
+            const { matchID, team1, team2 } = match
+            teamSanitization(team1, team2)
+            const matchesHaveFinished = bundesligaMatches.every(
+              (match) => match.matchIsFinished === true
+            )
 
-          const correspondingBet = bets.find((bet) => bet.matchID === matchID)
-          const { homeScore, awayScore, pointsEarned } = correspondingBet || []
+            const correspondingBet =
+              bets && bets.find((bet) => bet.matchID === matchID)
+            const { homeScore, awayScore, pointsEarned } =
+              correspondingBet || []
 
-          return (
-            <div
-              className={`game-box ${
-                matchesHaveFinished ? 'points-earned' : ''
-              }`}
-              key={matchID}
-            >
-              <span className="home-team">
-                <p>{team1.shortName}</p>
-                <img
-                  crossorigin="anonymous"
-                  className="club-icon"
-                  src={team1.teamIconUrl}
-                  alt={`${team1.shortName}-icon`}
-                />
-              </span>
+            return (
+              <div
+                className={`game-box ${
+                  matchesHaveFinished ? 'points-earned' : ''
+                }`}
+                key={matchID}
+              >
+                <span className="home-team">
+                  <p>{team1.shortName}</p>
+                  <img
+                    crossorigin="anonymous"
+                    className="club-icon"
+                    src={team1.teamIconUrl}
+                    alt={`${team1.shortName}-icon`}
+                  />
+                </span>
 
-              <span className="score">
-                {homeScore ?? ''}:{awayScore ?? ''}
-              </span>
+                <span className="score">
+                  {homeScore ?? ''}:{awayScore ?? ''}
+                </span>
 
-              <span className="away-team">
-                <img
-                  crossorigin="anonymous"
-                  className="club-icon"
-                  src={team2.teamIconUrl}
-                  alt={`${team2.shortName}-icon`}
-                />
-                <p>{team2.shortName}</p>
-              </span>
+                <span className="away-team">
+                  <img
+                    crossorigin="anonymous"
+                    className="club-icon"
+                    src={team2.teamIconUrl}
+                    alt={`${team2.shortName}-icon`}
+                  />
+                  <p>{team2.shortName}</p>
+                </span>
 
-              {pointsEarned !== undefined && matchesHaveFinished && (
-                <p
-                  style={{
-                    color:
-                      pointsEarned === 3
-                        ? 'green'
-                        : pointsEarned === 1
-                        ? 'yellow'
-                        : 'red',
-                  }}
-                >
-                  {pointsEarned > 0 ? `+${pointsEarned}` : pointsEarned}
-                </p>
-              )}
-            </div>
-          )
-        })}
+                {pointsEarned !== undefined && matchesHaveFinished && (
+                  <p
+                    style={{
+                      color:
+                        pointsEarned === 3
+                          ? 'green'
+                          : pointsEarned === 1
+                          ? 'yellow'
+                          : 'red',
+                    }}
+                  >
+                    {pointsEarned > 0 ? `+${pointsEarned}` : pointsEarned}
+                  </p>
+                )}
+              </div>
+            )
+          })}
       </div>
     </section>
   )

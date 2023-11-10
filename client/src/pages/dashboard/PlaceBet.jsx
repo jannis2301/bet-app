@@ -52,10 +52,12 @@ const PlaceBet = () => {
     // Get the logged-in user's ID from the app context or state
     const userId = user._id
     // Add the user ID to each bet object
-    const betsWithUser = bets.map((bet) => ({
-      ...bet,
-      createdBy: userId,
-    }))
+    const betsWithUser =
+      bets &&
+      bets.map((bet) => ({
+        ...bet,
+        createdBy: userId,
+      }))
     createBet(betsWithUser)
     setIsSubmitted(true)
   }
@@ -63,9 +65,9 @@ const PlaceBet = () => {
   const checkIfBetHasBeenPlaced = () => {
     if (!(allBetsPlaced.length > 0)) return
 
-    const hasBetForMatchday = allBetsPlaced.some(
-      (bet) => bet.matchDay === currentMatchday
-    )
+    const hasBetForMatchday =
+      allBetsPlaced &&
+      allBetsPlaced.some((bet) => bet.matchDay === currentMatchday)
 
     if (hasBetForMatchday) {
       setIsSubmitted(true)
@@ -73,9 +75,9 @@ const PlaceBet = () => {
   }
 
   const checkIfMatchHasFinished = () => {
-    const matchHasFinished = bundesligaMatches.some(
-      (match) => match.matchIsFinished === true
-    )
+    const matchHasFinished =
+      bundesligaMatches &&
+      bundesligaMatches.some((match) => match.matchIsFinished === true)
     setMatchHasFinished(matchHasFinished)
   }
 
@@ -111,6 +113,7 @@ const PlaceBet = () => {
             </p>
           )}
           {!matchHasFinished &&
+            bundesligaMatches &&
             bundesligaMatches.map((match, i) => {
               const { matchID, team1, team2, group } = match
               teamSanitization(team1, team2)
