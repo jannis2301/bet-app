@@ -33,7 +33,7 @@ const Leaderboard = () => {
           <HiArrowSmRight />
         </button>
       </div>
-      {leaderboard.length > 0 ? (
+      {leaderboard?.length > 0 ? (
         <>
           <table className="leaderboard-table">
             <thead>
