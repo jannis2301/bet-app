@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppContext } from '../context/appContext'
+import { BsEyeSlashFill, BsEyeFill } from 'react-icons/bs'
 import { Alert } from '../components'
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
 
 const Register = () => {
   const [values, setValues] = useState(initialState)
+  const [showPassword, setShowPassword] = useState(false)
   //global state and useNavigate
   const { user, isLoading, showAlert, displayAlert, setupUser } =
     useAppContext()
@@ -85,18 +87,27 @@ const Register = () => {
             required
           />
           {/* password input */}
-          <input
-            type="password"
-            name="password"
-            value={values.password}
-            onChange={handleChange}
-            placeholder="Enter your password..."
-            minLength={8}
-            autoComplete={`${
-              values.isMember ? 'current-password' : 'new-password'
-            }`}
-            required
-          />
+          <div className="password-container">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              value={values.password}
+              onChange={handleChange}
+              placeholder="Enter your password..."
+              minLength={8}
+              autoComplete={`${
+                values.isMember ? 'current-password' : 'new-password'
+              }`}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="toggle-password-btn"
+            >
+              {showPassword ? <BsEyeFill /> : <BsEyeSlashFill />}
+            </button>
+          </div>
           <button type="submit" className="btn btn-block" disabled={isLoading}>
             Submit
           </button>
