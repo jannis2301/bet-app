@@ -41,8 +41,9 @@ app.use(
         "'self'",
         'data:',
         'https://i.imgur.com',
-        'https://upload.wikimedia.org', // Allow images from Wikimedia
-        'https://i.imgur.com', // Specific Imgur URL
+        'https://upload.wikimedia.org',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/*',
+        'https://i.imgur.com/*',
       ],
     },
   })
