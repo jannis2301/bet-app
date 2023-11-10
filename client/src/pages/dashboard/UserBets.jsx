@@ -61,9 +61,9 @@ const UserBets = () => {
           bundesligaMatches.map((match) => {
             const { matchID, team1, team2 } = match
             teamSanitization(team1, team2)
-            const matchesHaveFinished = bundesligaMatches.every(
-              (match) => match.matchIsFinished === true
-            )
+            const matchesHaveFinished =
+              bundesligaMatches &&
+              bundesligaMatches.every((match) => match.matchIsFinished === true)
 
             const correspondingBet =
               bets && bets.find((bet) => bet.matchID === matchID)
