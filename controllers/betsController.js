@@ -42,7 +42,7 @@ exports.getLeaderboard = async (req, res) => {
 
     // Get user details for each _id in the leaderboard
     const populatedLeaderboard = await Promise.all(
-      leaderboard.map(async (leader) => {
+      leaderboard?.map(async (leader) => {
         const user = await User.findById(leader._id)
         return {
           _id: leader._id,

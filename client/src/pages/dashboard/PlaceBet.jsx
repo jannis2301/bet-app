@@ -52,12 +52,10 @@ const PlaceBet = () => {
     // Get the logged-in user's ID from the app context or state
     const userId = user._id
     // Add the user ID to each bet object
-    const betsWithUser =
-      bets &&
-      bets.map((bet) => ({
-        ...bet,
-        createdBy: userId,
-      }))
+    const betsWithUser = bets?.map((bet) => ({
+      ...bet,
+      createdBy: userId,
+    }))
     createBet(betsWithUser)
     setIsSubmitted(true)
   }
@@ -65,9 +63,9 @@ const PlaceBet = () => {
   const checkIfBetHasBeenPlaced = () => {
     if (!(allBetsPlaced.length > 0)) return
 
-    const hasBetForMatchday =
-      allBetsPlaced &&
-      allBetsPlaced.some((bet) => bet.matchDay === currentMatchday)
+    const hasBetForMatchday = allBetsPlaced?.some(
+      (bet) => bet.matchDay === currentMatchday
+    )
 
     if (hasBetForMatchday) {
       setIsSubmitted(true)
@@ -75,9 +73,9 @@ const PlaceBet = () => {
   }
 
   const checkIfMatchHasFinished = () => {
-    const matchHasFinished =
-      bundesligaMatches &&
-      bundesligaMatches.some((match) => match.matchIsFinished === true)
+    const matchHasFinished = bundesligaMatches?.some(
+      (match) => match.matchIsFinished === true
+    )
     setMatchHasFinished(matchHasFinished)
   }
 
@@ -113,8 +111,7 @@ const PlaceBet = () => {
             </p>
           )}
           {!matchHasFinished &&
-            bundesligaMatches &&
-            bundesligaMatches.map((match, i) => {
+            bundesligaMatches?.map((match, i) => {
               const { matchID, team1, team2, group } = match
               teamSanitization(team1, team2)
 
@@ -123,7 +120,7 @@ const PlaceBet = () => {
                   <span className="home-team">
                     <p>{team1.shortName}</p>
                     <img
-                      crossorigin="anonymous"
+                      crossOrigin="anonymous"
                       className="club-icon"
                       src={team1.teamIconUrl}
                       alt={`${team1.shortName}-icon`}
@@ -158,7 +155,7 @@ const PlaceBet = () => {
                   />
                   <span className="away-team">
                     <img
-                      crossorigin="anonymous"
+                      crossOrigin="anonymous"
                       className="club-icon"
                       src={team2.teamIconUrl}
                       alt={`${team2.shortName}-icon`}

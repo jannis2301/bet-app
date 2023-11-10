@@ -53,7 +53,7 @@ const Navbar = () => {
             <div
               className={`user-bets ${userBetsOpen ? 'show-user-bets' : ''}`}
             >
-              {allUsers.map((user, i) => {
+              {allUsers?.map((user, i) => {
                 let displayName = user.name
                 if (
                   displayName &&

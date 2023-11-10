@@ -44,17 +44,16 @@ const Leaderboard = () => {
               </tr>
             </thead>
             <tbody>
-              {leaderboard &&
-                leaderboard.map((user, index) => {
-                  const { _id, name, totalPoints } = user
-                  return (
-                    <tr key={_id}>
-                      <td className="ranking">{index + 1}</td>
-                      <td>{name}</td>
-                      <td>{totalPoints}</td>
-                    </tr>
-                  )
-                })}
+              {leaderboard?.map((user, index) => {
+                const { _id, name, totalPoints } = user
+                return (
+                  <tr key={_id}>
+                    <td className="ranking">{index + 1}</td>
+                    <td>{name}</td>
+                    <td>{totalPoints}</td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </>

@@ -8,14 +8,14 @@ const compareScores = async () => {
     // Fetch all bets from the database
     const matchdayBets = await Bets.find({ matchDay: matchday })
 
-    const allMatchesHaveFinished = matches.every(
+    const allMatchesHaveFinished = matches?.every(
       (match) => match.matchIsFinished
     )
 
     if (!allMatchesHaveFinished) return
 
     for (const bet of matchdayBets) {
-      const correspondingMatch = matches.find(
+      const correspondingMatch = matches?.find(
         (match) => match.matchID === bet.matchID
       )
 
