@@ -41,8 +41,6 @@ app.use(
         'data:',
         'https://i.imgur.com',
         'https://upload.wikimedia.org',
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/*',
-        'https://i.imgur.com/*',
       ],
     },
   })
