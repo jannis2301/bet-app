@@ -1,4 +1,4 @@
-import React, { useReducer, useContext, useEffect } from 'react'
+import React, { useReducer, useContext, useEffect, useCallback } from 'react'
 import reducer from './reducer'
 import axios from 'axios'
 
@@ -62,124 +62,142 @@ const AppProvider = ({ children }) => {
     }
   )
 
-  const displayAlert = () => {
-    dispatch({ type: DISPLAY_ALERT })
-    clearAlert()
-  }
-
-  const clearAlert = () => {
+  const clearAlert = useCallback(() => {
     setTimeout(() => {
       dispatch({ type: CLEAR_ALERT })
     }, 3000)
-  }
+  }, [dispatch])
 
-  const setupUser = async ({ currentUser, endPoint, alertText }) => {
-    dispatch({ type: SET_LOADING })
-    try {
-      const response = await axios.post(`/api/auth/${endPoint}`, currentUser)
-      const { user, location } = response.data
-      dispatch({
-        type: SETUP_USER_SUCCESS,
-        payload: { user, location, alertText },
-      })
-    } catch (error) {
-      dispatch({
-        type: SET_ERROR,
-        payload: { msg: error.response.data.msg },
-      })
-    }
+  const displayAlert = useCallback(() => {
+    dispatch({ type: DISPLAY_ALERT })
     clearAlert()
-  }
+  }, [dispatch, clearAlert])
 
-  const logoutUser = async () => {
-    await authFetch.get('/auth/logout')
-    dispatch({ type: LOGOUT_USER })
-  }
-
-  const handleChange = ({ name, value }) => {
-    dispatch({ type: HANDLE_CHANGE, payload: { name, value } })
-  }
-
-  const updateUser = async (currentUser) => {
-    dispatch({ type: SET_LOADING })
-    try {
-      const { data } = await authFetch.patch('/auth/updateUser', currentUser)
-      const { user } = data
-
-      dispatch({
-        type: UPDATE_USER_SUCCESS,
-        payload: { user },
-      })
-    } catch (error) {
-      if (error.response && error.response.status !== 401) {
+  const setupUser = useCallback(
+    async ({ currentUser, endPoint, alertText }) => {
+      dispatch({ type: SET_LOADING })
+      try {
+        const response = await axios.post(`/api/auth/${endPoint}`, currentUser)
+        const { user, location } = response.data
+        dispatch({
+          type: SETUP_USER_SUCCESS,
+          payload: { user, location, alertText },
+        })
+      } catch (error) {
         dispatch({
           type: SET_ERROR,
           payload: { msg: error.response.data.msg },
         })
       }
-    }
-    clearAlert()
-  }
+      clearAlert()
+    },
+    [dispatch, clearAlert]
+  )
 
-  const createBet = async (betsWithUser) => {
-    dispatch({ type: SET_LOADING })
-    try {
-      await authFetch.post('/bets', betsWithUser)
-      dispatch({ type: CREATE_BET_SUCCESS })
-    } catch (error) {
-      if (error.response && error.response.status === 401) return
-      dispatch({
-        type: SET_ERROR,
-        payload: { msg: error.response.data.msg },
-      })
-    }
-    clearAlert()
-  }
+  const logoutUser = useCallback(async () => {
+    await authFetch.get('/auth/logout')
+    dispatch({ type: LOGOUT_USER })
+  }, [dispatch, authFetch])
 
-  const getUserBets = async (userId) => {
-    dispatch({ type: SET_LOADING })
-    try {
-      const { data } = await authFetch(`/bets/${userId}`)
-      const { userBets } = data
-      dispatch({
-        type: GET_USER_BETS,
-        payload: {
-          userBets,
-        },
-      })
-    } catch (error) {
-      if (error.response && error.response.status === 401) return
-      dispatch({
-        type: SET_ERROR,
-        payload: { msg: error.response.data.msg },
-      })
-    }
-    clearAlert()
-  }
+  const handleChange = useCallback(
+    ({ name, value }) => {
+      dispatch({ type: HANDLE_CHANGE, payload: { name, value } })
+    },
+    [dispatch]
+  )
 
-  const getLeaderboard = async (matchday) => {
-    dispatch({ type: SET_LOADING })
-    try {
-      const { data } = await authFetch(`/bets/leaderboard/${matchday}`)
-      const { leaderboard } = data
+  const updateUser = useCallback(
+    async (currentUser) => {
+      dispatch({ type: SET_LOADING })
+      try {
+        const { data } = await authFetch.patch('/auth/updateUser', currentUser)
+        const { user } = data
 
-      dispatch({
-        type: GET_LEADERBOARD,
-        payload: {
-          leaderboard,
-        },
-      })
-    } catch (error) {
-      if (error.response && error.response.status === 401) return
-      dispatch({
-        type: SET_ERROR,
-        payload: { msg: error.response.data.msg },
-      })
-    }
-    clearAlert()
-  }
+        dispatch({
+          type: UPDATE_USER_SUCCESS,
+          payload: { user },
+        })
+      } catch (error) {
+        if (error.response && error.response.status !== 401) {
+          dispatch({
+            type: SET_ERROR,
+            payload: { msg: error.response.data.msg },
+          })
+        }
+      }
+      clearAlert()
+    },
+    [dispatch, clearAlert, authFetch]
+  )
 
-  const getCurrentUser = async () => {
+  const createBet = useCallback(
+    async (betsWithUser) => {
+      dispatch({ type: SET_LOADING })
+      try {
+        await authFetch.post('/bets', betsWithUser)
+        dispatch({ type: CREATE_BET_SUCCESS })
+      } catch (error) {
+        if (error.response && error.response.status === 401) return
+        dispatch({
+          type: SET_ERROR,
+          payload: { msg: error.response.data.msg },
+        })
+      }
+      clearAlert()
+    },
+    [dispatch, clearAlert, authFetch]
+  )
+
+  const getUserBets = useCallback(
+    async (userId) => {
+      dispatch({ type: SET_LOADING })
+      try {
+        const { data } = await authFetch(`/bets/${userId}`)
+        const { userBets } = data
+        dispatch({
+          type: GET_USER_BETS,
+          payload: {
+            userBets,
+          },
+        })
+      } catch (error) {
+        if (error.response && error.response.status === 401) return
+        dispatch({
+          type: SET_ERROR,
+          payload: { msg: error.response.data.msg },
+        })
+      }
+      clearAlert()
+    },
+    [dispatch, clearAlert, authFetch]
+  )
+
+  const getLeaderboard = useCallback(
+    async (matchday) => {
+      dispatch({ type: SET_LOADING })
+      try {
+        const { data } = await authFetch(`/bets/leaderboard/${matchday}`)
+        const { leaderboard } = data
+
+        dispatch({
+          type: GET_LEADERBOARD,
+          payload: {
+            leaderboard,
+          },
+        })
+      } catch (error) {
+        if (error.response && error.response.status === 401) return
+        dispatch({
+          type: SET_ERROR,
+          payload: { msg: error.response.data.msg },
+        })
+      }
+      clearAlert()
+    },
+    [dispatch, authFetch]
+  )
+
+  const getCurrentUser = useCallback(async () => {
     dispatch({ type: GET_CURRENT_USER_BEGIN })
     try {
       const { data } = await authFetch('/auth/getCurrentUser')
@@ -196,9 +214,9 @@ const AppProvider = ({ children }) => {
       if (error.response && error.response.status === 401) return
       logoutUser()
     }
-  }
+  }, [dispatch, logoutUser, authFetch])
 
-  const getAllUsers = async () => {
+  const getAllUsers = useCallback(async () => {
     dispatch({ type: SET_LOADING })
     try {
       const { data } = await authFetch('/auth/getAllUsers')
@@ -216,64 +234,71 @@ const AppProvider = ({ children }) => {
         payload: { msg: error },
       })
     }
-  }
+  }, [dispatch, authFetch])
 
-  const fetchBundesligaMatches = async (selectedMatchday) => {
-    const matchDayURL = 'https://api.openligadb.de/getcurrentgroup/bl1'
-    const getMatchesURL = 'https://api.openligadb.de/getmatchdata/bl1'
+  const fetchBundesligaMatches = useCallback(
+    async (selectedMatchday) => {
+      const matchDayURL = 'https://api.openligadb.de/getcurrentgroup/bl1'
+      const getMatchesURL = 'https://api.openligadb.de/getmatchdata/bl1'
+      const date = new Date()
+      const getCurrentMonth = date.getMonth()
+      const getCurrentYear = date.getFullYear()
+      const MIN_MATCHDAYS = 1
+      const MAX_MATCHDAYS = 34
 
-    let currentSeason =
-      new Date().getMonth() > 6
-        ? new Date().getFullYear()
-        : new Date().getFullYear() - 1
+      let currentSeason =
+        getCurrentMonth > 6 ? getCurrentYear : getCurrentYear - 1
 
-    dispatch({ type: SET_LOADING })
-    try {
-      let matchdayToFetch
-      let currentMatchday
-
-      if (selectedMatchday) {
-        switch (true) {
-          case selectedMatchday < 1:
-            matchdayToFetch = 34
-            break
-          case selectedMatchday > 34:
-            matchdayToFetch = 1
-            break
-          default:
-            matchdayToFetch = selectedMatchday
+      dispatch({ type: SET_LOADING })
+      try {
+        let matchdayToFetch
+        let currentMatchday
+        if (selectedMatchday) {
+          switch (true) {
+            case selectedMatchday < MIN_MATCHDAYS:
+              matchdayToFetch = MAX_MATCHDAYS
+              break
+            case selectedMatchday > MAX_MATCHDAYS:
+              matchdayToFetch = MIN_MATCHDAYS
+              break
+            default:
+              matchdayToFetch = selectedMatchday
+          }
+        } else {
+          const { data } = await axios.get(matchDayURL)
+          matchdayToFetch = data.groupOrderID
         }
-      } else {
-        const { data } = await axios.get(matchDayURL)
-        matchdayToFetch = data.groupOrderID
+
+        const res = await axios.get(matchDayURL)
+        currentMatchday = res.data.groupOrderID
+
+        const { data } = await axios.get(
+          `${getMatchesURL}/${currentSeason}/${matchdayToFetch}`
+        )
+
+        dispatch({
+          type: SET_BUNDESLIGA_MATCHES,
+          payload: {
+            data,
+            matchdayToFetch,
+            currentMatchday,
+          },
+        })
+      } catch (error) {
+        dispatch({
+          type: SET_ERROR,
+          payload: { msg: error },
+        })
       }
-
-      const res = await axios.get(matchDayURL)
-      currentMatchday = res.data.groupOrderID
-
-      const { data } = await axios.get(
-        `${getMatchesURL}/${currentSeason}/${matchdayToFetch}`
-      )
-
-      dispatch({
-        type: SET_BUNDESLIGA_MATCHES,
-        payload: {
-          data,
-          matchdayToFetch,
-          currentMatchday,
-        },
-      })
-    } catch (error) {
-      dispatch({
-        type: SET_ERROR,
-        payload: { msg: error },
-      })
-    }
-  }
+    },
+    [dispatch]
+  )
 
   useEffect(() => {
-    getCurrentUser()
-    fetchBundesligaMatches()
+    const fetchData = async () => {
+      await Promise.all([getCurrentUser(), fetchBundesligaMatches()])
+    }
+    fetchData()
   }, [])
 
   return (
