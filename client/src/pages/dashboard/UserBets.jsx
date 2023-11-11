@@ -16,24 +16,32 @@ const UserBets = () => {
   } = useAppContext()
   const [bets, setBets] = useState([])
 
-  useEffect(() => {
-    getUserBets(userId)
-  }, [userId])
-
-  useEffect(() => {
+  const setMatchdayBets = () => {
     const matchDayBets = allBetsPlaced?.filter(
       (bet) => bet.matchDay === bundesligaMatchday
     )
     setBets(matchDayBets)
-  }, [allBetsPlaced, bundesligaMatchday])
-
-  const selectedUser = allUsers?.find((user) => user._id === userId)
-  let displayName = selectedUser ? selectedUser.name : ''
-
-  // Check if the last character of the name is not 's'
-  if (displayName && displayName.charAt(displayName.length - 1) !== 's') {
-    displayName += 's'
   }
+
+  const addLastCharacter = () => {
+    const selectedUser = allUsers?.find((user) => user._id === userId)
+    let displayName = selectedUser ? selectedUser.name : ''
+
+    // Check if the last character of the name is not 's'
+    if (displayName && displayName.charAt(displayName.length - 1) !== 's') {
+      displayName += 's'
+    }
+  }
+
+  useEffect(() => {
+    getUserBets(userId)
+    addLastCharacter()
+    console.log(allUsers)
+  }, [userId])
+
+  useEffect(() => {
+    setMatchdayBets()
+  }, [allBetsPlaced, bundesligaMatchday])
 
   return (
     <section>
