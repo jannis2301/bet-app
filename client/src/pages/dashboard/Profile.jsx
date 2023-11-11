@@ -5,18 +5,26 @@ import { Alert } from '../../components'
 const Profile = () => {
   const { user, showAlert, displayAlert, updateUser, isLoading } =
     useAppContext()
-  const [name, setName] = useState(user?.name)
-  const [email, setEmail] = useState(user?.email)
-  const [location, setLocation] = useState(user?.location)
-  const [team, setTeam] = useState(user?.team)
+  const [values, setValues] = useState({
+    name: user?.name,
+    email: user?.email,
+    location: user?.location,
+    team: user?.team,
+  })
+
+  const handleChange = (e) => {
+    const { value, name } = e.target
+    setValues({ ...values, [name]: value })
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    const { name, email } = values
     if (!name || !email) {
       displayAlert()
       return
     }
-    updateUser({ name, email, location, team })
+    updateUser(values)
   }
 
   return (
@@ -29,9 +37,11 @@ const Profile = () => {
             <label htmlFor="name">Username</label>
             <input
               type="text"
+              id="name"
               name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={values.name}
+              onChange={handleChange}
+              autoComplete="name"
               required
             />
           </div>
@@ -39,9 +49,11 @@ const Profile = () => {
             <label htmlFor="email">Email</label>
             <input
               type="email"
+              id="email"
               name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={values.email}
+              onChange={handleChange}
+              autoComplete="email"
               required
             />
           </div>
@@ -49,18 +61,22 @@ const Profile = () => {
             <label htmlFor="location">Location</label>
             <input
               type="text"
+              id="location"
               name="location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              value={values.location}
+              onChange={handleChange}
+              autoComplete="location"
             />
           </div>
           <div className="label-box">
             <label htmlFor="team">Favorite Team</label>
             <input
               type="text"
+              id="team"
               name="team"
-              value={team}
-              onChange={(e) => setTeam(e.target.value)}
+              value={values.team}
+              onChange={handleChange}
+              autoComplete="team"
             />
           </div>
         </div>
