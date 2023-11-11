@@ -172,11 +172,11 @@ const AppProvider = ({ children }) => {
     [dispatch, clearAlert, authFetch]
   )
 
-  const getLeaderboard = useCallback(
+  const getTotalPoints = useCallback(
     async (matchday) => {
       dispatch({ type: SET_LOADING })
       try {
-        const { data } = await authFetch(`/bets/leaderboard/${matchday}`)
+        const { data } = await authFetch(`/total-points/${matchday}`)
         const { leaderboard } = data
 
         dispatch({
@@ -294,13 +294,9 @@ const AppProvider = ({ children }) => {
     [dispatch]
   )
 
-  const fetchAppData = useCallback(
-    async () => await Promise.all([getCurrentUser(), fetchBundesligaMatches()]),
-    [getCurrentUser, fetchBundesligaMatches]
-  )
-
   useEffect(() => {
-    fetchAppData()
+    getCurrentUser()
+    fetchBundesligaMatches()
   }, [])
 
   return (
@@ -315,7 +311,7 @@ const AppProvider = ({ children }) => {
         createBet,
         getUserBets,
         getAllUsers,
-        getLeaderboard,
+        getTotalPoints,
         fetchBundesligaMatches,
       }}
     >

@@ -7,7 +7,7 @@ const Leaderboard = () => {
     leaderboard,
     bundesligaMatchday,
     fetchBundesligaMatches,
-    getLeaderboard,
+    getTotalPoints,
   } = useAppContext()
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const Leaderboard = () => {
       if (bundesligaMatchday !== null) {
         await Promise.all([
           fetchBundesligaMatches(bundesligaMatchday),
-          getLeaderboard(bundesligaMatchday),
+          getTotalPoints(bundesligaMatchday),
         ])
       }
     }
