@@ -1,4 +1,4 @@
-const Bets = require('../models/Bets')
+const Bet = require('../models/Bet')
 const { fetchBundesligaMatches } = require('../utils/fetchMatches')
 
 const compareScores = async () => {
@@ -6,7 +6,7 @@ const compareScores = async () => {
     const { matchData: matches, matchdayToFetch: matchday } =
       await fetchBundesligaMatches()
     // Fetch all bets from the database
-    const matchdayBets = await Bets.find({ matchDay: matchday })
+    const matchdayBets = await Bet.find({ matchDay: matchday })
 
     const allMatchesHaveFinished = matches?.every(
       (match) => match.matchIsFinished
@@ -52,7 +52,7 @@ const compareScores = async () => {
         }
 
         // Update the pointsEarned field for the current bet
-        await Bets.updateOne({ _id: bet._id }, { $set: { pointsEarned } })
+        await Bet.updateOne({ _id: bet._id }, { $set: { pointsEarned } })
       }
     }
   } catch (error) {

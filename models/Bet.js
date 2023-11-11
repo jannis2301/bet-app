@@ -26,6 +26,6 @@ const betSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-const Bets = mongoose.model('Bets', betSchema)
+const Bet = mongoose.model('Bet', betSchema)
 
-module.exports = Bets
+module.exports = Bet

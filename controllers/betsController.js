@@ -1,4 +1,4 @@
-const Bets = require('../models/Bets')
+const Bet = require('../models/Bet')
 const User = require('../models/User')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError } = require('../errors/index')
@@ -10,7 +10,7 @@ exports.setUserBets = async (req, res) => {
     if (!matchID || !matchDay || !homeScore || !awayScore) {
       throw new BadRequestError('Please Provide All Values')
     }
-    await Bets.create(bet)
+    await Bet.create(bet)
   }
   res.status(StatusCodes.CREATED).json(bets)
 }
@@ -18,7 +18,7 @@ exports.setUserBets = async (req, res) => {
 exports.getUserBets = async (req, res) => {
   const userId = req.params.userId
   try {
-    const userBets = await Bets.find({ createdBy: userId })
+    const userBets = await Bet.find({ createdBy: userId })
     res.status(StatusCodes.OK).json({ userBets })
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: error.message })
@@ -29,7 +29,7 @@ exports.getLeaderboard = async (req, res) => {
   const matchday = req.params.matchday
 
   try {
-    const leaderboard = await Bets.aggregate([
+    const leaderboard = await Bet.aggregate([
       { $match: { matchDay: parseInt(matchday) } }, // Match specific matchday
       {
         $group: {
