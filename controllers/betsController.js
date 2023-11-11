@@ -25,7 +25,7 @@ exports.getUserBets = async (req, res) => {
   }
 }
 
-exports.getLeaderboard = async (req, res) => {
+/* exports.getLeaderboard = async (req, res) => {
   const matchday = req.params.matchday
 
   try {
@@ -56,4 +56,4 @@ exports.getLeaderboard = async (req, res) => {
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: error.message })
   }
-}
+} */

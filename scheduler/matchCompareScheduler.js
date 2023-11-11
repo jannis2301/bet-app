@@ -1,10 +1,11 @@
 const cron = require('node-cron')
 const { compareScores } = require('./compareScores')
+const { updateTotalPoints } = require('./updateTotalPoints')
 
 const initializeCron = () => {
   /* cron.schedule('* * * * *', async () => {
     try {
-      await compareScores()
+      await updateTotalPoints()
     } catch (error) {
       console.error('Error while updating scores:', error)
     }
