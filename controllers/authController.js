@@ -82,6 +82,8 @@ exports.logout = async (req, res) => {
   res.cookie('token', 'logout', {
     httpOnly: true,
     expires: new Date(Date.now()),
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Lax',
   })
   res.status(StatusCodes.OK).json({ msg: 'user logged out' })
 }
