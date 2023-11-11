@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAppContext } from '../../context/appContext'
 import { HiArrowSmLeft, HiArrowSmRight } from 'react-icons/hi'
@@ -14,29 +14,32 @@ const UserBets = () => {
     bundesligaMatchday,
     fetchBundesligaMatches,
   } = useAppContext()
+  const [displayName, setDisplayName] = useState('')
   const [bets, setBets] = useState([])
 
-  const setMatchdayBets = () => {
-    const matchDayBets = allBetsPlaced?.filter(
-      (bet) => bet.matchDay === bundesligaMatchday
-    )
-    setBets(matchDayBets)
-  }
+  const setMatchdayBets = useMemo(() => {
+    return () => {
+      const matchDayBets = allBetsPlaced?.filter(
+        (bet) => bet.matchDay === bundesligaMatchday
+      )
+      setBets(matchDayBets)
+    }
+  }, [allBetsPlaced, bundesligaMatchday])
 
   const addLastCharacter = () => {
     const selectedUser = allUsers?.find((user) => user._id === userId)
     let displayName = selectedUser ? selectedUser.name : ''
 
-    // Check if the last character of the name is not 's'
     if (displayName && displayName.charAt(displayName.length - 1) !== 's') {
       displayName += 's'
     }
+
+    setDisplayName(displayName)
   }
 
   useEffect(() => {
     getUserBets(userId)
     addLastCharacter()
-    console.log(allUsers)
   }, [userId])
 
   useEffect(() => {
