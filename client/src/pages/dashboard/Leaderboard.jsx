@@ -11,7 +11,16 @@ const Leaderboard = () => {
   } = useAppContext()
 
   useEffect(() => {
-    getLeaderboard(bundesligaMatchday)
+    const fetchData = async () => {
+      if (bundesligaMatchday !== null) {
+        await Promise.all([
+          fetchBundesligaMatches(bundesligaMatchday),
+          getLeaderboard(bundesligaMatchday),
+        ])
+      }
+    }
+
+    fetchData()
   }, [bundesligaMatchday])
 
   return (
