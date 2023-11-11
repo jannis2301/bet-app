@@ -294,11 +294,13 @@ const AppProvider = ({ children }) => {
     [dispatch]
   )
 
+  const fetchAppData = useCallback(
+    async () => await Promise.all([getCurrentUser(), fetchBundesligaMatches()]),
+    [getCurrentUser, fetchBundesligaMatches]
+  )
+
   useEffect(() => {
-    const fetchData = async () => {
-      await Promise.all([getCurrentUser(), fetchBundesligaMatches()])
-    }
-    fetchData()
+    fetchAppData()
   }, [])
 
   return (
