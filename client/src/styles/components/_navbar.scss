@@ -27,6 +27,10 @@
   gap: 10px;
 }
 
+.nav-links a {
+  user-select: none;
+}
+
 .nav-links a.active {
   color: yellow;
 }
