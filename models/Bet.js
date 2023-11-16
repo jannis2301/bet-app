@@ -18,7 +18,7 @@ const betSchema = new mongoose.Schema(
     actualAwayScore: { type: Number },
     pointsEarned: { type: Number, default: 0 },
     createdBy: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Please provide user'],
     },

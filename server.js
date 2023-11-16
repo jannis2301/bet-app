@@ -18,7 +18,6 @@ const connectDB = require('./db/connect')
 //routers
 const authRouter = require('./routes/authRoutes')
 const betsRouter = require('./routes/betsRoutes')
-const totalPointsRouter = require('./routes/totalPointsRoutes')
 
 // middleware
 const notFoundMiddleware = require('./middleware/not-found')
@@ -60,7 +59,6 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use('/api/auth', authRouter)
 app.use('/api/bets', betsRouter)
-app.use('/api/total-points', totalPointsRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)

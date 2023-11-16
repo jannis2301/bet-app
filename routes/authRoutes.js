@@ -9,7 +9,7 @@ const apiLimiter = rateLimiter({
   max: 10,
   message:
     'Too many requests from this IP address, please try again after 15 minutes',
-  validate: { xForwardedForHeader: false },
+  //validate: { xForwardedForHeader: false },
 })
 
 const {
