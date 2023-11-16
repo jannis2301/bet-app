@@ -16,6 +16,7 @@ const PlaceBet = () => {
     bundesligaMatches,
     currentMatchday,
     bundesligaMatchday,
+    fetchBundesligaMatches,
   } = useAppContext()
 
   const [bets, setBets] = useState(currentBets)
@@ -49,14 +50,7 @@ const PlaceBet = () => {
     })
 
     if (hasInvalidBet) return
-    // Get the logged-in user's ID from the app context or state
-    const userId = user._id
-    // Add the user ID to each bet object
-    const betsWithUser = bets?.map((bet) => ({
-      ...bet,
-      createdBy: userId,
-    }))
-    createBet(betsWithUser)
+    createBet(bets, user._id)
     setIsSubmitted(true)
   }
 
@@ -85,6 +79,10 @@ const PlaceBet = () => {
     checkIfMatchHasFinished()
     checkIfBetHasBeenPlaced()
   }, [allBetsPlaced, bundesligaMatchday, bundesligaMatches])
+
+  useEffect(() => {
+    fetchBundesligaMatches()
+  }, [])
 
   return (
     <section className="placebets-box">

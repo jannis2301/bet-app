@@ -46,6 +46,10 @@ const UserBets = () => {
     setMatchdayBets()
   }, [allBetsPlaced, bundesligaMatchday])
 
+  useEffect(() => {
+    fetchBundesligaMatches()
+  }, [])
+
   return (
     <section>
       <div className="matchday-headline">

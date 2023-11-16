@@ -2,10 +2,15 @@ import moment from 'moment'
 import teamSanitization from '../../utils/teamSanitize'
 import { useAppContext } from '../../context/appContext'
 import { HiArrowSmLeft, HiArrowSmRight } from 'react-icons/hi'
+import { useEffect } from 'react'
 
 const Home = () => {
   const { bundesligaMatches, bundesligaMatchday, fetchBundesligaMatches } =
     useAppContext()
+
+  useEffect(() => {
+    fetchBundesligaMatches()
+  }, [])
 
   return (
     <section>

@@ -131,10 +131,10 @@ const AppProvider = ({ children }) => {
   )
 
   const createBet = useCallback(
-    async (betsWithUser) => {
+    async (bets, userId) => {
       dispatch({ type: SET_LOADING })
       try {
-        await authFetch.post('/bets', betsWithUser)
+        await authFetch.post(`/bets/user/${userId}`, bets)
         dispatch({ type: CREATE_BET_SUCCESS })
       } catch (error) {
         if (error.response && error.response.status === 401) return
@@ -152,7 +152,7 @@ const AppProvider = ({ children }) => {
     async (userId) => {
       dispatch({ type: SET_LOADING })
       try {
-        const { data } = await authFetch(`/bets/${userId}`)
+        const { data } = await authFetch(`/bets/user/${userId}`)
         const { userBets } = data
         dispatch({
           type: GET_USER_BETS,
@@ -172,11 +172,12 @@ const AppProvider = ({ children }) => {
     [dispatch, clearAlert, authFetch]
   )
 
-  const getTotalPoints = useCallback(
+  const getLeaderboard = useCallback(
     async (matchday) => {
       dispatch({ type: SET_LOADING })
       try {
-        const { data } = await authFetch(`/total-points/${matchday}`)
+        const { data } = await authFetch(`/bets/leaderboard/${matchday}`)
+        console.log(data)
         const { leaderboard } = data
 
         dispatch({
@@ -296,7 +297,6 @@ const AppProvider = ({ children }) => {
 
   useEffect(() => {
     getCurrentUser()
-    fetchBundesligaMatches()
   }, [])
 
   return (
@@ -311,7 +311,7 @@ const AppProvider = ({ children }) => {
         createBet,
         getUserBets,
         getAllUsers,
-        getTotalPoints,
+        getLeaderboard,
         fetchBundesligaMatches,
       }}
     >
