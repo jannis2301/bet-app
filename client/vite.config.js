@@ -7,8 +7,7 @@ export default defineConfig({
     https: true,
     proxy: {
       '/api': {
-        target:
-          process.env.VITE_API_URL || 'https://bet-app-4w2c.onrender.com/',
+        target: 'https://bet-app-4w2c.onrender.com/',
         changeOrigin: true,
       },
     },
