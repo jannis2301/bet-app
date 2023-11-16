@@ -8,6 +8,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'https://bet-app-4w2c.onrender.com/',
+        changeOrigin: true,
         secure: true,
       },
     },
