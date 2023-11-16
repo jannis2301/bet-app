@@ -5,8 +5,14 @@ const { fetchBundesligaMatches } = require('../utils/fetchMatches')
 
 const updateTotalPoints = async () => {
   try {
-    //const { matchdayToFetch: matchday } = await fetchBundesligaMatches()
-    const matchday = 10
+    const { matchdayToFetch: matchday, matchData: matches } =
+      await fetchBundesligaMatches()
+    const allMatchesHaveFinished = matches?.every(
+      (match) => match.matchIsFinished
+    )
+
+    if (!allMatchesHaveFinished) return
+
     const totalPoints = await Bet.aggregate([
       { $match: { matchDay: parseInt(matchday) } },
       {
