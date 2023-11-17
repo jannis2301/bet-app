@@ -72,15 +72,12 @@ const PlaceBet = () => {
   }
 
   useEffect(() => {
-    getUserBets(user._id)
-  }, [])
-
-  useEffect(() => {
     checkIfMatchHasFinished()
     checkIfBetHasBeenPlaced()
   }, [allBetsPlaced, bundesligaMatchday, bundesligaMatches])
 
   useEffect(() => {
+    getUserBets(user._id)
     fetchBundesligaMatches()
   }, [])
 
