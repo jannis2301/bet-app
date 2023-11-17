@@ -33,9 +33,7 @@ app.use(helmet())
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'", 'https://api.openligadb.de'],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      connectSrc: ["'self'", 'https://api.openligadb.de'],
       imgSrc: [
         "'self'",
         'data:',
@@ -45,6 +43,7 @@ app.use(
     },
   })
 )
+
 app.use(mongoSanitize())
 
 if (process.env.NODE_ENV === 'production') {
