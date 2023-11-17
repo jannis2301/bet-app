@@ -4,16 +4,15 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    https: true,
     proxy: {
       '/api': {
-        target: 'https://bet-app-4w2c.onrender.com/',
+        target: 'http://localhost:5050',
         changeOrigin: true,
-        secure: true,
       },
     },
   },
   build: {
+    sourcemap: true,
     minify: true,
   },
 })
