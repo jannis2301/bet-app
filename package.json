@@ -4,12 +4,12 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "setup-production": "yarn run install-client && yarn run build-client && yarn install",
-    "install-client": "cd client && yarn install",
-    "build-client": "cd client && yarn run build",
+    "setup-production": "pnpm run install-client && pnpm run build-client && pnpm install",
+    "install-client": "cd client && pnpm install",
+    "build-client": "cd client && pnpm run build",
     "start": "nodemon server",
-    "client": "cd client && yarn start",
-    "dev": "concurrently --kill-others-on-fail \"yarn nodemon server\" \"yarn run client\""
+    "client": "cd client && pnpm start",
+    "dev": "concurrently --kill-others-on-fail \"pnpm nodemon server\" \"pnpm run client\""
   },
   "author": "Jannis",
   "license": "ISC",
