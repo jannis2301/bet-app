@@ -1,18 +1,13 @@
-import { Link, NavLink } from 'react-router-dom'
-import { FaUserCircle, FaCaretDown } from 'react-icons/fa'
-import Logo from './Logo'
-import { useEffect, useState } from 'react'
-import { useAppContext } from '../context/appContext'
+import { Link, NavLink } from 'react-router-dom';
+import { FaUserCircle, FaCaretDown } from 'react-icons/fa';
+import Logo from './Logo';
+import { useState } from 'react';
+import { useAppContext } from '../context/appContext';
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [userBetsOpen, setUserBetsOpen] = useState(false)
-  const [showLogout, setShowLogout] = useState()
-  const { logoutUser, user, allUsers, getAllUsers } = useAppContext()
-
-  useEffect(() => {
-    getAllUsers()
-  }, [])
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showLogout, setShowLogout] = useState();
+  const { logoutUser, user } = useAppContext();
 
   return (
     <header className="header">
@@ -37,41 +32,14 @@ const Navbar = () => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/bets" onClick={() => setIsMenuOpen(false)}>
+              Meine Tipps
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/profile" onClick={() => setIsMenuOpen(false)}>
               Profil
             </NavLink>
-          </li>
-          <li className="user-bets-box">
-            <button
-              type="button"
-              className="bets-btn"
-              onClick={() => setUserBetsOpen(!userBetsOpen)}
-            >
-              Bets
-              <FaCaretDown />
-            </button>
-            <div
-              className={`user-bets ${userBetsOpen ? 'show-user-bets' : ''}`}
-            >
-              {allUsers?.map((user, i) => {
-                let displayName = user.name
-                if (
-                  displayName &&
-                  displayName.charAt(displayName.length - 1) !== 's'
-                ) {
-                  displayName += 's'
-                }
-                return (
-                  <NavLink
-                    key={i}
-                    to={`/bets/${user._id}`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {displayName} Bets
-                  </NavLink>
-                )
-              })}
-            </div>
           </li>
         </ul>
         <div className="btn-container">
@@ -104,6 +72,6 @@ const Navbar = () => {
         </button>
       </nav>
     </header>
-  )
-}
-export default Navbar
+  );
+};
+export default Navbar;
