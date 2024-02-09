@@ -1,19 +1,18 @@
-import { useEffect, useMemo } from 'react'
-import { Navigate } from 'react-router-dom'
-import { useAppContext } from '../context/appContext'
-import Loading from '../components/Loading'
+import { Navigate } from 'react-router-dom';
+import { useAppContext } from '../context/appContext';
+import Loading from '../components/Loading';
 
 const ProtectedRoute = ({ children }) => {
-  const { user, userLoading } = useAppContext()
+  const { user, userLoading } = useAppContext();
 
   if (userLoading) {
-    return <Loading />
+    return <Loading />;
   }
 
   if (!user) {
-    return <Navigate to="/register"></Navigate>
+    return <Navigate to="/register"></Navigate>;
   }
-  return children
-}
+  return children;
+};
 
-export default ProtectedRoute
+export default ProtectedRoute;
