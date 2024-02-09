@@ -22,7 +22,7 @@ body {
 
 section {
   padding-block: 1rem;
-  min-height: 100vh;
+  min-height: 100dvh;
   opacity: 0;
   animation: fadeIn 0.5s ease-in-out forwards;
 }
@@ -54,7 +54,7 @@ ul {
 }
 
 form {
-  width: 90vw;
+  width: 90dvw;
   max-width: var(--fixedWidth);
   transition: var(--transition);
 }
