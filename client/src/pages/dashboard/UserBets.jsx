@@ -79,7 +79,12 @@ const UserBets = () => {
                 >
                   <span className="home-team">
                     <p>{team1.shortName}</p>
-                    <img alt={`${team1.shortName}-icon`} />
+                    <img
+                      crossOrigin="anonymous"
+                      className="club-icon"
+                      src={team1.teamIconUrl}
+                      alt={`${team1.shortName}-icon`}
+                    />
                   </span>
 
                   <span className="score">
@@ -88,7 +93,9 @@ const UserBets = () => {
 
                   <span className="away-team">
                     <img
+                      crossOrigin="anonymous"
                       className="club-icon"
+                      src={team2.teamIconUrl}
                       alt={`${team2.shortName}-icon`}
                     />
                     <p>{team2.shortName}</p>
