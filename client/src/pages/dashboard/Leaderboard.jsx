@@ -1,6 +1,6 @@
-import { useAppContext } from '../../context/appContext'
-import { useEffect } from 'react'
-import { HiArrowSmLeft, HiArrowSmRight } from 'react-icons/hi'
+import { useAppContext } from '../../context/appContext';
+import { useEffect } from 'react';
+import { HiArrowSmLeft, HiArrowSmRight } from 'react-icons/hi';
 
 const Leaderboard = () => {
   const {
@@ -8,12 +8,16 @@ const Leaderboard = () => {
     bundesligaMatchday,
     fetchBundesligaMatches,
     getLeaderboard,
-  } = useAppContext()
+    isLoading,
+  } = useAppContext();
 
   useEffect(() => {
-    fetchBundesligaMatches()
-    getLeaderboard(bundesligaMatchday)
-  }, [bundesligaMatchday])
+    fetchBundesligaMatches(bundesligaMatchday);
+    getLeaderboard(bundesligaMatchday);
+  }, [bundesligaMatchday]);
+
+  // Check if leaderboard is not available or empty
+  const isLeaderboardAvailable = leaderboard && leaderboard.length > 0;
 
   return (
     <section className="leaderboard-box">
@@ -21,6 +25,7 @@ const Leaderboard = () => {
         <button
           className="prev-btn"
           onClick={() => fetchBundesligaMatches(bundesligaMatchday - 1)}
+          disabled={isLoading}
         >
           <HiArrowSmLeft />
           <p>vorheriger Spieltag</p>
@@ -29,12 +34,13 @@ const Leaderboard = () => {
         <button
           className="next-btn"
           onClick={() => fetchBundesligaMatches(bundesligaMatchday + 1)}
+          disabled={isLoading}
         >
           <p>nächster Spieltag</p>
           <HiArrowSmRight />
         </button>
       </div>
-      {leaderboard?.length > 0 ? (
+      {isLeaderboardAvailable ? (
         <table className="leaderboard-table">
           <thead>
             <tr>
@@ -44,15 +50,15 @@ const Leaderboard = () => {
             </tr>
           </thead>
           <tbody>
-            {leaderboard?.map((user, index) => {
-              const { _id, name, totalPoints } = user
+            {leaderboard.map((user, index) => {
+              const { _id, name, totalPoints } = user;
               return (
                 <tr key={_id}>
                   <td className="ranking">{index + 1}</td>
                   <td>{name}</td>
                   <td>{totalPoints}</td>
                 </tr>
-              )
+              );
             })}
           </tbody>
         </table>
@@ -62,6 +68,6 @@ const Leaderboard = () => {
         </div>
       )}
     </section>
-  )
-}
-export default Leaderboard
+  );
+};
+export default Leaderboard;

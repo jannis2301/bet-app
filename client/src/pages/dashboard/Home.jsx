@@ -1,16 +1,20 @@
-import moment from 'moment'
-import teamSanitization from '../../utils/teamSanitize'
-import { useAppContext } from '../../context/appContext'
-import { HiArrowSmLeft, HiArrowSmRight } from 'react-icons/hi'
-import { useEffect } from 'react'
+import moment from 'moment';
+import teamSanitization from '../../utils/teamSanitize';
+import { useAppContext } from '../../context/appContext';
+import { HiArrowSmLeft, HiArrowSmRight } from 'react-icons/hi';
+import { useEffect } from 'react';
 
 const Home = () => {
-  const { bundesligaMatches, bundesligaMatchday, fetchBundesligaMatches } =
-    useAppContext()
+  const {
+    bundesligaMatches,
+    bundesligaMatchday,
+    fetchBundesligaMatches,
+    isLoading,
+  } = useAppContext();
 
   useEffect(() => {
-    fetchBundesligaMatches()
-  }, [])
+    fetchBundesligaMatches();
+  }, []);
 
   return (
     <section>
@@ -18,6 +22,7 @@ const Home = () => {
         <button
           className="prev-btn"
           onClick={() => fetchBundesligaMatches(bundesligaMatchday - 1)}
+          disabled={isLoading}
         >
           <HiArrowSmLeft />
           <p>vorheriger Spieltag</p>
@@ -26,6 +31,7 @@ const Home = () => {
         <button
           className="next-btn"
           onClick={() => fetchBundesligaMatches(bundesligaMatchday + 1)}
+          disabled={isLoading}
         >
           <p>nächster Spieltag</p>
           <HiArrowSmRight />
@@ -40,19 +46,21 @@ const Home = () => {
             matchResults,
             matchIsFinished,
             matchDateTime,
-          } = match
+          } = match;
 
-          const matchDate = moment.utc(matchDateTime).local().format('D/M/YYYY')
-          const matchTime = moment.utc(matchDateTime).local().format('H:mm')
+          const matchDate = moment
+            .utc(matchDateTime)
+            .local()
+            .format('D/M/YYYY');
+          const matchTime = moment.utc(matchDateTime).local().format('H:mm');
 
-          teamSanitization(team1, team2)
+          teamSanitization(team1, team2);
 
           return (
             <li className="game-box" key={id}>
               <span className="home-team">
                 <p>{team1.shortName}</p>
                 <img
-                  crossOrigin="anonymous"
                   className="club-icon"
                   src={team1.teamIconUrl}
                   alt={`${team1.shortName}-icon`}
@@ -72,7 +80,6 @@ const Home = () => {
               </span>
               <span className="away-team">
                 <img
-                  crossOrigin="anonymous"
                   className="club-icon"
                   src={team2.teamIconUrl}
                   alt={`${team2.shortName}-icon`}
@@ -80,10 +87,10 @@ const Home = () => {
                 <p>{team2.shortName}</p>
               </span>
             </li>
-          )
+          );
         })}
       </ul>
     </section>
-  )
-}
-export default Home
+  );
+};
+export default Home;

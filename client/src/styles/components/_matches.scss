@@ -59,6 +59,10 @@
   margin: 0 auto;
 }
 
+.matches-box:has(h2):not(:last-child) {
+  margin-block: 2rem;
+}
+
 .matchday-headline {
   margin-block: 1rem;
   display: flex;

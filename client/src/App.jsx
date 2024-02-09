@@ -1,6 +1,6 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { Error, ProtectedRoute, Register } from './pages'
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Error, ProtectedRoute, Register } from './pages';
 import {
   Home,
   Layout,
@@ -8,7 +8,7 @@ import {
   PlaceBet,
   Profile,
   UserBets,
-} from './pages/dashboard'
+} from './pages/dashboard';
 
 const App = () => {
   return (
@@ -24,7 +24,7 @@ const App = () => {
         >
           <Route index element={<Home />} />
           <Route path="/placebet" element={<PlaceBet />} />
-          <Route path="/bets/:userId" element={<UserBets />} />
+          <Route path="/bets" element={<UserBets />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
@@ -32,7 +32,7 @@ const App = () => {
         <Route path="/*" element={<Error />} />
       </Routes>
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default App
+export default App;

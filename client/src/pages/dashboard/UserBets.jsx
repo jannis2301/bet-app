@@ -1,54 +1,36 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useAppContext } from '../../context/appContext'
-import { HiArrowSmLeft, HiArrowSmRight } from 'react-icons/hi'
-import teamSanitization from '../../utils/teamSanitize'
+import { useEffect, useState } from 'react';
+import { useAppContext } from '../../context/appContext';
+import { HiArrowSmLeft, HiArrowSmRight } from 'react-icons/hi';
+import teamSanitization from '../../utils/teamSanitize';
 
 const UserBets = () => {
-  const { userId } = useParams()
   const {
-    getUserBets,
-    allUsers,
-    allBetsPlaced,
-    bundesligaMatches,
+    getUserBetsByMatchday,
+    allMatchdayBets,
     bundesligaMatchday,
+    bundesligaMatches,
     fetchBundesligaMatches,
-  } = useAppContext()
-  const [displayName, setDisplayName] = useState('')
-  const [bets, setBets] = useState([])
+    getAllUsers,
+    allUsers,
+    isLoading,
+  } = useAppContext();
 
-  const setMatchdayBets = useMemo(() => {
-    return () => {
-      const matchDayBets = allBetsPlaced?.filter(
-        (bet) => bet.matchDay === bundesligaMatchday
-      )
-      setBets(matchDayBets)
-    }
-  }, [allBetsPlaced, bundesligaMatchday])
-
-  const addLastCharacter = () => {
-    const selectedUser = allUsers?.find((user) => user._id === userId)
-    let displayName = selectedUser ? selectedUser.name : ''
-
-    if (displayName && displayName.charAt(displayName.length - 1) !== 's') {
-      displayName += 's'
-    }
-
-    setDisplayName(displayName)
-  }
+  const [users, setUsers] = useState([]);
+  const [userBets, setUserBets] = useState([]);
 
   useEffect(() => {
-    getUserBets(userId)
-    addLastCharacter()
-  }, [userId])
+    getAllUsers();
+  }, []);
 
   useEffect(() => {
-    setMatchdayBets()
-  }, [allBetsPlaced, bundesligaMatchday])
+    fetchBundesligaMatches(bundesligaMatchday);
+    getUserBetsByMatchday(bundesligaMatchday);
+  }, [bundesligaMatchday]);
 
   useEffect(() => {
-    fetchBundesligaMatches()
-  }, [])
+    setUsers(allUsers);
+    setUserBets(allMatchdayBets);
+  }, [allMatchdayBets]);
 
   return (
     <section>
@@ -56,83 +38,84 @@ const UserBets = () => {
         <button
           className="prev-btn"
           onClick={() => fetchBundesligaMatches(bundesligaMatchday - 1)}
+          disabled={isLoading}
         >
           <HiArrowSmLeft />
           <p>vorheriger Spieltag</p>
         </button>
-        <h1>
-          {displayName} Tipps für den {bundesligaMatchday}. Spieltag
-        </h1>
+        <h1>Tipps für den {bundesligaMatchday}. Spieltag</h1>
         <button
           className="next-btn"
           onClick={() => fetchBundesligaMatches(bundesligaMatchday + 1)}
+          disabled={isLoading}
         >
           <p>nächster Spieltag</p>
           <HiArrowSmRight />
         </button>
       </div>
-      <div className="matches-box">
-        {bundesligaMatches?.map((match) => {
-          const { matchID, team1, team2 } = match
-          teamSanitization(team1, team2)
-          const matchesHaveFinished = bundesligaMatches?.every(
-            (match) => match.matchIsFinished === true
-          )
+      {users?.map((user) => {
+        return (
+          <div key={user._id} className="matches-box">
+            <h2>{user.name}</h2>
+            {bundesligaMatches?.map((match) => {
+              const { matchID, team1, team2 } = match;
+              teamSanitization(team1, team2);
+              const matchesHaveFinished = bundesligaMatches?.every(
+                (match) => match.matchIsFinished === true
+              );
 
-          const correspondingBet = bets?.find((bet) => bet.matchID === matchID)
-          const { homeScore, awayScore, pointsEarned } = correspondingBet || []
+              const correspondingBet = userBets
+                ?.filter((bet) => bet.createdBy === user._id)
+                ?.find((bet) => bet.matchID === matchID);
+              const { homeScore, awayScore, pointsEarned } =
+                correspondingBet || [];
 
-          return (
-            <div
-              className={`game-box ${
-                matchesHaveFinished ? 'points-earned' : ''
-              }`}
-              key={matchID}
-            >
-              <span className="home-team">
-                <p>{team1.shortName}</p>
-                <img
-                  crossOrigin="anonymous"
-                  className="club-icon"
-                  src={team1.teamIconUrl}
-                  alt={`${team1.shortName}-icon`}
-                />
-              </span>
-
-              <span className="score">
-                {homeScore ?? ''}:{awayScore ?? ''}
-              </span>
-
-              <span className="away-team">
-                <img
-                  crossOrigin="anonymous"
-                  className="club-icon"
-                  src={team2.teamIconUrl}
-                  alt={`${team2.shortName}-icon`}
-                />
-                <p>{team2.shortName}</p>
-              </span>
-
-              {pointsEarned !== undefined && matchesHaveFinished && (
-                <p
-                  style={{
-                    color:
-                      pointsEarned === 3
-                        ? 'green'
-                        : pointsEarned === 1
-                        ? 'yellow'
-                        : 'red',
-                  }}
+              return (
+                <div
+                  className={`game-box ${
+                    matchesHaveFinished ? 'points-earned' : ''
+                  }`}
+                  key={matchID}
                 >
-                  {pointsEarned > 0 ? `+${pointsEarned}` : pointsEarned}
-                </p>
-              )}
-            </div>
-          )
-        })}
-      </div>
-    </section>
-  )
-}
+                  <span className="home-team">
+                    <p>{team1.shortName}</p>
+                    <img alt={`${team1.shortName}-icon`} />
+                  </span>
 
-export default UserBets
+                  <span className="score">
+                    {homeScore ?? ''}:{awayScore ?? ''}
+                  </span>
+
+                  <span className="away-team">
+                    <img
+                      className="club-icon"
+                      alt={`${team2.shortName}-icon`}
+                    />
+                    <p>{team2.shortName}</p>
+                  </span>
+
+                  {pointsEarned !== undefined && matchesHaveFinished && (
+                    <p
+                      style={{
+                        color:
+                          pointsEarned === 3
+                            ? 'green'
+                            : pointsEarned === 1
+                            ? 'yellow'
+                            : 'red',
+                      }}
+                    >
+                      {pointsEarned > 0 ? `+${pointsEarned}` : pointsEarned}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </section>
+  );
+};
+
+export default UserBets;

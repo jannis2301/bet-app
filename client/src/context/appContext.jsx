@@ -15,9 +15,9 @@ import {
   HANDLE_CHANGE,
   UPDATE_USER_SUCCESS,
   CREATE_BET_SUCCESS,
-  GET_USER_BETS,
   SET_BUNDESLIGA_MATCHES,
   GET_LEADERBOARD,
+  GET_ALL_USER_BETS,
 } from './actions';
 
 const initialState = {
@@ -35,6 +35,7 @@ const initialState = {
   // bets
   currentBets: [],
   allBetsPlaced: [],
+  allMatchdayBets: [],
   leaderboard: [],
   allUsers: [],
 };
@@ -148,26 +149,26 @@ const AppProvider = ({ children }) => {
     [dispatch, clearAlert, authFetch]
   );
 
-  const getUserBets = useCallback(
-    async (userId) => {
+  const getUserBetsByMatchday = useCallback(
+    async (matchday) => {
       dispatch({ type: SET_LOADING });
+      if (!matchday) return;
       try {
-        const { data } = await authFetch(`/bets/user/${userId}`);
+        const { data } = await authFetch(`/bets/user/${matchday}`);
         const { userBets } = data;
+
         dispatch({
-          type: GET_USER_BETS,
+          type: GET_ALL_USER_BETS,
           payload: {
             userBets,
           },
         });
       } catch (error) {
-        if (error.response && error.response.status === 401) return;
         dispatch({
           type: SET_ERROR,
           payload: { msg: error.response.data.msg },
         });
       }
-      clearAlert();
     },
     [dispatch, clearAlert, authFetch]
   );
@@ -186,13 +187,11 @@ const AppProvider = ({ children }) => {
           },
         });
       } catch (error) {
-        if (error.response && error.response.status === 401) return;
         dispatch({
           type: SET_ERROR,
           payload: { msg: error.response.data.msg },
         });
       }
-      clearAlert();
     },
     [dispatch, authFetch]
   );
@@ -308,7 +307,7 @@ const AppProvider = ({ children }) => {
         handleChange,
         updateUser,
         createBet,
-        getUserBets,
+        getUserBetsByMatchday,
         getAllUsers,
         getLeaderboard,
         fetchBundesligaMatches,

@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
-import { Alert } from '../../components'
-import { useAppContext } from '../../context/appContext'
-import teamSanitization from '../../utils/teamSanitize'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import { Alert } from '../../components';
+import { useAppContext } from '../../context/appContext';
+import teamSanitization from '../../utils/teamSanitize';
+import { Link } from 'react-router-dom';
 
 const PlaceBet = () => {
   const {
@@ -11,75 +11,73 @@ const PlaceBet = () => {
     createBet,
     user,
     currentBets,
-    getUserBets,
     allBetsPlaced,
     bundesligaMatches,
     currentMatchday,
     bundesligaMatchday,
     fetchBundesligaMatches,
-  } = useAppContext()
+  } = useAppContext();
 
-  const [bets, setBets] = useState(currentBets)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [matchHasFinished, setMatchHasFinished] = useState(false)
+  const [bets, setBets] = useState(currentBets);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [matchHasFinished, setMatchHasFinished] = useState(false);
 
   const handleChange = (e, i, matchID, matchDay) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setBets((prevBets) => {
-      const updatedBets = [...prevBets] // create a copy of the bets array
+      const updatedBets = [...prevBets]; // create a copy of the bets array
       updatedBets[i] = {
         ...updatedBets[i], // keep existing properties
         matchID,
         matchDay,
         [name]: value, // update the specified property with the new value */
-      }
-      return updatedBets // return the updated array to set the new state
-    })
-  }
+      };
+      return updatedBets; // return the updated array to set the new state
+    });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    let hasInvalidBet = false
+    e.preventDefault();
+    let hasInvalidBet = false;
     bets.forEach((bet) => {
-      const { matchDay, matchID, homeScore, awayScore } = bet
+      const { matchDay, matchID, homeScore, awayScore } = bet;
       if (!matchDay || !matchID || !homeScore || !awayScore) {
-        displayAlert()
-        hasInvalidBet = true
-        return
+        displayAlert();
+        hasInvalidBet = true;
+        return;
       }
-    })
+    });
 
-    if (hasInvalidBet) return
-    createBet(bets, user._id)
-    setIsSubmitted(true)
-  }
+    if (hasInvalidBet) return;
+    createBet(bets, user._id);
+    setIsSubmitted(true);
+  };
 
   const checkIfBetHasBeenPlaced = () => {
     const hasBetForMatchday = allBetsPlaced?.some(
       (bet) => bet.matchDay === currentMatchday
-    )
+    );
 
     if (hasBetForMatchday) {
-      setIsSubmitted(true)
+      setIsSubmitted(true);
     }
-  }
+  };
 
   const checkIfMatchHasFinished = () => {
     const matchHasFinished = bundesligaMatches?.some(
       (match) => match.matchIsFinished === true
-    )
-    setMatchHasFinished(matchHasFinished)
-  }
+    );
+    setMatchHasFinished(matchHasFinished);
+  };
 
   useEffect(() => {
-    checkIfMatchHasFinished()
-    checkIfBetHasBeenPlaced()
-  }, [allBetsPlaced, bundesligaMatchday, bundesligaMatches])
+    checkIfMatchHasFinished();
+    checkIfBetHasBeenPlaced();
+  }, [allBetsPlaced, bundesligaMatchday, bundesligaMatches]);
 
   useEffect(() => {
-    getUserBets(user._id)
-    fetchBundesligaMatches()
-  }, [])
+    fetchBundesligaMatches();
+  }, []);
 
   return (
     <section className="placebets-box">
@@ -88,7 +86,7 @@ const PlaceBet = () => {
           <p style={{ marginBlock: '1.5rem' }}>
             Du hast bereits Tipps für den {currentMatchday}. Spieltag abgegeben.
           </p>
-          <Link to={`/bets/${user._id}`} className="btn">
+          <Link to={'/bets'} className="btn">
             My bets
           </Link>
         </>
@@ -105,15 +103,14 @@ const PlaceBet = () => {
           )}
           {!matchHasFinished &&
             bundesligaMatches?.map((match, i) => {
-              const { matchID, team1, team2, group } = match
-              teamSanitization(team1, team2)
+              const { matchID, team1, team2, group } = match;
+              teamSanitization(team1, team2);
 
               return (
                 <div className="game-box game-score" key={matchID}>
                   <span className="home-team">
                     <p>{team1.shortName}</p>
                     <img
-                      crossOrigin="anonymous"
                       className="club-icon"
                       src={team1.teamIconUrl}
                       alt={`${team1.shortName}-icon`}
@@ -148,7 +145,6 @@ const PlaceBet = () => {
                   />
                   <span className="away-team">
                     <img
-                      crossOrigin="anonymous"
                       className="club-icon"
                       src={team2.teamIconUrl}
                       alt={`${team2.shortName}-icon`}
@@ -156,7 +152,7 @@ const PlaceBet = () => {
                     <p>{team2.shortName}</p>
                   </span>
                 </div>
-              )
+              );
             })}
           {!matchHasFinished && (
             <button
@@ -170,7 +166,7 @@ const PlaceBet = () => {
         </form>
       )}
     </section>
-  )
-}
+  );
+};
 
-export default PlaceBet
+export default PlaceBet;

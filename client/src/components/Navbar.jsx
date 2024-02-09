@@ -33,7 +33,7 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink to="/bets" onClick={() => setIsMenuOpen(false)}>
-              Meine Tipps
+              Tipps
             </NavLink>
           </li>
           <li>
