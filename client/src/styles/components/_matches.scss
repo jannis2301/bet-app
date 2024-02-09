@@ -73,7 +73,9 @@
   border: none;
   background: transparent;
   color: var(--gray);
+  user-select: none;
   cursor: pointer;
+
   @include flex-center;
   @include seoClickable;
 }
