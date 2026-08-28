@@ -1,33 +1,42 @@
+# Monolith deploy: this single Node service builds the client (see
+# "setup-production" in package.json) and serves it statically via
+# server.js's production static-file + SPA catch-all block — no
+# separate frontend service is needed.
+#
+# MongoDB is not a Render-managed database type (Render's `databases:`
+# key only supports Postgres/Key Value), so MONGODB_URI must point to
+# an externally hosted instance (e.g. MongoDB Atlas) and is entered
+# manually in the Render dashboard on first deploy (sync: false).
+#
+# SMTP_* configures outbound mail (see utils/sendEmail.ts), used for the
+# matchday reminder emails (scheduler/matchdayReminder.ts) and the
+# forgot-password reset link (controllers/authController.ts) — point it at
+# whichever provider's SMTP relay is in use (e.g. Postmark, SES, Mailgun) and
+# enter the credentials manually in the Render dashboard (sync: false).
 services:
-  - name: web
-    env: node
-    buildCommand: yarn run setup-production
-    startCommand: node server.js
-    readyTimeout: 300
+  - type: web
+    name: bet-app
+    runtime: node
+    plan: free
+    buildCommand: pnpm run setup-production
+    startCommand: node dist/server.js
     healthCheckPath: /healthcheck
-
-    # Node.js environment configuration
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 5050
       - key: MONGODB_URI
-        value: ${MONGODB_URI}
-      -key: JWT_SECRET
-        value: ${JWT_SECRET}
-      -key: JWT_LIFETIME
-        value: ${JWT_LIFETIME}
-
-    # The following lines are for frontend build using Vite
-    - name: web
-    env: node
-    buildCommand: yarn build-client
-    readyTimeout: 300
-
-# Database configurations
-databases:
-  - name: mongodb
-    plan: mongodb:7.0
-    config:
-      MONGODB_URI: ${MONGODB_URI}
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_LIFETIME
+        value: 1d
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
