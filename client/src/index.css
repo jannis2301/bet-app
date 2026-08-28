@@ -1,0 +1,24 @@
+@import "./styles/variables.css";
+@import "./styles/animations.css";
+@import "./styles/globals.css";
+
+/* Pages */
+@import "./styles/pages/error.css";
+@import "./styles/pages/leaderboard.css";
+@import "./styles/pages/pastSeasons.css";
+@import "./styles/pages/placebet.css";
+@import "./styles/pages/profile.css";
+@import "./styles/pages/register.css";
+
+/* Components */
+@import "./styles/components/alert.css";
+@import "./styles/components/matches.css";
+@import "./styles/components/navbar.css";
+@import "./styles/components/loading.css";
+
+/* Register Container background-image */
+.register-box {
+  background: var(--blue) url("assets/images/register-bg.jpeg") no-repeat 20%
+    50%;
+  background-size: cover;
+}

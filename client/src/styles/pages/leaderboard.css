@@ -1,0 +1,36 @@
+.leaderboard-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.leaderboard-tabs button {
+  padding: 5px 15px;
+  border: 1px solid var(--gray);
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+}
+
+.leaderboard-tabs button.active {
+  background: var(--blue);
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table th {
+  background: var(--blue);
+}
+
+table th,
+table td {
+  padding: 5px;
+  border: 1px solid var(--gray);
+}
+
+.ranking {
+  width: 50px;
+}

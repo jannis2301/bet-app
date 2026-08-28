@@ -1,0 +1,15 @@
+packages:
+  - '.'
+  - 'client'
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  bcrypt: true
+  esbuild: true
+  mongodb-memory-server: true
+onlyBuiltDependencies:
+  - bcrypt
+  - '@parcel/watcher'
+  - '@swc/core'
+  - esbuild
+  - mongodb-memory-server

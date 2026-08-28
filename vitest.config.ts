@@ -1,0 +1,15 @@
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    environment: 'node',
+    exclude: ['**/node_modules/**', '**/client/**'],
+    setupFiles: ['./test/setup.ts'],
+    hookTimeout: 30000,
+    env: {
+      JWT_SECRET: 'test-jwt-secret',
+      JWT_LIFETIME: '1d',
+      NODE_ENV: 'test',
+    },
+  },
+});

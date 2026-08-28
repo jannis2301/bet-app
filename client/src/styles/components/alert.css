@@ -1,0 +1,14 @@
+.alert {
+  margin: 0 0 15px;
+  padding: 10px;
+  border-radius: var(--radius5);
+  background: var(--alert-bg);
+}
+
+.alert.danger {
+  background: var(--danger);
+}
+
+.alert.success {
+  background: var(--success);
+}

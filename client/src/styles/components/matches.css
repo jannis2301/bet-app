@@ -1,0 +1,121 @@
+.game-box {
+  width: 100%;
+  padding: 0.6rem 0;
+  display: grid;
+  grid-template-columns: 5fr 1fr 5fr;
+  grid-gap: 0.5rem;
+  border-bottom: 1px solid var(--gray);
+}
+
+.game-box:first-child {
+  border-top: 1px solid var(--gray);
+}
+
+.points-earned {
+  grid-template-columns: 5fr 1fr 4fr 1fr;
+  align-items: center;
+}
+
+.game-box span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.score {
+  max-width: 3.5rem;
+  width: 100%;
+  padding: 0.5rem 0.2rem;
+  justify-content: center;
+  background: #000;
+}
+.not-finished {
+  color: var(--yellow);
+}
+.game-box.locked {
+  opacity: 0.5;
+}
+.game-box.locked input {
+  cursor: not-allowed;
+}
+.match-date {
+  font-size: 0.7rem;
+}
+
+.home-team,
+.away-team {
+  justify-self: flex-end;
+  gap: 0.4rem;
+}
+
+.away-team {
+  justify-self: flex-start;
+}
+
+.club-icon {
+  --img-size: 1.25rem;
+  block-size: var(--img-size);
+  inline-size: var(--img-size);
+
+  @media (width >= 450px) {
+    --img-size: 2rem;
+  }
+}
+
+.matches-box,
+.matchday-headline,
+.leaderboard-table {
+  width: 90dvw;
+  max-width: var(--maxMatchWidth);
+  margin: 0 auto;
+}
+
+.matches-box:has(h2):not(:last-child) {
+  margin-block: 2rem;
+}
+
+.matchday-headline {
+  margin-block: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.prev-btn,
+.next-btn {
+  position: relative;
+  border: none;
+  background: transparent;
+  color: var(--gray);
+  user-select: none;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.prev-btn::after,
+.next-btn::after {
+  --minSize: 3rem;
+  content: "";
+  width: var(--minSize);
+  height: var(--minSize);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.prev-btn p,
+.next-btn p {
+  display: none;
+}
+
+@media (min-width: 550px) {
+  .prev-btn p,
+  .next-btn p {
+    display: block;
+  }
+}
