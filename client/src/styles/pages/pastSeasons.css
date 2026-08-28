@@ -1,0 +1,29 @@
+.past-seasons-list {
+  display: grid;
+  gap: 20px;
+  width: 90dvw;
+  max-width: var(--maxNavWidth);
+  margin: 0 auto;
+}
+
+.past-season-item {
+  display: grid;
+  gap: 10px;
+}
+
+.past-season-headline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.past-season-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.past-season-item table {
+  margin: 0 auto;
+}
