@@ -15,7 +15,7 @@ body {
   text-align: center;
   text-shadow: var(--textShadow);
   color: var(--text-clr);
-  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  font-size: clamp(1rem, 2vw, 1.5rem);
 
   background: var(--bg-clr);
 }
@@ -86,7 +86,7 @@ button:disabled {
 
 .btn::after {
   --minSize: 3rem;
-  content: "";
+  content: '';
   width: var(--minSize);
   height: var(--minSize);
   position: absolute;

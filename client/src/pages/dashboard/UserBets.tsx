@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { HiArrowSmLeft, HiArrowSmRight } from 'react-icons/hi';
+import { MatchTeam } from '../../components';
 import { useAppContext } from '../../context/appContext';
 import teamSanitization from '../../utils/teamSanitize';
 
@@ -71,29 +72,13 @@ const UserBets = () => {
                   }`}
                   key={matchID}
                 >
-                  <span className="home-team">
-                    <p>{team1.shortName}</p>
-                    <img
-                      crossOrigin="anonymous"
-                      className="club-icon"
-                      src={team1.teamIconUrl}
-                      alt={`${team1.shortName}-icon`}
-                    />
-                  </span>
+                  <MatchTeam team={team1} side="home" />
 
                   <span className="score">
                     {homeScore ?? ''}:{awayScore ?? ''}
                   </span>
 
-                  <span className="away-team">
-                    <img
-                      crossOrigin="anonymous"
-                      className="club-icon"
-                      src={team2.teamIconUrl}
-                      alt={`${team2.shortName}-icon`}
-                    />
-                    <p>{team2.shortName}</p>
-                  </span>
+                  <MatchTeam team={team2} side="away" />
 
                   {pointsEarned !== undefined && matchesHaveFinished && (
                     <p

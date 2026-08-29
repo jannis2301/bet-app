@@ -1,6 +1,6 @@
 import type { ChangeEvent, FormEvent } from 'react';
 import { useEffect, useState } from 'react';
-import { Alert } from '../../components';
+import { Alert, MatchTeam } from '../../components';
 import { useAppContext } from '../../context/appContext';
 import type { BetFormEntry, Match, User } from '../../types';
 import teamSanitization from '../../utils/teamSanitize';
@@ -122,15 +122,7 @@ const PlaceBet = () => {
               className={`game-box game-score${locked ? ' locked' : ''}`}
               key={matchID}
             >
-              <span className="home-team">
-                <p>{team1.shortName}</p>
-                <img
-                  crossOrigin="anonymous"
-                  className="club-icon"
-                  src={team1.teamIconUrl}
-                  alt={`${team1.shortName}-icon`}
-                />
-              </span>
+              <MatchTeam team={team1} side="home" />
               <input
                 type="number"
                 className="input-number"
@@ -160,15 +152,7 @@ const PlaceBet = () => {
                 required={!locked}
                 disabled={locked}
               />
-              <span className="away-team">
-                <img
-                  crossOrigin="anonymous"
-                  className="club-icon"
-                  src={team2.teamIconUrl}
-                  alt={`${team2.shortName}-icon`}
-                />
-                <p>{team2.shortName}</p>
-              </span>
+              <MatchTeam team={team2} side="away" />
             </div>
           );
         })}

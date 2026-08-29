@@ -78,7 +78,7 @@ describe('PastSeasons', () => {
     render(<PastSeasons />);
 
     expect(
-      screen.getByText('Es sind noch keine Saisons archiviert.')
+      screen.getByText('Es sind noch keine vergangenen Saisons archiviert.')
     ).toBeInTheDocument();
   });
 });

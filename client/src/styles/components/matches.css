@@ -52,13 +52,24 @@
   justify-self: flex-start;
 }
 
+.team-name {
+  /* flex items default to min-width: auto, which blocks shrinking below
+     content size and defeats text-overflow — min-width: 0 lets the grid
+     column (matches.css:5) be the actual constraint. */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .club-icon {
   --img-size: 1.25rem;
   block-size: var(--img-size);
   inline-size: var(--img-size);
+  filter: drop-shadow(0px 0px 1px var(--white));
 
   @media (width >= 450px) {
-    --img-size: 2rem;
+    --img-size: 2.5rem;
   }
 }
 
@@ -99,7 +110,7 @@
 .prev-btn::after,
 .next-btn::after {
   --minSize: 3rem;
-  content: "";
+  content: '';
   width: var(--minSize);
   height: var(--minSize);
   position: absolute;

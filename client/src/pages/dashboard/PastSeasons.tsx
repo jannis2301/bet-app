@@ -26,9 +26,9 @@ const PastSeasons = () => {
 
   return (
     <section className="leaderboard-box">
-      <h1>Vergangene Saisons</h1>
+      <h1>Archiv</h1>
       {archivedSeasons.length === 0 && !isLoading && (
-        <p>Es sind noch keine Saisons archiviert.</p>
+        <p>Es sind noch keine vergangenen Saisons archiviert.</p>
       )}
       <ul className="past-seasons-list">
         {archivedSeasons.map(({ season, entryCount }) => (

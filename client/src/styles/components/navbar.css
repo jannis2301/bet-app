@@ -6,7 +6,7 @@
 }
 
 .nav {
-  width: 90dvw;
+  width: 85dvw;
   max-width: var(--maxNavWidth);
   margin: 0 auto;
   display: flex;
@@ -27,6 +27,7 @@
 
 .nav-links a {
   user-select: none;
+  font-size: 1.25rem;
 }
 
 .nav-links a.active {
@@ -94,11 +95,19 @@
   justify-content: center;
   align-items: center;
   gap: 2px;
+  font-size: 1.25rem;
+}
+
+.user-btn-name {
+  max-width: 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .user-btn::after {
   --minSize: 3rem;
-  content: "";
+  content: '';
   width: var(--minSize);
   height: var(--minSize);
   position: absolute;
@@ -121,7 +130,7 @@
 
 .dropdown-btn::after {
   --minSize: 3rem;
-  content: "";
+  content: '';
   width: var(--minSize);
   height: var(--minSize);
   position: absolute;
@@ -136,7 +145,7 @@
 
 .placeBet-btn::after {
   --minSize: 3rem;
-  content: "";
+  content: '';
   width: var(--minSize);
   height: var(--minSize);
   position: absolute;
@@ -162,7 +171,7 @@
 
 .bets-btn::after {
   --minSize: 3rem;
-  content: "";
+  content: '';
   width: var(--minSize);
   height: var(--minSize);
   position: absolute;
@@ -171,7 +180,7 @@
   transform: translate(-50%, -50%);
 }
 
-@media (max-width: 550px) {
+@media (max-width: 850px) {
   .hamburger-menu {
     display: block;
   }
@@ -205,5 +214,9 @@
   .user-bets {
     background: var(--blue);
     box-shadow: none;
+  }
+
+  .user-btn-name {
+    max-width: 5rem;
   }
 }
