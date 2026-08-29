@@ -1,4 +1,5 @@
 import nodemailer, { type Transporter } from 'nodemailer';
+import EmailLog from '../models/EmailLog.js';
 
 interface SendEmailArgs {
   to: string;
@@ -6,6 +7,21 @@ interface SendEmailArgs {
   text: string;
   html: string;
 }
+
+export class EmailLimitExceededError extends Error {
+  constructor() {
+    super('Daily email limit reached');
+    this.name = 'EmailLimitExceededError';
+  }
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// read lazily, like SMTP_* below — process.env.DAILY_EMAIL_LIMIT may not be
+// set yet at module-import time. Guards against a runaway caller (e.g. a
+// reminder loop), not against the mail provider's own — much higher — quota.
+const getDailyEmailLimit = (): number =>
+  Number(process.env.DAILY_EMAIL_LIMIT) || 10;
 
 let transporter: Transporter | undefined;
 
@@ -34,6 +50,12 @@ export const sendEmail = async ({
   text,
   html,
 }: SendEmailArgs): Promise<void> => {
+  const since = new Date(Date.now() - DAY_MS);
+  const sentToday = await EmailLog.countDocuments({ sentAt: { $gte: since } });
+  if (sentToday >= getDailyEmailLimit()) {
+    throw new EmailLimitExceededError();
+  }
+
   await getTransporter().sendMail({
     from: process.env.SMTP_FROM || process.env.SMTP_USER,
     to,
@@ -41,4 +63,6 @@ export const sendEmail = async ({
     text,
     html,
   });
+
+  await EmailLog.create({});
 };
