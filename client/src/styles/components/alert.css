@@ -1,6 +1,6 @@
 .alert {
-  margin: 0 0 15px;
-  padding: 10px;
+  margin: 0 0 var(--spaceLg);
+  padding: var(--spaceMd);
   border-radius: var(--radius5);
   background: var(--alert-bg);
 }

@@ -5,8 +5,8 @@
 }
 
 .register-box h1 {
-  margin-block: 1rem;
-  padding: 5px 2vw;
+  margin-block: var(--spaceLg);
+  padding: var(--spaceXs) 2vw;
   box-shadow: var(--boxShadow);
   background: var(--blue);
   border: 1px solid var(--white);
@@ -22,11 +22,11 @@
 .register-box .form {
   display: grid;
   place-items: center;
-  grid-gap: 20px;
+  grid-gap: var(--spaceXl);
 }
 
 .register-box .btn {
-  margin-block-start: 1rem;
+  margin-block-start: var(--spaceLg);
 }
 
 .register-box .btn::after {
@@ -41,7 +41,7 @@
 }
 
 .register-box .member-btn {
-  margin-inline-start: 10px;
+  margin-inline-start: var(--spaceMd);
 }
 
 .register-box .member-btn::after {
@@ -63,7 +63,7 @@
 .toggle-password-btn {
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-end: 10px;
+  inset-inline-end: var(--spaceMd);
   transform: translateY(-50%);
   background: none;
   border: none;

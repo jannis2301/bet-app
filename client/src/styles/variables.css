@@ -20,4 +20,20 @@
   --letterSpacing: 1px;
   --radius5: 5px;
   --transition: all 0.2s ease-in-out;
+
+  /* Spacing (4px grid) — for padding/margin/gap only, not component sizing */
+  --spaceXs: 0.25rem; /* 4px */
+  --spaceSm: 0.5rem; /* 8px */
+  --spaceMd: 0.75rem; /* 12px */
+  --spaceLg: 1rem; /* 16px */
+  --spaceXl: 1.25rem; /* 20px */
+  --space2xl: 1.5rem; /* 24px */
+  --space3xl: 2rem; /* 32px */
+
+  /* Font sizes */
+  --fontXs: 0.75rem;
+  --fontSm: 1rem;
+  --fontMd: 1.25rem;
+  --fontLg: 1.5rem;
+  --fontXl: 2rem;
 }

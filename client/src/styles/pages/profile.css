@@ -5,20 +5,20 @@
 }
 
 .profile-box .form-center {
-  padding: 0 0 20px;
+  padding: 0 0 var(--spaceXl);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 20px;
+  grid-gap: var(--spaceXl);
 }
 
 .profile-box .label-box {
   display: grid;
   justify-items: flex-start;
-  grid-gap: 10px;
+  grid-gap: var(--spaceMd);
 }
 
 .profile-box h1 {
-  margin-block: 1rem;
+  margin-block: var(--spaceLg);
 }
 
 @media (max-width: 500px) {

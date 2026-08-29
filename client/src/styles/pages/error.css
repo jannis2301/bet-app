@@ -5,7 +5,7 @@
   justify-items: center;
   align-items: center;
   align-content: center;
-  gap: 2rem;
+  gap: var(--space3xl);
 }
 
 .error-page-img {

@@ -11,7 +11,7 @@
   --input-size: clamp(2.5rem, 4vw, 3rem);
   inline-size: var(--input-size);
   block-size: var(--input-size);
-  padding: 0.5rem;
+  padding: var(--spaceSm);
   text-align: center;
 }
 

@@ -1,6 +1,6 @@
 .header {
   inline-size: 100%;
-  padding: 15px 0;
+  padding: var(--spaceLg) 0;
   color: white;
   background: var(--blue);
 }
@@ -22,12 +22,12 @@
   flex: 5;
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: var(--spaceMd);
 }
 
 .nav-links a {
   user-select: none;
-  font-size: 1.25rem;
+  font-size: var(--fontMd);
 }
 
 .nav-links a.active {
@@ -45,7 +45,7 @@
   display: block;
   inline-size: 20px;
   block-size: 2px;
-  margin: 0 0 5px;
+  margin: 0 0 var(--spaceXs);
   background: var(--white);
 }
 
@@ -67,7 +67,7 @@
   inset-block-start: 2rem;
   inset-inline-start: 0px;
   inline-size: 100%;
-  padding: 0.5rem;
+  padding: var(--spaceSm);
   text-align: center;
   visibility: hidden;
   border-radius: var(--radius5);
@@ -81,7 +81,7 @@
   inset-block-start: 2rem;
   inset-inline-start: 50%;
   transform: translateX(-50%);
-  gap: 0.8rem;
+  gap: var(--spaceMd);
   box-shadow: var(--boxShadow);
   background: var(--lightBlue);
 }
@@ -94,8 +94,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2px;
-  font-size: 1.25rem;
+  gap: var(--spaceXs);
+  font-size: var(--fontMd);
 }
 
 .user-btn-name {
@@ -140,7 +140,7 @@
 }
 
 .placeBet-btn {
-  margin-block: 1rem;
+  margin-block: var(--spaceLg);
 }
 
 .placeBet-btn::after {
@@ -193,7 +193,7 @@
     display: block;
     inline-size: 100%;
     block-size: calc(100vh - 61px);
-    padding: 20px 0;
+    padding: var(--spaceXl) 0;
     position: absolute;
     inset-block-start: 61px;
     inset-inline-start: 0;
@@ -202,7 +202,7 @@
   }
 
   .nav-links li:not(:last-child) {
-    margin-block-end: 1.5rem;
+    margin-block-end: var(--space2xl);
   }
 
   .user-bets-box {

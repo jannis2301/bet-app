@@ -15,13 +15,13 @@ body {
   text-align: center;
   text-shadow: var(--textShadow);
   color: var(--text-clr);
-  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-size: clamp(var(--fontSm), 2vw, var(--fontLg));
 
   background: var(--bg-clr);
 }
 
 section {
-  padding-block: 1rem;
+  padding-block: var(--spaceLg);
   min-block-size: 100dvh;
   opacity: 0;
   animation: fadeIn 0.5s ease-in-out forwards;
@@ -40,7 +40,7 @@ h6 {
 }
 
 h1 {
-  font-size: clamp(1.6rem, 4vw, 2rem);
+  font-size: clamp(var(--fontLg), 4vw, var(--fontXl));
 }
 
 p,
@@ -62,8 +62,8 @@ form {
 input {
   border: none;
   inline-size: 100%;
-  padding: 1rem 0.5rem;
-  font-size: 1.25rem;
+  padding: var(--spaceLg) var(--spaceSm);
+  font-size: var(--fontMd);
   border-radius: var(--radius5);
 }
 
@@ -77,8 +77,8 @@ button:disabled {
 
 .btn {
   position: relative;
-  padding: 0.5rem;
-  font-size: 1.4rem;
+  padding: var(--spaceSm);
+  font-size: var(--fontLg);
   border-radius: var(--radius5);
   border: none;
   background: var(--blue);

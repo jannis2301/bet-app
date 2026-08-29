@@ -1,6 +1,6 @@
 .past-seasons-list {
   display: grid;
-  gap: 20px;
+  gap: var(--spaceXl);
   inline-size: 90dvw;
   max-inline-size: var(--maxNavWidth);
   margin: 0 auto;
@@ -8,7 +8,7 @@
 
 .past-season-item {
   display: grid;
-  gap: 10px;
+  gap: var(--spaceMd);
 }
 
 .past-season-headline {
@@ -16,12 +16,12 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: var(--spaceMd);
 }
 
 .past-season-actions {
   display: flex;
-  gap: 10px;
+  gap: var(--spaceMd);
 }
 
 .past-season-item table {

@@ -1,13 +1,13 @@
 .leaderboard-tabs {
   display: flex;
   justify-content: center;
-  gap: 0.625rem;
-  margin-block-end: 0.625rem;
+  gap: var(--spaceMd);
+  margin-block-end: var(--spaceMd);
 }
 
 .leaderboard-tabs button {
-  padding: 0.5rem 1rem;
-  font-size: 1.4rem;
+  padding: var(--spaceSm) var(--spaceLg);
+  font-size: var(--fontLg);
   border: 1px solid var(--gray);
   background: transparent;
   color: var(--white);
@@ -28,7 +28,7 @@ table th {
 
 table th,
 table td {
-  padding: 0.3125rem;
+  padding: var(--spaceXs);
   border: 1px solid var(--gray);
 }
 
