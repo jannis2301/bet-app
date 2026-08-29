@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "main": "dist/server.js",
+  "author": "Jannis",
   "scripts": {
     "setup-production": "pnpm run install-client && pnpm run build-client && pnpm install && pnpm run build",
     "install-client": "cd client && pnpm install",
@@ -19,8 +20,6 @@
     "test:watch": "vitest",
     "test:all": "pnpm run test && pnpm --dir client run test"
   },
-  "author": "Jannis",
-  "packageManager": "pnpm@11.23.0",
   "dependencies": {
     "axios": "^1.20.0",
     "bcrypt": "^6.0.0",
@@ -61,5 +60,6 @@
   },
   "engines": {
     "node": ">=22.13.0"
-  }
+  },
+  "packageManager": "pnpm@11.23.0"
 }
