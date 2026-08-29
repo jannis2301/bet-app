@@ -18,7 +18,7 @@ describe('sendEmail', () => {
     process.env.SMTP_PORT = '587';
     process.env.SMTP_USER = 'user@example.com';
     process.env.SMTP_PASS = 'secret';
-    process.env.SMTP_FROM = 'BetMasters <no-reply@example.com>';
+    process.env.SMTP_FROM = 'Tippy <no-reply@example.com>';
   });
 
   it('sends an email with the configured from address', async () => {
@@ -30,7 +30,7 @@ describe('sendEmail', () => {
     });
 
     expect(sendMail).toHaveBeenCalledWith({
-      from: 'BetMasters <no-reply@example.com>',
+      from: 'Tippy <no-reply@example.com>',
       to: 'someone@example.com',
       subject: 'Hallo',
       text: 'plain text',

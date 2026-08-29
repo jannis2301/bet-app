@@ -1,6 +1,6 @@
 {
-  "name": "BetMasters – Bundesliga Tippspiel",
-  "short_name": "BetMasters",
+  "name": "Tippy – Bundesliga Tippspiel",
+  "short_name": "Tippy",
   "description": "Tippe Bundesliga-Ergebnisse und miss dich mit anderen im Leaderboard.",
   "start_url": "/",
   "scope": "/",

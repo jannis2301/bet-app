@@ -38,106 +38,98 @@ Stand: 2026-08-27. Ergebnis eines Backend/Frontend-Reviews inkl. Live-Tests.
 - [x] **TypeScript-Migration** — schrittweise Umstellung von Backend und Frontend auf
       TypeScript, jetzt möglich, da die Testbasis als Sicherheitsnetz für den Umbau
       existiert. Vorher zurückgestellt, weil eine Migration ohne Tests nur schwer
-      verifizierbar gewesen wäre.
-      - [x] **Backend** — komplett auf TypeScript + ESM umgestellt (`"type": "module"`,
-            `tsconfig.json`, `tsc` als Build-Schritt nach `dist/`). `nodemon` durch
-            `tsx watch` ersetzt (versteht TS nativ, macht `nodemon` redundant).
-            [render.yaml](render.yaml) startet jetzt `node dist/server.js`,
-            [ci.yml](.github/workflows/ci.yml) hat einen `pnpm run typecheck`-Schritt.
-            Mongoose-Models bekamen echte Dokument-Interfaces
-            ([models/User.ts](models/User.ts), [models/Bet.ts](models/Bet.ts)),
-            `req.user` ist über eine globale Express-Typerweiterung
-            ([types/express.d.ts](types/express.d.ts)) typisiert. Die
-            CJS-spezifischen `require()`-Workarounds in den Tests
-            (`betsController.test.ts`'s Mocking von `fetchBundesligaMatches`,
-            `app.production.test.ts`'s verzögerter Import nach dem Setzen von
-            `NODE_ENV`) wurden auf echtes ESM umgestellt — Vitest patcht ESM-Namespace-
-            Exports so, dass `vi.spyOn()` direkt funktioniert, ein dynamisches
-            `import()` übernimmt die Rolle des verzögerten `require()`. Verifiziert
-            per `pnpm run typecheck`, `pnpm test`, echtem `pnpm run build` +
-            manuellem Start von `node dist/server.js` gegen eine echte Mongo-Instanz
-            (`/healthcheck` geprüft), sowie `pnpm run dev` (Hot-Reload via `tsx watch`).
-      - [x] **Frontend** — komplett auf TypeScript umgestellt (`.jsx`→`.tsx`,
-            `.js`→`.ts`), kein Modulsystem-Wechsel nötig (Vite lief schon auf ESM).
-            Neue Datei [types.ts](client/src/types.ts) mit den geteilten
-            Domänentypen (`Match`, `Team`, `Bet`, `User`, `LeaderboardEntry`).
-            Reducer/Actions sind jetzt eine echte discriminated union
-            ([actions.ts](client/src/context/actions.ts): jede Konstante mit
-            `as const`, dazu ein `Action`-Union-Type), wodurch
-            [reducer.ts](client/src/context/reducer.ts) ohne Casts typsicher ist.
-            `AppContextValue` in [appContext.tsx](client/src/context/appContext.tsx)
-            typisiert den gesamten Context inkl. aller Funktionen, `axios`-Aufrufe
-            haben jetzt Response-Generics statt implizitem `any`. Die drei Tests,
-            die `useAppContext` mocken, nutzen jetzt `vi.mocked(...)` statt direktem
-            Zugriff auf `.mockReturnValue`. Verifiziert per `pnpm --dir client run
-            typecheck`, `pnpm --dir client test`, echtem `pnpm run build-client`,
-            sowie einem vollen Browser-Durchlauf (Playwright, headless) gegen
-            Dev-Server + In-Memory-Mongo: Registrierung, Spieltag-Anzeige mit
-            echten openligadb-Daten, Leaderboard-Tab-Wechsel, Tipp-Formular,
-            Tipps-Übersicht und Profil — keine Konsolen-/Laufzeitfehler.
+      verifizierbar gewesen wäre. - [x] **Backend** — komplett auf TypeScript + ESM umgestellt (`"type": "module"`,
+      `tsconfig.json`, `tsc` als Build-Schritt nach `dist/`). `nodemon` durch
+      `tsx watch` ersetzt (versteht TS nativ, macht `nodemon` redundant).
+      [render.yaml](render.yaml) startet jetzt `node dist/server.js`,
+      [ci.yml](.github/workflows/ci.yml) hat einen `pnpm run typecheck`-Schritt.
+      Mongoose-Models bekamen echte Dokument-Interfaces
+      ([models/User.ts](models/User.ts), [models/Bet.ts](models/Bet.ts)),
+      `req.user` ist über eine globale Express-Typerweiterung
+      ([types/express.d.ts](types/express.d.ts)) typisiert. Die
+      CJS-spezifischen `require()`-Workarounds in den Tests
+      (`betsController.test.ts`'s Mocking von `fetchBundesligaMatches`,
+      `app.production.test.ts`'s verzögerter Import nach dem Setzen von
+      `NODE_ENV`) wurden auf echtes ESM umgestellt — Vitest patcht ESM-Namespace-
+      Exports so, dass `vi.spyOn()` direkt funktioniert, ein dynamisches
+      `import()` übernimmt die Rolle des verzögerten `require()`. Verifiziert
+      per `pnpm run typecheck`, `pnpm test`, echtem `pnpm run build` +
+      manuellem Start von `node dist/server.js` gegen eine echte Mongo-Instanz
+      (`/healthcheck` geprüft), sowie `pnpm run dev` (Hot-Reload via `tsx watch`). - [x] **Frontend** — komplett auf TypeScript umgestellt (`.jsx`→`.tsx`,
+      `.js`→`.ts`), kein Modulsystem-Wechsel nötig (Vite lief schon auf ESM).
+      Neue Datei [types.ts](client/src/types.ts) mit den geteilten
+      Domänentypen (`Match`, `Team`, `Bet`, `User`, `LeaderboardEntry`).
+      Reducer/Actions sind jetzt eine echte discriminated union
+      ([actions.ts](client/src/context/actions.ts): jede Konstante mit
+      `as const`, dazu ein `Action`-Union-Type), wodurch
+      [reducer.ts](client/src/context/reducer.ts) ohne Casts typsicher ist.
+      `AppContextValue` in [appContext.tsx](client/src/context/appContext.tsx)
+      typisiert den gesamten Context inkl. aller Funktionen, `axios`-Aufrufe
+      haben jetzt Response-Generics statt implizitem `any`. Die drei Tests,
+      die `useAppContext` mocken, nutzen jetzt `vi.mocked(...)` statt direktem
+      Zugriff auf `.mockReturnValue`. Verifiziert per `pnpm --dir client run
+        typecheck`, `pnpm --dir client test`, echtem `pnpm run build-client`,
+      sowie einem vollen Browser-Durchlauf (Playwright, headless) gegen
+      Dev-Server + In-Memory-Mongo: Registrierung, Spieltag-Anzeige mit
+      echten openligadb-Daten, Leaderboard-Tab-Wechsel, Tipp-Formular,
+      Tipps-Übersicht und Profil — keine Konsolen-/Laufzeitfehler.
 - [x] **Dependencies auf neueste Major-Version heben** — ein Major nach dem anderen,
       mit der Testbasis oben als Sicherheitsnetz. `pnpm outdated` zeigt jetzt nichts
-      mehr an, der komplette Workspace ist auf dem neuesten Stand:
-      - [x] **Express 4→5** — `express-async-errors` entfernt (Express 5 leitet
-            rejected Promises aus Handlern/Middleware jetzt nativ an die
-            Error-Middleware weiter). Wildcard-Route in [app.js](app.js) von
-            `app.get('*', ...)` auf `app.get('/{*splat}', ...)` umgestellt — ein
-            bloßes `*splat` matcht anders als Express 4's `*` die Root `/` nicht
-            mehr, wurde per Hand gegen einen echten Express-5-Prozess verifiziert.
-            `express-mongo-sanitize` reassigned `req.query` komplett, was in
-            Express 5 nicht mehr geht (`req.query` ist jetzt ein reiner Getter
-            ohne Setter, der bei jedem Zugriff neu parst) — Sanitizing für Query
-            läuft jetzt über eine eigene `query parser`-Funktion, Body/Params
-            weiterhin direkt gemutet. **Nebenbefund:** Die SPA-Fallback-Route stand
-            im Code vor den `/api/*`-Routern und hätte im Produktivbetrieb
-            (`NODE_ENV=production`) sämtliche API-GET-Requests verschluckt — ein
-            vorbestehender, nie unter `NODE_ENV=production` getesteter Bug, jetzt
-            gefixt (Route-Reihenfolge vertauscht) und mit
-            [app.production.test.js](app.production.test.js) dauerhaft abgesichert.
-      - [x] **Mongoose 8→9** — nach Abgleich mit dem offiziellen Migration Guide betraf
-            keine der Breaking Changes (Pre-Middleware ohne `next()`, Update-Pipeline-
-            Arrays, `findOneAndUpdate`-Optionen, ObjectId-aus-Number, Geo-Queries,
-            Subdocument-Hooks) den tatsächlichen Code hier — einziger Berührungspunkt
-            war `UserSchema.pre('save', ...)`, das schon async ohne `next` war. Reine
-            Versionsanhebung, komplette Testsuite (inkl. echter In-Memory-DB-Queries)
-            lief unverändert grün durch.
-      - [x] **React 18→19** — Codebase nutzt schon durchgehend `createRoot`, reine
-            Funktionskomponenten/Hooks, kein `ReactDOM.render`/`findDOMNode`,
-            `propTypes`/`defaultProps`, Klassen-Components, String-Refs oder
-            `forwardRef` — also keine der React-19-Breaking-Changes betroffen.
-            react-icons/react-router-dom/@testing-library/react akzeptieren React 19
-            per Peer-Range bereits. Reine Versionsanhebung, alle Frontend-Tests
-            (echtes RTL-Rendering + Interaktionen) liefen unverändert grün durch.
-      - [x] **React Router 6→7** — App nutzt nur die klassische Library-Mode-API
-            (`BrowserRouter`/`Routes`/`Route`/`Link`/`NavLink`/`Outlet`/`Navigate`/
-            `useNavigate`, ausschließlich absolute Pfade, kein Data-Router, keine
-            Loader/Actions) — genau die Fläche, die v7 kompatibel weiterführt.
-            [ProtectedRoute.jsx](client/src/pages/ProtectedRoute.jsx) war die einzige
-            Stelle mit echter Router-Logik (`<Navigate>`-Redirect) und hatte bisher
-            keine Tests — neuer
-            [ProtectedRoute.test.jsx](client/src/pages/ProtectedRoute.test.jsx) deckt
-            jetzt Loading-/Redirect-/Children-Fall ab.
-      - [x] **Vite 5→8 & Vitest 3→4** — drei Vite-Majors auf einmal, größter Sprung
-            der Liste: Vite 8 ersetzt esbuild/Rollup intern durch Rolldown/Oxc.
-            Config nutzt weder `build.rollupOptions` noch Sass (bereits vorher auf
-            natives CSS umgestellt) noch sonstige der laut Migration-Guide
-            betroffenen Optionen — daher reine Versionsanhebung ohne Config-Änderung.
-            `@vitejs/plugin-react-swc` läuft unverändert weiter (Vite meldet nur eine
-            Performance-Empfehlung, auf `@vitejs/plugin-react` zu wechseln — bewusst
-            nicht gemacht, da das neue Rolldown/Babel/React-Compiler-Abhängigkeiten
-            zieht, ohne für dieses Projekt einen echten Vorteil zu bringen). Build
-            läuft jetzt spürbar schneller (~3s → ~0,8s). Zusätzlich zu den
-            automatisierten Tests den Dev-Server (`pnpm start`, inkl. Proxy-Setup)
-            manuell hochgefahren und per `curl` verifiziert.
-      - [x] **Restliche kleine, unabhängige Majors** — bcrypt 5→6 (nur Build/Distribution
-            umgestellt auf prebuildify, API unverändert; Hash/Compare-Roundtrip manuell
-            gegen den echten nativen Addon verifiziert), express-rate-limit 7→8 (Changelog
-            geprüft: `max: 0`-Verhalten, `req.rateLimit.current`, entfernte Legacy-Optionen
-            — nichts davon von uns genutzt), dotenv 16→17 (loggt jetzt standardmäßig eine
-            Info-Zeile beim Start, betrifft nur `server.js`, nicht die Tests, die nur
-            `app.js` laden), node-cron 3→4 (Registrierung manuell gegen den echten
-            Scheduler verifiziert, kein Zugriff auf entfernte APIs), concurrently 9→10
-            (rein Dev-Tooling, kein Prod-Code-Pfad betroffen).
+      mehr an, der komplette Workspace ist auf dem neuesten Stand: - [x] **Express 4→5** — `express-async-errors` entfernt (Express 5 leitet
+      rejected Promises aus Handlern/Middleware jetzt nativ an die
+      Error-Middleware weiter). Wildcard-Route in [app.js](app.js) von
+      `app.get('*', ...)` auf `app.get('/{*splat}', ...)` umgestellt — ein
+      bloßes `*splat` matcht anders als Express 4's `*` die Root `/` nicht
+      mehr, wurde per Hand gegen einen echten Express-5-Prozess verifiziert.
+      `express-mongo-sanitize` reassigned `req.query` komplett, was in
+      Express 5 nicht mehr geht (`req.query` ist jetzt ein reiner Getter
+      ohne Setter, der bei jedem Zugriff neu parst) — Sanitizing für Query
+      läuft jetzt über eine eigene `query parser`-Funktion, Body/Params
+      weiterhin direkt gemutet. **Nebenbefund:** Die SPA-Fallback-Route stand
+      im Code vor den `/api/*`-Routern und hätte im Produktivbetrieb
+      (`NODE_ENV=production`) sämtliche API-GET-Requests verschluckt — ein
+      vorbestehender, nie unter `NODE_ENV=production` getesteter Bug, jetzt
+      gefixt (Route-Reihenfolge vertauscht) und mit
+      [app.production.test.js](app.production.test.js) dauerhaft abgesichert. - [x] **Mongoose 8→9** — nach Abgleich mit dem offiziellen Migration Guide betraf
+      keine der Breaking Changes (Pre-Middleware ohne `next()`, Update-Pipeline-
+      Arrays, `findOneAndUpdate`-Optionen, ObjectId-aus-Number, Geo-Queries,
+      Subdocument-Hooks) den tatsächlichen Code hier — einziger Berührungspunkt
+      war `UserSchema.pre('save', ...)`, das schon async ohne `next` war. Reine
+      Versionsanhebung, komplette Testsuite (inkl. echter In-Memory-DB-Queries)
+      lief unverändert grün durch. - [x] **React 18→19** — Codebase nutzt schon durchgehend `createRoot`, reine
+      Funktionskomponenten/Hooks, kein `ReactDOM.render`/`findDOMNode`,
+      `propTypes`/`defaultProps`, Klassen-Components, String-Refs oder
+      `forwardRef` — also keine der React-19-Breaking-Changes betroffen.
+      react-icons/react-router-dom/@testing-library/react akzeptieren React 19
+      per Peer-Range bereits. Reine Versionsanhebung, alle Frontend-Tests
+      (echtes RTL-Rendering + Interaktionen) liefen unverändert grün durch. - [x] **React Router 6→7** — App nutzt nur die klassische Library-Mode-API
+      (`BrowserRouter`/`Routes`/`Route`/`Link`/`NavLink`/`Outlet`/`Navigate`/
+      `useNavigate`, ausschließlich absolute Pfade, kein Data-Router, keine
+      Loader/Actions) — genau die Fläche, die v7 kompatibel weiterführt.
+      [ProtectedRoute.jsx](client/src/pages/ProtectedRoute.jsx) war die einzige
+      Stelle mit echter Router-Logik (`<Navigate>`-Redirect) und hatte bisher
+      keine Tests — neuer
+      [ProtectedRoute.test.jsx](client/src/pages/ProtectedRoute.test.jsx) deckt
+      jetzt Loading-/Redirect-/Children-Fall ab. - [x] **Vite 5→8 & Vitest 3→4** — drei Vite-Majors auf einmal, größter Sprung
+      der Liste: Vite 8 ersetzt esbuild/Rollup intern durch Rolldown/Oxc.
+      Config nutzt weder `build.rollupOptions` noch Sass (bereits vorher auf
+      natives CSS umgestellt) noch sonstige der laut Migration-Guide
+      betroffenen Optionen — daher reine Versionsanhebung ohne Config-Änderung.
+      `@vitejs/plugin-react-swc` läuft unverändert weiter (Vite meldet nur eine
+      Performance-Empfehlung, auf `@vitejs/plugin-react` zu wechseln — bewusst
+      nicht gemacht, da das neue Rolldown/Babel/React-Compiler-Abhängigkeiten
+      zieht, ohne für dieses Projekt einen echten Vorteil zu bringen). Build
+      läuft jetzt spürbar schneller (~3s → ~0,8s). Zusätzlich zu den
+      automatisierten Tests den Dev-Server (`pnpm start`, inkl. Proxy-Setup)
+      manuell hochgefahren und per `curl` verifiziert. - [x] **Restliche kleine, unabhängige Majors** — bcrypt 5→6 (nur Build/Distribution
+      umgestellt auf prebuildify, API unverändert; Hash/Compare-Roundtrip manuell
+      gegen den echten nativen Addon verifiziert), express-rate-limit 7→8 (Changelog
+      geprüft: `max: 0`-Verhalten, `req.rateLimit.current`, entfernte Legacy-Optionen
+      — nichts davon von uns genutzt), dotenv 16→17 (loggt jetzt standardmäßig eine
+      Info-Zeile beim Start, betrifft nur `server.js`, nicht die Tests, die nur
+      `app.js` laden), node-cron 3→4 (Registrierung manuell gegen den echten
+      Scheduler verifiziert, kein Zugriff auf entfernte APIs), concurrently 9→10
+      (rein Dev-Tooling, kein Prod-Code-Pfad betroffen).
 - [x] **Passwort-Reset-Flow** — neue Endpunkte `POST /api/auth/forgot-password` und
       `POST /api/auth/reset-password` ([authController.ts](controllers/authController.ts)).
       Reset-Token wird gehasht (SHA-256) mit 10 Min. Ablaufzeit auf dem `User`-Dokument
@@ -171,8 +163,8 @@ Stand: 2026-08-27. Ergebnis eines Backend/Frontend-Reviews inkl. Live-Tests.
 ## 🟡 Nice-to-have
 
 - [x] **PWA-Manifest fertigstellen** — `name`/`short_name` in
-      [site.webmanifest](client/public/site.webmanifest) gefüllt (`BetMasters –
-      Bundesliga Tippspiel` / `BetMasters`, passend zum bestehenden Markennamen in
+      [site.webmanifest](client/public/site.webmanifest) gefüllt (`Tippy –
+  Bundesliga Tippspiel` / `Tippy`, passend zum bestehenden Markennamen in
       [Logo.tsx](client/src/components/Logo.tsx)), dazu `description`, `start_url` und
       `scope` ergänzt. `theme_color`/`background_color` waren auf Weiß gesetzt (Standard
       des Generators) statt auf die tatsächlichen App-Farben — jetzt `#008080`
@@ -244,8 +236,7 @@ Stand: 2026-08-27. Ergebnis eines Backend/Frontend-Reviews inkl. Live-Tests.
       PlaceBet-Seite zeigen Spieltagsdaten korrekt an, Matchday-Navigation funktioniert,
       der Browser kontaktiert nachweislich nur noch die eigene Origin (plus die
       Team-Icon-Hosts) statt openligadb direkt.
-- [x] **Tie-Breaker-Regel für Punktgleichstand im Leaderboard** — festgelegt:
-      1. Gesamtpunkte, 2. Anzahl exakter Ergebnisse (3-Punkte-Tipps), 3. Name
+- [x] **Tie-Breaker-Regel für Punktgleichstand im Leaderboard** — festgelegt: 1. Gesamtpunkte, 2. Anzahl exakter Ergebnisse (3-Punkte-Tipps), 3. Name
       alphabetisch als letzter, garantiert deterministischer Fallback (entspricht der
       gängigen Konvention bei Tippspielen wie Kicktipp). Umgesetzt in
       [betsController.ts](controllers/betsController.ts): die Aggregation zählt

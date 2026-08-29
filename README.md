@@ -1,4 +1,4 @@
-# BetMasters
+# BetApp
 
 A Bundesliga prediction game: users predict match results for every matchday,
 earn points (3 for an exact score, 1 for the correct tendency), and compete
