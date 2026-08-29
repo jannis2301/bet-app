@@ -1,12 +1,13 @@
 .leaderboard-tabs {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 0.625rem;
+  margin-bottom: 0.625rem;
 }
 
 .leaderboard-tabs button {
-  padding: 5px 15px;
+  padding: 0.5rem 1rem;
+  font-size: 1.4rem;
   border: 1px solid var(--gray);
   background: transparent;
   color: var(--white);
@@ -27,10 +28,10 @@ table th {
 
 table th,
 table td {
-  padding: 5px;
+  padding: 0.3125rem;
   border: 1px solid var(--gray);
 }
 
 .ranking {
-  width: 50px;
+  inline-size: 3.125rem;
 }

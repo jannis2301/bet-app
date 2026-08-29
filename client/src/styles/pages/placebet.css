@@ -1,5 +1,9 @@
 .placebets-box .game-score {
-  grid-template-columns: 10fr repeat(3, 1fr) 10fr;
+  /* auto for the score inputs/colon keeps them at their natural size;
+     minmax(0, 10fr) lets the team columns take whatever's left and
+     shrink evenly instead of growing to fit each row's team name
+     (see the comment on .game-box in matches.css). */
+  grid-template-columns: minmax(0, 10fr) repeat(3, auto) minmax(0, 10fr);
   place-items: center;
 }
 
@@ -8,7 +12,7 @@
 }
 
 .input-number {
-  --input-size: clamp(1.9rem, 4vw, 3rem);
+  --input-size: clamp(2.5rem, 4vw, 3rem);
   width: var(--input-size);
   height: var(--input-size);
   padding: 0.5rem;
@@ -23,6 +27,6 @@
 }
 
 /* Firefox */
-.input-number[type="number"] {
+.input-number[type='number'] {
   -moz-appearance: textfield;
 }

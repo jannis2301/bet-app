@@ -40,7 +40,7 @@ h6 {
 }
 
 h1 {
-  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-size: clamp(1.6rem, 4vw, 2rem);
 }
 
 p,
@@ -54,14 +54,16 @@ ul {
 }
 
 form {
-  width: 90dvw;
-  max-width: var(--fixedWidth);
+  inline-size: 90dvw;
+  max-inline-size: var(--maxFormWidth);
   transition: var(--transition);
 }
 
 input {
   border: none;
-  padding: 10px;
+  inline-size: 100%;
+  padding: 1rem 0.5rem;
+  font-size: 1.25rem;
   border-radius: var(--radius5);
 }
 
@@ -75,7 +77,8 @@ button:disabled {
 
 .btn {
   position: relative;
-  padding: 10px;
+  padding: 0.5rem;
+  font-size: 1.4rem;
   border-radius: var(--radius5);
   border: none;
   background: var(--blue);

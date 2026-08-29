@@ -2,7 +2,16 @@
   width: 100%;
   padding: 0.6rem 0;
   display: grid;
-  grid-template-columns: 5fr 1fr 5fr;
+  /* minmax(0, ...) stops a track from growing to fit its content's
+     min-content size — without it, a row with a longer team name gets
+     wider columns than its neighbors, so rows drift out of alignment
+     on narrow screens where there's little slack to hide the drift. */
+  /* the middle column holds either a short result ("2:1") or the
+     two-line match-date/-time — 3.5rem matches .score's own max-width
+     so that column never gets squeezed narrower than the date needs,
+     letting the team-name columns (which can ellipsize) give up the
+     space instead. */
+  grid-template-columns: minmax(0, 5fr) minmax(3.5rem, 1fr) minmax(0, 5fr);
   grid-gap: 0.5rem;
   border-bottom: 1px solid var(--gray);
 }
@@ -12,7 +21,9 @@
 }
 
 .points-earned {
-  grid-template-columns: 5fr 1fr 4fr 1fr;
+  grid-template-columns:
+    minmax(0, 5fr) minmax(0, 1fr) minmax(0, 4fr)
+    minmax(0, 1fr);
   align-items: center;
 }
 
@@ -39,11 +50,12 @@
   cursor: not-allowed;
 }
 .match-date {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
 }
 
 .home-team,
 .away-team {
+  max-inline-size: 100%;
   justify-self: flex-end;
   gap: 0.4rem;
 }
@@ -63,7 +75,7 @@
 }
 
 .club-icon {
-  --img-size: 1.25rem;
+  --img-size: 2rem;
   block-size: var(--img-size);
   inline-size: var(--img-size);
   filter: drop-shadow(0px 0px 1px var(--white));

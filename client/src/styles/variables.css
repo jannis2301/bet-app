@@ -12,8 +12,9 @@
   --yellow: yellow;
 
   /* General */
-  --maxNavWidth: 900px;
-  --maxMatchWidth: 550px;
+  --maxNavWidth: 56.25rem; /* 900px */
+  --maxMatchWidth: 34.375rem; /* 550px */
+  --maxFormWidth: 31rem; /* 500px */
   --boxShadow: 0 0 5px rgba(0, 0, 0, 0.2);
   --textShadow: -1px 1px 3px rgba(0, 0, 0, 0.2);
   --letterSpacing: 1px;

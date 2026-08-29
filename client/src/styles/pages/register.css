@@ -31,7 +31,7 @@
 
 .register-box .btn::after {
   --minSize: 3rem;
-  content: "";
+  content: '';
   width: var(--minSize);
   height: var(--minSize);
   position: absolute;
@@ -46,7 +46,7 @@
 
 .register-box .member-btn::after {
   --minSize: 3rem;
-  content: "";
+  content: '';
   width: var(--minSize);
   height: var(--minSize);
   position: absolute;
@@ -57,6 +57,7 @@
 
 .password-container {
   position: relative;
+  inline-size: 100%;
 }
 
 .toggle-password-btn {
