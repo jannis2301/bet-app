@@ -78,7 +78,11 @@ app.use('/api/archive', archiveRouter);
 if (process.env.NODE_ENV === 'production') {
   // registered after the API routers so it only catches what they didn't —
   // otherwise this would swallow every GET request, API routes included
-  const directoryPath = path.join(__dirname, 'client', 'dist');
+  // __dirname points at the compiled file's own location (dist/ in
+  // production vs. the repo root under tsx/vitest), which differs between
+  // environments — process.cwd() doesn't, since every entry point (tsx
+  // watch, vitest, node dist/server.js) is launched from the repo root.
+  const directoryPath = path.join(process.cwd(), 'client', 'dist');
   app.use(express.static(directoryPath));
 
   // {*splat} is Express 5's (path-to-regexp v8) match-everything-including-root
