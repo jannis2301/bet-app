@@ -2,12 +2,17 @@ import { useState } from 'react';
 import { FaCaretDown, FaUserCircle } from 'react-icons/fa';
 import { Link, NavLink } from 'react-router-dom';
 import { useAppContext } from '../context/appContext';
+import { useClickOutside } from '../hooks/useClickOutside';
 import Logo from './Logo';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
   const { logoutUser, user } = useAppContext();
+  const userMenuRef = useClickOutside<HTMLDivElement>(
+    () => setShowLogout(false),
+    showLogout
+  );
 
   return (
     <header className="header">
@@ -47,7 +52,7 @@ const Navbar = () => {
             </NavLink>
           </li>
         </ul>
-        <div className="btn-container">
+        <div className="btn-container" ref={userMenuRef}>
           <button
             type="button"
             aria-label="User button"
