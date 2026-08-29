@@ -1,5 +1,5 @@
 .error-page-box {
-  max-width: var(--maxNavWidth);
+  max-inline-size: var(--maxNavWidth);
   margin: 0 auto;
   display: grid;
   justify-items: center;
@@ -9,7 +9,7 @@
 }
 
 .error-page-img {
-  width: 100%;
-  max-width: 600px;
+  inline-size: 100%;
+  max-inline-size: 600px;
   aspect-ratio: 16 / 9;
 }

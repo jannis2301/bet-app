@@ -1,16 +1,7 @@
 .game-box {
-  width: 100%;
+  inline-size: 100%;
   padding: 0.6rem 0;
   display: grid;
-  /* minmax(0, ...) stops a track from growing to fit its content's
-     min-content size — without it, a row with a longer team name gets
-     wider columns than its neighbors, so rows drift out of alignment
-     on narrow screens where there's little slack to hide the drift. */
-  /* the middle column holds either a short result ("2:1") or the
-     two-line match-date/-time — 3.5rem matches .score's own max-width
-     so that column never gets squeezed narrower than the date needs,
-     letting the team-name columns (which can ellipsize) give up the
-     space instead. */
   grid-template-columns: minmax(0, 5fr) minmax(3.5rem, 1fr) minmax(0, 5fr);
   grid-gap: 0.5rem;
   border-bottom: 1px solid var(--gray);
@@ -34,8 +25,8 @@
 }
 
 .score {
-  max-width: 3.5rem;
-  width: 100%;
+  max-inline-size: 3.5rem;
+  inline-size: 100%;
   padding: 0.5rem 0.2rem;
   justify-content: center;
   background: #000;
@@ -65,10 +56,7 @@
 }
 
 .team-name {
-  /* flex items default to min-width: auto, which blocks shrinking below
-     content size and defeats text-overflow — min-width: 0 lets the grid
-     column (matches.css:5) be the actual constraint. */
-  min-width: 0;
+  min-inline-size: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -88,8 +76,8 @@
 .matches-box,
 .matchday-headline,
 .leaderboard-table {
-  width: 90dvw;
-  max-width: var(--maxMatchWidth);
+  inline-size: 90dvw;
+  max-inline-size: var(--maxMatchWidth);
   margin: 0 auto;
 }
 
@@ -123,11 +111,11 @@
 .next-btn::after {
   --minSize: 3rem;
   content: '';
-  width: var(--minSize);
-  height: var(--minSize);
+  inline-size: var(--minSize);
+  block-size: var(--minSize);
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   transform: translate(-50%, -50%);
 }
 

@@ -1,13 +1,13 @@
 .header {
-  width: 100%;
+  inline-size: 100%;
   padding: 15px 0;
   color: white;
   background: var(--blue);
 }
 
 .nav {
-  width: 85dvw;
-  max-width: var(--maxNavWidth);
+  inline-size: 85dvw;
+  max-inline-size: var(--maxNavWidth);
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -43,8 +43,8 @@
 
 .hamburger-menu span {
   display: block;
-  width: 20px;
-  height: 2px;
+  inline-size: 20px;
+  block-size: 2px;
   margin: 0 0 5px;
   background: var(--white);
 }
@@ -64,9 +64,9 @@
 .dropdown,
 .user-bets {
   position: absolute;
-  top: 2rem;
-  left: 0px;
-  width: 100%;
+  inset-block-start: 2rem;
+  inset-inline-start: 0px;
+  inline-size: 100%;
   padding: 0.5rem;
   text-align: center;
   visibility: hidden;
@@ -76,10 +76,10 @@
 
 .user-bets {
   display: grid;
-  max-width: 8rem;
-  width: 100dvw;
-  top: 2rem;
-  left: 50%;
+  max-inline-size: 8rem;
+  inline-size: 100dvw;
+  inset-block-start: 2rem;
+  inset-inline-start: 50%;
   transform: translateX(-50%);
   gap: 0.8rem;
   box-shadow: var(--boxShadow);
@@ -99,7 +99,7 @@
 }
 
 .user-btn-name {
-  max-width: 10rem;
+  max-inline-size: 10rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -108,11 +108,11 @@
 .user-btn::after {
   --minSize: 3rem;
   content: '';
-  width: var(--minSize);
-  height: var(--minSize);
+  inline-size: var(--minSize);
+  block-size: var(--minSize);
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   transform: translate(-50%, -50%);
 }
 
@@ -131,11 +131,11 @@
 .dropdown-btn::after {
   --minSize: 3rem;
   content: '';
-  width: var(--minSize);
-  height: var(--minSize);
+  inline-size: var(--minSize);
+  block-size: var(--minSize);
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   transform: translate(-50%, -50%);
 }
 
@@ -146,11 +146,11 @@
 .placeBet-btn::after {
   --minSize: 3rem;
   content: '';
-  width: var(--minSize);
-  height: var(--minSize);
+  inline-size: var(--minSize);
+  block-size: var(--minSize);
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   transform: translate(-50%, -50%);
 }
 
@@ -172,11 +172,11 @@
 .bets-btn::after {
   --minSize: 3rem;
   content: '';
-  width: var(--minSize);
-  height: var(--minSize);
+  inline-size: var(--minSize);
+  block-size: var(--minSize);
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   transform: translate(-50%, -50%);
 }
 
@@ -191,18 +191,18 @@
 
   .nav-links.open {
     display: block;
-    width: 100%;
-    height: calc(100vh - 61px);
+    inline-size: 100%;
+    block-size: calc(100vh - 61px);
     padding: 20px 0;
     position: absolute;
-    top: 61px;
-    left: 0;
+    inset-block-start: 61px;
+    inset-inline-start: 0;
     background: var(--blue);
     z-index: 10;
   }
 
   .nav-links li:not(:last-child) {
-    margin-bottom: 1.5rem;
+    margin-block-end: 1.5rem;
   }
 
   .user-bets-box {
@@ -217,6 +217,6 @@
   }
 
   .user-btn-name {
-    max-width: 5rem;
+    max-inline-size: 5rem;
   }
 }

@@ -1,8 +1,8 @@
 .past-seasons-list {
   display: grid;
   gap: 20px;
-  width: 90dvw;
-  max-width: var(--maxNavWidth);
+  inline-size: 90dvw;
+  max-inline-size: var(--maxNavWidth);
   margin: 0 auto;
 }
 

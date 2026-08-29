@@ -1,8 +1,4 @@
 .placebets-box .game-score {
-  /* auto for the score inputs/colon keeps them at their natural size;
-     minmax(0, 10fr) lets the team columns take whatever's left and
-     shrink evenly instead of growing to fit each row's team name
-     (see the comment on .game-box in matches.css). */
   grid-template-columns: minmax(0, 10fr) repeat(3, auto) minmax(0, 10fr);
   place-items: center;
 }
@@ -13,8 +9,8 @@
 
 .input-number {
   --input-size: clamp(2.5rem, 4vw, 3rem);
-  width: var(--input-size);
-  height: var(--input-size);
+  inline-size: var(--input-size);
+  block-size: var(--input-size);
   padding: 0.5rem;
   text-align: center;
 }
