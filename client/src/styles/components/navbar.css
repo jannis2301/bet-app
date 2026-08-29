@@ -19,6 +19,10 @@
 }
 
 .nav-links {
+  --nav-height: 3.8125rem;
+}
+
+.nav-links {
   flex: 5;
   display: flex;
   justify-content: flex-end;
@@ -27,7 +31,7 @@
 
 .nav-links a {
   user-select: none;
-  font-size: var(--fontMd);
+  font-size: var(--fontLg);
 }
 
 .nav-links a.active {
@@ -43,8 +47,8 @@
 
 .hamburger-menu span {
   display: block;
-  inline-size: 20px;
-  block-size: 2px;
+  inline-size: 1.25rem;
+  block-size: 0.125rem;
   margin: 0 0 var(--spaceXs);
   background: var(--white);
 }
@@ -64,7 +68,7 @@
 .dropdown,
 .user-bets {
   position: absolute;
-  inset-block-start: 2rem;
+  inset-block-start: 0.125rem;
   inset-inline-start: 0px;
   inline-size: 100%;
   padding: var(--spaceSm);
@@ -192,17 +196,17 @@
   .nav-links.open {
     display: block;
     inline-size: 100%;
-    block-size: calc(100vh - 61px);
+    block-size: calc(100vh - var(--nav-height));
     padding: var(--spaceXl) 0;
     position: absolute;
-    inset-block-start: 61px;
+    inset-block-start: var(--nav-height);
     inset-inline-start: 0;
     background: var(--blue);
     z-index: 10;
   }
 
   .nav-links li:not(:last-child) {
-    margin-block-end: var(--space2xl);
+    margin-block-end: var(--space3xl);
   }
 
   .user-bets-box {
