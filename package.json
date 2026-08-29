@@ -20,8 +20,7 @@
     "test:all": "pnpm run test && pnpm --dir client run test"
   },
   "author": "Jannis",
-  "license": "ISC",
-  "packageManager": "pnpm@11.22.0",
+  "packageManager": "pnpm@11.23.0",
   "dependencies": {
     "axios": "^1.20.0",
     "bcrypt": "^6.0.0",
@@ -61,6 +60,6 @@
     "vitest": "^4.1.11"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.13.0"
   }
 }

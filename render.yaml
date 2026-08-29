@@ -22,6 +22,8 @@ services:
     startCommand: node dist/server.js
     healthCheckPath: /healthcheck
     envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
