@@ -74,3 +74,28 @@ export const fetchBundesligaMatches = async (
   const matchData = await fetchMatchdayData(matchdayToFetch);
   return { matchData, matchdayToFetch };
 };
+
+export interface TableEntry {
+  teamInfoId: number;
+  teamName: string;
+  shortName: string;
+  teamIconUrl: string;
+  points: number;
+  opponentGoals: number;
+  goals: number;
+  matches: number;
+  won: number;
+  lost: number;
+  draw: number;
+  goalDiff: number;
+}
+
+export const fetchBundesligaTable = async (
+  season = getCurrentSeason()
+): Promise<TableEntry[]> => {
+  const { data } = await axios.get<TableEntry[]>(
+    `${BASE_URL}/getbltable/bl1/${season}`,
+    { timeout: REQUEST_TIMEOUT_MS }
+  );
+  return data;
+};

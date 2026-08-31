@@ -7,6 +7,7 @@ import {
   GET_ALL_USER_BETS,
   GET_ALL_USERS,
   GET_ARCHIVED_SEASONS,
+  GET_BUNDESLIGA_TABLE,
   GET_CURRENT_USER_BEGIN,
   GET_CURRENT_USER_SUCCESS,
   GET_LEADERBOARD,
@@ -191,6 +192,15 @@ const reducer = (state: AppState, action: Action): AppState => {
       isLoading: false,
       seasonLeaderboard: action.payload.leaderboard,
       seasonLeaderboardYear: action.payload.season,
+    };
+  }
+
+  if (action.type === GET_BUNDESLIGA_TABLE) {
+    return {
+      ...state,
+      isLoading: false,
+      bundesligaTable: action.payload.table,
+      bundesligaTableSeason: action.payload.season,
     };
   }
 

@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fetchBundesligaMatches } from './fetchMatches.js';
+import {
+  fetchBundesligaMatches,
+  fetchBundesligaTable,
+} from './fetchMatches.js';
 import { getCurrentSeason } from './season.js';
 
 vi.mock('axios', () => ({
@@ -54,5 +57,34 @@ describe('fetchBundesligaMatches', () => {
 
     expect(axios.get).toHaveBeenCalledTimes(2);
     expect(result.matchdayToFetch).toBe(3);
+  });
+});
+
+describe('fetchBundesligaTable', () => {
+  beforeEach(() => {
+    vi.mocked(axios.get).mockReset();
+  });
+
+  it('fetches the table for the given season', async () => {
+    vi.mocked(axios.get).mockResolvedValue({ data: [{ teamInfoId: 6 }] });
+
+    const result = await fetchBundesligaTable(2023);
+
+    expect(axios.get).toHaveBeenCalledWith(
+      'https://api.openligadb.de/getbltable/bl1/2023',
+      expect.objectContaining({ timeout: expect.any(Number) })
+    );
+    expect(result).toEqual([{ teamInfoId: 6 }]);
+  });
+
+  it('defaults to the current season', async () => {
+    vi.mocked(axios.get).mockResolvedValue({ data: [] });
+
+    await fetchBundesligaTable();
+
+    expect(axios.get).toHaveBeenCalledWith(
+      `https://api.openligadb.de/getbltable/bl1/${getCurrentSeason()}`,
+      expect.objectContaining({ timeout: expect.any(Number) })
+    );
   });
 });

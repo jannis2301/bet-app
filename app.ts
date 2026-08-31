@@ -19,6 +19,7 @@ import archiveRouter from './routes/archiveRoutes.js';
 import authRouter from './routes/authRoutes.js';
 import betsRouter from './routes/betsRoutes.js';
 import matchesRouter from './routes/matchesRoutes.js';
+import tableRouter from './routes/tableRoutes.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -73,6 +74,7 @@ app.use((req, _res, next) => {
 app.use('/api/auth', authRouter);
 app.use('/api/bets', betsRouter);
 app.use('/api/matches', matchesRouter);
+app.use('/api/table', tableRouter);
 app.use('/api/archive', archiveRouter);
 
 if (process.env.NODE_ENV === 'production') {

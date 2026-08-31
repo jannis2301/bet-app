@@ -75,7 +75,8 @@
 
 .matches-box,
 .matchday-headline,
-.leaderboard-table {
+.leaderboard-table,
+.bundesliga-table {
   inline-size: 90dvw;
   max-inline-size: var(--maxMatchWidth);
   margin: 0 auto;

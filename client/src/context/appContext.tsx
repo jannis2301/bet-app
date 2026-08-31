@@ -4,6 +4,7 @@ import React, { useCallback, useContext, useEffect, useReducer } from 'react';
 import type {
   Bet,
   BetFormEntry,
+  BundesligaTableEntry,
   LeaderboardEntry,
   Match,
   PublicUser,
@@ -20,6 +21,7 @@ import {
   GET_ALL_USER_BETS,
   GET_ALL_USERS,
   GET_ARCHIVED_SEASONS,
+  GET_BUNDESLIGA_TABLE,
   GET_CURRENT_USER_BEGIN,
   GET_CURRENT_USER_SUCCESS,
   GET_LEADERBOARD,
@@ -56,6 +58,8 @@ export interface AppState {
   leaderboard: LeaderboardEntry[];
   seasonLeaderboard: LeaderboardEntry[];
   seasonLeaderboardYear: number | '';
+  bundesligaTable: BundesligaTableEntry[];
+  bundesligaTableSeason: number | '';
   allUsers: PublicUser[];
   archivedSeasons: SeasonArchiveSummary[];
   selectedSeasonArchive: {
@@ -90,6 +94,7 @@ export interface AppContextValue extends AppState {
   getAllUsers: () => Promise<void>;
   getLeaderboard: (matchday: number | '') => Promise<void>;
   getSeasonLeaderboard: () => Promise<void>;
+  getBundesligaTable: () => Promise<void>;
   fetchBundesligaMatches: (selectedMatchday?: number | '') => Promise<void>;
   getArchivedSeasons: () => Promise<void>;
   getSeasonArchive: (season: number) => Promise<void>;
@@ -112,6 +117,8 @@ export const initialState: AppState = {
   leaderboard: [],
   seasonLeaderboard: [],
   seasonLeaderboardYear: '',
+  bundesligaTable: [],
+  bundesligaTableSeason: '',
   allUsers: [],
   archivedSeasons: [],
   selectedSeasonArchive: null,
@@ -379,6 +386,27 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
       }
     }, []);
 
+  const getBundesligaTable: AppContextValue['getBundesligaTable'] =
+    useCallback(async () => {
+      dispatch({ type: SET_LOADING });
+      try {
+        const { data } = await authFetch<{
+          table: BundesligaTableEntry[];
+          season: number;
+        }>('/table');
+
+        dispatch({
+          type: GET_BUNDESLIGA_TABLE,
+          payload: { table: data.table, season: data.season },
+        });
+      } catch (error) {
+        dispatch({
+          type: SET_ERROR,
+          payload: { msg: getErrorMessage(error) },
+        });
+      }
+    }, []);
+
   const getCurrentUser = useCallback(async () => {
     dispatch({ type: GET_CURRENT_USER_BEGIN });
     try {
@@ -515,6 +543,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         getAllUsers,
         getLeaderboard,
         getSeasonLeaderboard,
+        getBundesligaTable,
         fetchBundesligaMatches,
         getArchivedSeasons,
         getSeasonArchive,

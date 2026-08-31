@@ -3,6 +3,7 @@
 @import "./styles/globals.css";
 
 /* Pages */
+@import "./styles/pages/bundesligaTable.css";
 @import "./styles/pages/error.css";
 @import "./styles/pages/leaderboard.css";
 @import "./styles/pages/pastSeasons.css";

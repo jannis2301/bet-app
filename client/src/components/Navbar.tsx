@@ -37,6 +37,14 @@ const Navbar = () => {
             </NavLink>
           </li>
           <li>
+            <NavLink
+              to="/bundesliga-table"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Bundesliga-Tabelle
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/bets" onClick={() => setIsMenuOpen(false)}>
               Tipps
             </NavLink>

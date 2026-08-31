@@ -1,5 +1,6 @@
 import type {
   Bet,
+  BundesligaTableEntry,
   LeaderboardEntry,
   Match,
   PublicUser,
@@ -31,6 +32,8 @@ export const CREATE_BET_SUCCESS = 'CREATE_BET_SUCCESS' as const;
 export const SET_BUNDESLIGA_MATCHES = 'SET_BUNDESLIGA_MATCHES' as const;
 export const GET_LEADERBOARD = 'GET_LEADERBOARD' as const;
 export const GET_SEASON_LEADERBOARD = 'GET_SEASON_LEADERBOARD' as const;
+// BUNDESLIGA TABLE
+export const GET_BUNDESLIGA_TABLE = 'GET_BUNDESLIGA_TABLE' as const;
 // SEASON ARCHIVE
 export const GET_ARCHIVED_SEASONS = 'GET_ARCHIVED_SEASONS' as const;
 export const GET_SEASON_ARCHIVE = 'GET_SEASON_ARCHIVE' as const;
@@ -72,6 +75,10 @@ export type Action =
   | {
       type: typeof GET_SEASON_LEADERBOARD;
       payload: { leaderboard: LeaderboardEntry[]; season: number };
+    }
+  | {
+      type: typeof GET_BUNDESLIGA_TABLE;
+      payload: { table: BundesligaTableEntry[]; season: number };
     }
   | { type: typeof GET_ALL_USERS; payload: { users: PublicUser[] } }
   | {

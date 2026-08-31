@@ -1,0 +1,6 @@
+.team-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--spaceSm);
+  text-align: start;
+}

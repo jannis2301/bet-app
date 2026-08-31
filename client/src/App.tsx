@@ -7,6 +7,7 @@ import {
   ResetPassword,
 } from './pages';
 import {
+  BundesligaTable,
   Home,
   Layout,
   Leaderboard,
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/placebet" element={<PlaceBet />} />
           <Route path="/bets" element={<UserBets />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/bundesliga-table" element={<BundesligaTable />} />
           <Route path="/past-seasons" element={<PastSeasons />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
