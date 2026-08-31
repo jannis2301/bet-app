@@ -6,6 +6,10 @@ import type { LeaderboardEntry } from '../../types';
 const VIEW_MATCHDAY = 'matchday';
 const VIEW_SEASON = 'season';
 
+// How often to re-check for updated points while this page is open, so it
+// doesn't stay stuck on a stale ranking as bets get compared during live play.
+const POLL_INTERVAL_MS = 5 * 60 * 1000;
+
 const toRankingEntries = (entries: LeaderboardEntry[]) =>
   entries.map(({ _id, name, totalPoints, exactHits }) => ({
     key: _id,
@@ -20,6 +24,7 @@ const Leaderboard = () => {
     seasonLeaderboard,
     seasonLeaderboardYear,
     bundesligaMatchday,
+    currentMatchday,
     fetchBundesligaMatches,
     getLeaderboard,
     getSeasonLeaderboard,
@@ -38,6 +43,31 @@ const Leaderboard = () => {
       getSeasonLeaderboard();
     }
   }, [view, getSeasonLeaderboard]);
+
+  // Only auto-refresh the matchday tab while it's showing the current
+  // matchday — otherwise this would yank the user back from a manually
+  // browsed past/future matchday. The season tab has no such browsing state.
+  useEffect(() => {
+    if (view === VIEW_MATCHDAY && bundesligaMatchday !== currentMatchday) {
+      return undefined;
+    }
+    const intervalId = setInterval(() => {
+      if (view === VIEW_MATCHDAY) {
+        fetchBundesligaMatches(bundesligaMatchday);
+        getLeaderboard(bundesligaMatchday);
+      } else {
+        getSeasonLeaderboard();
+      }
+    }, POLL_INTERVAL_MS);
+    return () => clearInterval(intervalId);
+  }, [
+    view,
+    bundesligaMatchday,
+    currentMatchday,
+    fetchBundesligaMatches,
+    getLeaderboard,
+    getSeasonLeaderboard,
+  ]);
 
   return (
     <section className="leaderboard-box">
