@@ -39,6 +39,13 @@ const getTransporter = (): Transporter => {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
+      // without these, a stalled SMTP handshake (network flakiness, a
+      // provider silently dropping packets) hangs indefinitely — and since
+      // callers await sendEmail(), that blocks the whole HTTP response
+      // (e.g. registration) forever instead of failing into the catch block
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 10_000,
     });
   }
   return transporter;
