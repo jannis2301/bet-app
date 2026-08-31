@@ -79,7 +79,7 @@ separate frontend server needed.
 
 ## Prerequisites
 
-- Node.js ≥ 22
+- Node.js ≥ 24
 - pnpm (version pinned via `packageManager` in `package.json`, available
   automatically through [Corepack](https://nodejs.org/api/corepack.html))
 - A MongoDB instance (local or e.g. MongoDB Atlas)
