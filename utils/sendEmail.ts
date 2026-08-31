@@ -1,4 +1,3 @@
-import nodemailer, { type Transporter } from 'nodemailer';
 import EmailLog from '../models/EmailLog.js';
 
 interface SendEmailArgs {
@@ -17,40 +16,17 @@ export class EmailLimitExceededError extends Error {
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-// read lazily, like SMTP_* below — process.env.DAILY_EMAIL_LIMIT may not be
-// set yet at module-import time. Guards against a runaway caller (e.g. a
-// reminder loop), not against the mail provider's own — much higher — quota.
+// read lazily, like RESEND_API_KEY below — process.env.DAILY_EMAIL_LIMIT may
+// not be set yet at module-import time. Guards against a runaway caller
+// (e.g. a reminder loop), not against the mail provider's own — much
+// higher — quota.
 const getDailyEmailLimit = (): number =>
   Number(process.env.DAILY_EMAIL_LIMIT) || 10;
 
-let transporter: Transporter | undefined;
-
-// created lazily (not at module load) so env vars set after import — e.g. by
-// dotenv.config() in server.ts, which runs before this module is used but
-// after it would otherwise be imported — are picked up correctly
-const getTransporter = (): Transporter => {
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 587,
-      // true only for port 465 (implicit TLS) — 587/25 use STARTTLS instead
-      secure: process.env.SMTP_PORT === '465',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-      // without these, a stalled SMTP handshake (network flakiness, a
-      // provider silently dropping packets) hangs indefinitely — and since
-      // callers await sendEmail(), that blocks the whole HTTP response
-      // (e.g. registration) forever instead of failing into the catch block
-      connectionTimeout: 10_000,
-      greetingTimeout: 10_000,
-      socketTimeout: 10_000,
-    });
-  }
-  return transporter;
-};
-
+// Render's free tier blocks outbound traffic on SMTP ports (25/465/587)
+// entirely, so nodemailer-over-SMTP can never connect from this deployment —
+// Resend's HTTPS API is the same provider, just over port 443, which isn't
+// blocked. See https://render.com/changelog/free-web-services-will-no-longer-allow-outbound-traffic-to-smtp-ports
 export const sendEmail = async ({
   to,
   subject,
@@ -63,13 +39,26 @@ export const sendEmail = async ({
     throw new EmailLimitExceededError();
   }
 
-  await getTransporter().sendMail({
-    from: process.env.SMTP_FROM || process.env.SMTP_USER,
-    to,
-    subject,
-    text,
-    html,
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: process.env.EMAIL_FROM,
+      to,
+      subject,
+      text,
+      html,
+    }),
+    signal: AbortSignal.timeout(10_000),
   });
+  if (!response.ok) {
+    throw new Error(
+      `Resend API error (${response.status}): ${await response.text()}`
+    );
+  }
   console.log(`Email sent to ${to}: ${subject}`);
 
   await EmailLog.create({});

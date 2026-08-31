@@ -8,11 +8,12 @@
 # an externally hosted instance (e.g. MongoDB Atlas) and is entered
 # manually in the Render dashboard on first deploy (sync: false).
 #
-# SMTP_* configures outbound mail (see utils/sendEmail.ts), used for the
-# matchday reminder emails (scheduler/matchdayReminder.ts) and the
-# forgot-password reset link (controllers/authController.ts) — point it at
-# whichever provider's SMTP relay is in use (e.g. Postmark, SES, Mailgun) and
-# enter the credentials manually in the Render dashboard (sync: false).
+# RESEND_API_KEY/EMAIL_FROM configure outbound mail (see utils/sendEmail.ts),
+# used for the matchday reminder emails (scheduler/matchdayReminder.ts) and
+# the forgot-password reset link (controllers/authController.ts) — sent via
+# Resend's HTTPS API rather than SMTP, since Render's free tier blocks
+# outbound SMTP ports entirely. Enter the API key manually in the Render
+# dashboard (sync: false).
 services:
   - type: web
     name: bet-app
@@ -32,15 +33,9 @@ services:
         generateValue: true
       - key: JWT_LIFETIME
         value: 1d
-      - key: SMTP_HOST
+      - key: RESEND_API_KEY
         sync: false
-      - key: SMTP_PORT
-        sync: false
-      - key: SMTP_USER
-        sync: false
-      - key: SMTP_PASS
-        sync: false
-      - key: SMTP_FROM
+      - key: EMAIL_FROM
         sync: false
       - key: ADMIN_EMAIL
         sync: false

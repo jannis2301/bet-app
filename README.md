@@ -104,18 +104,16 @@ In a `.env` file at the project root:
 | `JWT_LIFETIME`      | no       | Token lifetime (default: `1d`)                                                |
 | `PORT`              | no       | Server port in dev (default: `5050`)                                          |
 | `NODE_ENV`          | no       | `development` (default) or `production`                                       |
-| `SMTP_HOST`         | no\*     | SMTP server for outbound mail (password reset, reminders)                     |
-| `SMTP_PORT`         | no\*     | SMTP port (e.g. `587`)                                                        |
-| `SMTP_USER`         | no\*     | SMTP credentials                                                               |
-| `SMTP_PASS`         | no\*     | SMTP credentials                                                               |
-| `SMTP_FROM`         | no\*     | From address for outbound mail                                                |
+| `RESEND_API_KEY`    | no\*     | [Resend](https://resend.com) API key for outbound mail (password reset, reminders) |
+| `EMAIL_FROM`        | no\*     | From address for outbound mail                                                |
 | `ADMIN_EMAIL`       | no\*\*   | Receives the approve/reject link for every new registration                   |
 | `DAILY_EMAIL_LIMIT` | no       | Hard cap on emails sent per rolling 24h, across all mail types (default: `10`) |
 
-\* Without SMTP configured, sending mail fails and gets logged, but doesn't
+\* Without it configured, sending mail fails and gets logged, but doesn't
 block any requests — forgot-password still responds generically, and reminder
-emails are simply skipped for that user. A free
-[Ethereal](https://ethereal.email/) test account works well for local testing.
+emails are simply skipped for that user. Mail is sent via Resend's HTTPS API
+rather than SMTP, since Render's free tier blocks outbound SMTP ports
+entirely — see [utils/sendEmail.ts](utils/sendEmail.ts).
 
 \*\* Without it, registration still succeeds, but there's no one to approve
 it — the account stays pending indefinitely.
@@ -168,8 +166,8 @@ typecheck, and both test suites on every push/PR to `main`.
 Configured for [Render](https://render.com) as a single web service
 ([render.yaml](render.yaml)): `pnpm run setup-production` builds the client
 and backend, `node dist/server.js` serves both the API and the built React
-app statically in production. `MONGODB_URI`, the `SMTP_*` variables, and
-`ADMIN_EMAIL` need to be set manually in the Render dashboard (external
+app statically in production. `MONGODB_URI`, `RESEND_API_KEY`/`EMAIL_FROM`,
+and `ADMIN_EMAIL` need to be set manually in the Render dashboard (external
 services, not a Render add-on).
 
 Render's free plan suspends the service after ~15 minutes without incoming
