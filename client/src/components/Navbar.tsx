@@ -5,6 +5,16 @@ import { useAppContext } from '../context/appContext';
 import { useClickOutside } from '../hooks/useClickOutside';
 import Logo from './Logo';
 
+const NAV_LINKS = [
+  { to: '/', label: 'Spieltag tippen' },
+  { to: '/matchday', label: 'Bundesliga-Spieltag' },
+  { to: '/bundesliga-table', label: 'Bundesliga-Tabelle' },
+  { to: '/leaderboard', label: 'Tipp-Tabelle' },
+  { to: '/bets', label: 'Alle Tipps' },
+  { to: '/past-seasons', label: 'Archiv' },
+  { to: '/profile', label: 'Profil' },
+];
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
@@ -13,6 +23,7 @@ const Navbar = () => {
     () => setShowLogout(false),
     showLogout
   );
+  const closeMenu = () => setIsMenuOpen(false);
 
   return (
     <header className="header">
@@ -21,44 +32,13 @@ const Navbar = () => {
           <Logo />
         </Link>
         <ul className={isMenuOpen ? 'nav-links open' : 'nav-links'}>
-          <li>
-            <NavLink to="/" onClick={() => setIsMenuOpen(false)}>
-              Spieltag tippen
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/matchday" onClick={() => setIsMenuOpen(false)}>
-              Bundesliga-Spieltag
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/bundesliga-table"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Bundesliga-Tabelle
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/leaderboard" onClick={() => setIsMenuOpen(false)}>
-              Tipp-Tabelle
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/bets" onClick={() => setIsMenuOpen(false)}>
-              Alle Tipps
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/past-seasons" onClick={() => setIsMenuOpen(false)}>
-              Archiv
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/profile" onClick={() => setIsMenuOpen(false)}>
-              Profil
-            </NavLink>
-          </li>
+          {NAV_LINKS.map(({ to, label }) => (
+            <li key={to}>
+              <NavLink to={to} onClick={closeMenu}>
+                {label}
+              </NavLink>
+            </li>
+          ))}
         </ul>
         <div className="btn-container" ref={userMenuRef}>
           <button
