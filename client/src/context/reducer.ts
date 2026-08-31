@@ -15,6 +15,7 @@ import {
   GET_SEASON_LEADERBOARD,
   HANDLE_CHANGE,
   LOGOUT_USER,
+  REGISTER_PENDING_APPROVAL,
   RESET_PASSWORD_SUCCESS,
   SET_BUNDESLIGA_MATCHES,
   SET_ERROR,
@@ -69,6 +70,16 @@ const reducer = (state: AppState, action: Action): AppState => {
       showAlert: true,
       alertType: 'success',
       alertText,
+    };
+  }
+
+  if (action.type === REGISTER_PENDING_APPROVAL) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'success',
+      alertText: action.payload.msg,
     };
   }
 

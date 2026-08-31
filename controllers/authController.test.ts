@@ -19,6 +19,15 @@ const extractResetTokenFromLastEmail = () => {
   return match[1];
 };
 
+// approve/reject share the same token — pulls it out of the admin email the
+// way an admin would get it from the link rather than from an API response
+const extractApprovalTokenFromLastEmail = () => {
+  const lastCall = sendEmail.mock.calls.at(-1);
+  const match = lastCall?.[0].text.match(/token=([^\s]+)/);
+  if (!match) throw new Error('No approval token found in the sent email');
+  return match[1];
+};
+
 beforeEach(() => {
   sendEmail.mockReset();
   sendEmail.mockResolvedValue(undefined);
@@ -53,19 +62,36 @@ describe('POST /api/auth/register', () => {
     expect(res.body.msg).toMatch(/already in use/i);
   });
 
-  it('creates a user, sets an auth cookie, and never returns the password', async () => {
+  it('creates a user pending approval, emails the admin, and does not log them in', async () => {
     const res = await registerUser({
       name: 'Alice',
       email: 'alice@example.com',
     });
 
     expect(res.status).toBe(201);
-    expect(res.headers['set-cookie']?.[0]).toMatch(/^token=/);
-    expect(res.body.user).toMatchObject({
-      name: 'Alice',
-      email: 'alice@example.com',
+    expect(res.body.pending).toBe(true);
+    expect(res.headers['set-cookie']).toBeUndefined();
+
+    const stored = await User.findOne({ email: 'alice@example.com' });
+    expect(stored?.isApproved).toBe(false);
+
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+    const emailArgs = sendEmail.mock.calls[0][0];
+    expect(emailArgs.to).toBe(process.env.ADMIN_EMAIL);
+    expect(emailArgs.text).toMatch(/approve\?token=/);
+    expect(emailArgs.text).toMatch(/reject\?token=/);
+  });
+
+  it('still responds with the pending message even if the admin email fails to send', async () => {
+    sendEmail.mockRejectedValue(new Error('SMTP down'));
+
+    const res = await registerUser({
+      name: 'Ivy',
+      email: 'ivy@example.com',
     });
-    expect(res.body.user.password).toBeUndefined();
+
+    expect(res.status).toBe(201);
+    expect(res.body.pending).toBe(true);
   });
 });
 
@@ -98,7 +124,7 @@ describe('POST /api/auth/login', () => {
     expect(res.status).toBe(401);
   });
 
-  it('logs in with correct credentials and never returns the password', async () => {
+  it('rejects login for a registered but not-yet-approved account', async () => {
     await registerUser({
       email: 'carol@example.com',
       password: 'correct-password',
@@ -108,9 +134,84 @@ describe('POST /api/auth/login', () => {
       .post('/api/auth/login')
       .send({ email: 'carol@example.com', password: 'correct-password' });
 
+    expect(res.status).toBe(401);
+  });
+
+  it('logs in with correct credentials and never returns the password', async () => {
+    await registerUser({
+      email: 'carol@example.com',
+      password: 'correct-password',
+    });
+    await User.updateOne({ email: 'carol@example.com' }, { isApproved: true });
+
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'carol@example.com', password: 'correct-password' });
+
     expect(res.status).toBe(200);
     expect(res.headers['set-cookie']?.[0]).toMatch(/^token=/);
     expect(res.body.user.password).toBeUndefined();
+  });
+});
+
+describe('GET /api/auth/approve', () => {
+  it('rejects a missing or invalid token', async () => {
+    const res = await request(app).get('/api/auth/approve');
+    expect(res.status).toBe(400);
+
+    const invalidRes = await request(app)
+      .get('/api/auth/approve')
+      .query({ token: 'not-a-real-token' });
+    expect(invalidRes.status).toBe(400);
+  });
+
+  it('approves the pending registration from the emailed link', async () => {
+    await registerUser({ name: 'Zoe', email: 'zoe@example.com' });
+    const token = extractApprovalTokenFromLastEmail();
+
+    const res = await request(app).get('/api/auth/approve').query({ token });
+
+    expect(res.status).toBe(200);
+    expect(res.text).toMatch(/Zoe/);
+
+    const stored = await User.findOne({ email: 'zoe@example.com' });
+    expect(stored?.isApproved).toBe(true);
+
+    const loginRes = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'zoe@example.com', password: 'password123' });
+    expect(loginRes.status).toBe(200);
+  });
+});
+
+describe('GET /api/auth/reject', () => {
+  it('rejects a missing or invalid token', async () => {
+    const res = await request(app).get('/api/auth/reject');
+    expect(res.status).toBe(400);
+  });
+
+  it('deletes the pending registration from the emailed link', async () => {
+    await registerUser({ name: 'Yara', email: 'yara@example.com' });
+    const token = extractApprovalTokenFromLastEmail();
+
+    const res = await request(app).get('/api/auth/reject').query({ token });
+
+    expect(res.status).toBe(200);
+    expect(res.text).toMatch(/Yara/);
+    expect(await User.findOne({ email: 'yara@example.com' })).toBeNull();
+  });
+
+  it('does not delete an account that has already been approved', async () => {
+    await registerUser({ name: 'Xander', email: 'xander@example.com' });
+    const token = extractApprovalTokenFromLastEmail();
+    await request(app).get('/api/auth/approve').query({ token });
+
+    const res = await request(app).get('/api/auth/reject').query({ token });
+
+    expect(res.status).toBe(200);
+    const stored = await User.findOne({ email: 'xander@example.com' });
+    expect(stored).not.toBeNull();
+    expect(stored?.isApproved).toBe(true);
   });
 });
 

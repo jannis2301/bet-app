@@ -13,6 +13,7 @@ import type {
 export const SET_LOADING = 'SET_LOADING' as const;
 export const SET_ERROR = 'SET_ERROR' as const;
 export const SETUP_USER_SUCCESS = 'SETUP_USER_SUCCESS' as const;
+export const REGISTER_PENDING_APPROVAL = 'REGISTER_PENDING_APPROVAL' as const;
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS' as const;
 export const UPDATE_PASSWORD_SUCCESS = 'UPDATE_PASSWORD_SUCCESS' as const;
 export const FORGOT_PASSWORD_SUCCESS = 'FORGOT_PASSWORD_SUCCESS' as const;
@@ -47,6 +48,7 @@ export type Action =
       type: typeof SETUP_USER_SUCCESS;
       payload: { user: User; location?: string; alertText: string };
     }
+  | { type: typeof REGISTER_PENDING_APPROVAL; payload: { msg: string } }
   | { type: typeof LOGOUT_USER }
   | { type: typeof UPDATE_USER_SUCCESS; payload: { user: User } }
   | { type: typeof UPDATE_PASSWORD_SUCCESS }

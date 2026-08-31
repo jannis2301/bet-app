@@ -13,6 +13,7 @@ export interface IUser {
   password: string;
   location: string;
   team: string;
+  isApproved: boolean;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
   createdAt: Date;
@@ -66,6 +67,12 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>(
       trim: true,
       maxlength: 30,
       default: 'my team',
+    },
+    // gates login until an admin approves the registration — see
+    // controllers/authController.ts's register/login/approveUser/rejectUser
+    isApproved: {
+      type: Boolean,
+      default: false,
     },
     passwordResetToken: {
       type: String,

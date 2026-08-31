@@ -10,6 +10,7 @@ export default defineConfig({
       JWT_SECRET: 'test-jwt-secret',
       JWT_LIFETIME: '1d',
       NODE_ENV: 'test',
+      ADMIN_EMAIL: 'admin@example.com',
     },
   },
 });

@@ -29,6 +29,7 @@ import {
   GET_SEASON_LEADERBOARD,
   HANDLE_CHANGE,
   LOGOUT_USER,
+  REGISTER_PENDING_APPROVAL,
   RESET_PASSWORD_SUCCESS,
   SET_BUNDESLIGA_MATCHES,
   SET_ERROR,
@@ -160,15 +161,27 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     async ({ currentUser, endPoint, alertText }) => {
       dispatch({ type: SET_LOADING });
       try {
-        const response = await axios.post<{ user: User; location?: string }>(
-          `/api/auth/${endPoint}`,
-          currentUser
-        );
-        const { user, location } = response.data;
-        dispatch({
-          type: SETUP_USER_SUCCESS,
-          payload: { user, location, alertText },
-        });
+        const response = await axios.post<{
+          user?: User;
+          location?: string;
+          pending?: boolean;
+          msg?: string;
+        }>(`/api/auth/${endPoint}`, currentUser);
+        if (response.data.pending) {
+          dispatch({
+            type: REGISTER_PENDING_APPROVAL,
+            payload: { msg: response.data.msg ?? alertText },
+          });
+        } else {
+          const { user, location } = response.data as {
+            user: User;
+            location?: string;
+          };
+          dispatch({
+            type: SETUP_USER_SUCCESS,
+            payload: { user, location, alertText },
+          });
+        }
       } catch (error) {
         dispatch({
           type: SET_ERROR,

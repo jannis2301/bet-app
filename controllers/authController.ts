@@ -3,10 +3,32 @@ import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BadRequestError, UnAuthenticatedError } from '../errors/index.js';
 import User from '../models/User.js';
+import {
+  signApprovalToken,
+  verifyApprovalToken,
+} from '../utils/approvalToken.js';
 import attachCookies from '../utils/attachCookies.js';
 // imported via namespace (not destructured) so tests can vi.spyOn the
 // exported binding directly — see betsController.test.ts for the same pattern
 import * as sendEmailModule from '../utils/sendEmail.js';
+
+const PENDING_APPROVAL_MSG =
+  'Registrierung eingegangen — ein Admin muss deinen Account noch bestätigen.';
+
+// Render sits behind a proxy that terminates TLS, so req.protocol would
+// report 'http' without also configuring `trust proxy` — NODE_ENV is a
+// simpler, already-established way to tell (see attachCookies.ts's
+// `secure` flag for the same pattern) since any real deployment is HTTPS.
+const buildApprovalLinks = (req: Request, userId: string) => {
+  const protocol =
+    process.env.NODE_ENV === 'production' ? 'https' : req.protocol;
+  const base = `${protocol}://${req.get('host')}/api/auth`;
+  const token = signApprovalToken(userId);
+  return {
+    approveUrl: `${base}/approve?token=${token}`,
+    rejectUrl: `${base}/reject?token=${token}`,
+  };
+};
 
 export const register = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -20,15 +42,25 @@ export const register = async (req: Request, res: Response) => {
   }
   const user = await User.create({ name, email, password });
 
-  const token = user.createJWT();
-  attachCookies({ res, token });
+  const { approveUrl, rejectUrl } = buildApprovalLinks(
+    req,
+    user._id.toString()
+  );
+  try {
+    await sendEmailModule.sendEmail({
+      to: process.env.ADMIN_EMAIL as string,
+      subject: `Neue Registrierung: ${user.name}`,
+      text: `${user.name} (${user.email}) hat sich registriert.\n\nBestätigen: ${approveUrl}\nAblehnen (löscht den Account): ${rejectUrl}`,
+      html: `<p>${user.name} (${user.email}) hat sich registriert.</p><p><a href="${approveUrl}">Bestätigen</a></p><p><a href="${rejectUrl}">Ablehnen (löscht den Account)</a></p>`,
+    });
+  } catch (error) {
+    // never let a mail-provider failure block the registration itself
+    console.error(error);
+  }
+
   res.status(StatusCodes.CREATED).json({
-    user: {
-      email: user.email,
-      name: user.name,
-      location: user.location,
-      team: user.team,
-    },
+    pending: true,
+    msg: PENDING_APPROVAL_MSG,
   });
 };
 
@@ -46,11 +78,72 @@ export const login = async (req: Request, res: Response) => {
   if (!isPasswordCorrect) {
     throw new UnAuthenticatedError('Invalid Credentials');
   }
+
+  if (!user.isApproved) {
+    throw new UnAuthenticatedError('Dein Account wurde noch nicht bestätigt.');
+  }
+
   const token = user.createJWT();
   user.password = undefined as unknown as string;
   attachCookies({ res, token });
 
   res.status(StatusCodes.OK).json({ user });
+};
+
+// Both hit from a link in the admin's inbox, not the SPA — plain-text
+// responses instead of JSON, and no auth cookie required to view them.
+export const approveUser = async (req: Request, res: Response) => {
+  const token = req.query.token as string | undefined;
+  const userId = token ? verifyApprovalToken(token) : null;
+  if (!userId) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .send('Ungültiger oder abgelaufener Link.');
+    return;
+  }
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { isApproved: true },
+    { returnDocument: 'after' }
+  );
+  if (!user) {
+    res.status(StatusCodes.NOT_FOUND).send('Nutzer nicht gefunden.');
+    return;
+  }
+
+  res
+    .status(StatusCodes.OK)
+    .send(`${user.name} (${user.email}) wurde freigeschaltet.`);
+};
+
+export const rejectUser = async (req: Request, res: Response) => {
+  const token = req.query.token as string | undefined;
+  const userId = token ? verifyApprovalToken(token) : null;
+  if (!userId) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .send('Ungültiger oder abgelaufener Link.');
+    return;
+  }
+
+  // only deletes while still pending — an old email's reject link shouldn't
+  // be able to remove an account that has since been approved and is in use
+  const user = await User.findOneAndDelete({ _id: userId, isApproved: false });
+  if (!user) {
+    res
+      .status(StatusCodes.OK)
+      .send(
+        'Registrierung wurde bereits bestätigt oder existiert nicht mehr — nichts geändert.'
+      );
+    return;
+  }
+
+  res
+    .status(StatusCodes.OK)
+    .send(
+      `Registrierung von ${user.name} (${user.email}) wurde abgelehnt und gelöscht.`
+    );
 };
 
 export const updateUser = async (req: Request, res: Response) => {

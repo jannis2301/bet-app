@@ -46,7 +46,7 @@ const Register = () => {
       setupUser({
         currentUser,
         endPoint: 'register',
-        alertText: 'User Created! Redirecting...',
+        alertText: 'Registrierung eingegangen.',
       });
     }
   };
