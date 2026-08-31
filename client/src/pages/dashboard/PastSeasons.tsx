@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { RankingTable } from '../../components';
 import { useAppContext } from '../../context/appContext';
 
 const PastSeasons = () => {
@@ -59,28 +60,14 @@ const PastSeasons = () => {
             {entryCount === 0 && <p>Keine Tipps in dieser Saison.</p>}
             {expandedSeason === season &&
               selectedSeasonArchive?.season === season && (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>User</th>
-                      <th>Punkte</th>
-                      <th>Exakt</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {selectedSeasonArchive.leaderboard.map((entry, index) => (
-                      <tr
-                        key={`${entry.name}-${entry.totalPoints}-${entry.exactHits}`}
-                      >
-                        <td className="ranking">{index + 1}</td>
-                        <td>{entry.name}</td>
-                        <td>{entry.totalPoints}</td>
-                        <td>{entry.exactHits}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <RankingTable
+                  entries={selectedSeasonArchive.leaderboard.map((entry) => ({
+                    key: `${entry.name}-${entry.totalPoints}-${entry.exactHits}`,
+                    name: entry.name,
+                    totalPoints: entry.totalPoints,
+                    exactHits: entry.exactHits,
+                  }))}
+                />
               )}
           </li>
         ))}

@@ -1,9 +1,8 @@
 import type { ChangeEvent, FormEvent } from 'react';
 import { useEffect, useState } from 'react';
-import { Alert, MatchTeam } from '../../components';
+import { Alert, MatchRow } from '../../components';
 import { useAppContext } from '../../context/appContext';
 import type { BetFormEntry, Match, User } from '../../types';
-import teamSanitization from '../../utils/teamSanitize';
 
 const isMatchLocked = (match: Match) =>
   match.matchIsFinished || new Date(match.matchDateTimeUTC) <= new Date();
@@ -115,44 +114,43 @@ const PlaceBet = () => {
         {bundesligaMatches?.map((match, i) => {
           const { matchID, team1, team2, group } = match;
           const locked = isMatchLocked(match);
-          teamSanitization(team1, team2);
 
           return (
             <div
               className={`game-box game-score${locked ? ' locked' : ''}`}
               key={matchID}
             >
-              <MatchTeam team={team1} side="home" />
-              <input
-                type="number"
-                className="input-number"
-                id={`homeScore${i}`}
-                name="homeScore"
-                value={bets[i]?.homeScore ?? ''}
-                onChange={(e) =>
-                  handleChange(e, i, matchID, group.groupOrderID)
-                }
-                min={0}
-                max={10}
-                required={!locked}
-                disabled={locked}
-              />
-              <span> : </span>
-              <input
-                type="number"
-                className="input-number"
-                id={`awayScore${i}`}
-                name="awayScore"
-                value={bets[i]?.awayScore ?? ''}
-                onChange={(e) =>
-                  handleChange(e, i, matchID, group.groupOrderID)
-                }
-                min={0}
-                max={10}
-                required={!locked}
-                disabled={locked}
-              />
-              <MatchTeam team={team2} side="away" />
+              <MatchRow team1={team1} team2={team2}>
+                <input
+                  type="number"
+                  className="input-number"
+                  id={`homeScore${i}`}
+                  name="homeScore"
+                  value={bets[i]?.homeScore ?? ''}
+                  onChange={(e) =>
+                    handleChange(e, i, matchID, group.groupOrderID)
+                  }
+                  min={0}
+                  max={10}
+                  required={!locked}
+                  disabled={locked}
+                />
+                <span> : </span>
+                <input
+                  type="number"
+                  className="input-number"
+                  id={`awayScore${i}`}
+                  name="awayScore"
+                  value={bets[i]?.awayScore ?? ''}
+                  onChange={(e) =>
+                    handleChange(e, i, matchID, group.groupOrderID)
+                  }
+                  min={0}
+                  max={10}
+                  required={!locked}
+                  disabled={locked}
+                />
+              </MatchRow>
             </div>
           );
         })}

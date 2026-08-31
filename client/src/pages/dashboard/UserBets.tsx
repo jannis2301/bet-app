@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
-import { HiArrowSmLeft, HiArrowSmRight } from 'react-icons/hi';
-import { MatchTeam } from '../../components';
+import { MatchdayHeadline, MatchRow } from '../../components';
 import { useAppContext } from '../../context/appContext';
-import teamSanitization from '../../utils/teamSanitize';
 
 const UserBets = () => {
   const {
@@ -27,34 +25,19 @@ const UserBets = () => {
 
   return (
     <section>
-      <div className="matchday-headline">
-        <button
-          type="button"
-          className="prev-btn"
-          onClick={() => fetchBundesligaMatches(Number(bundesligaMatchday) - 1)}
-          disabled={isLoading}
-        >
-          <HiArrowSmLeft />
-          <p>vorheriger Spieltag</p>
-        </button>
-        <h1>Tipps für den {bundesligaMatchday}. Spieltag</h1>
-        <button
-          type="button"
-          className="next-btn"
-          onClick={() => fetchBundesligaMatches(Number(bundesligaMatchday) + 1)}
-          disabled={isLoading}
-        >
-          <p>nächster Spieltag</p>
-          <HiArrowSmRight />
-        </button>
-      </div>
+      <MatchdayHeadline
+        isLoading={isLoading}
+        onPrev={() => fetchBundesligaMatches(Number(bundesligaMatchday) - 1)}
+        onNext={() => fetchBundesligaMatches(Number(bundesligaMatchday) + 1)}
+      >
+        Tipps für den {bundesligaMatchday}. Spieltag
+      </MatchdayHeadline>
       {allUsers?.map((user) => {
         return (
           <div key={user._id} className="matches-box">
             <h2>{user.name}</h2>
             {bundesligaMatches?.map((match) => {
               const { matchID, team1, team2 } = match;
-              teamSanitization(team1, team2);
               const matchesHaveFinished = bundesligaMatches?.every(
                 (match) => match.matchIsFinished === true
               );
@@ -72,13 +55,11 @@ const UserBets = () => {
                   }`}
                   key={matchID}
                 >
-                  <MatchTeam team={team1} side="home" />
-
-                  <span className="score">
-                    {homeScore ?? ''}:{awayScore ?? ''}
-                  </span>
-
-                  <MatchTeam team={team2} side="away" />
+                  <MatchRow team1={team1} team2={team2}>
+                    <span className="score">
+                      {homeScore ?? ''}:{awayScore ?? ''}
+                    </span>
+                  </MatchRow>
 
                   {pointsEarned !== undefined && matchesHaveFinished && (
                     <p
