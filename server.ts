@@ -6,6 +6,7 @@ import app from './app.js';
 import connectDB from './db/connect.js';
 import { compareScores } from './scheduler/compareScores.js';
 import { initializeCron } from './scheduler/matchCompareScheduler.js';
+import { sendMatchdayReminders } from './scheduler/matchdayReminder.js';
 import { initializeReminderCron } from './scheduler/reminderScheduler.js';
 import { initializeSeasonArchiveCron } from './scheduler/seasonArchiveScheduler.js';
 
@@ -21,8 +22,9 @@ const start = async () => {
     await connectDB(process.env.MONGODB_URI as string);
     console.log('Connected to MongoDB');
     // Render's free plan sleeps the service (and its cron timers) when idle,
-    // so run once here too — every wake-up then catches up immediately.
+    // so run these once here too — every wake-up then catches up immediately.
     compareScores();
+    sendMatchdayReminders();
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
     });
