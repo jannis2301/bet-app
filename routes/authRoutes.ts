@@ -26,8 +26,12 @@ const apiLimiter = rateLimiter({
   // Max 10 Requests, try again in 15 Minutes
   windowMs: 15 * 60 * 1000,
   max: 10,
-  message:
-    'Too many requests from this IP address, please try again after 15 minutes',
+  // an object (not a string) so express-rate-limit's res.send() serializes
+  // it as JSON — the frontend's error parser reads error.response.data.msg
+  // and got nothing usable from a plain-text body
+  message: {
+    msg: 'Too many requests from this IP address, please try again after 15 minutes',
+  },
   skip: skipInTest,
   //validate: { xForwardedForHeader: false },
 });
@@ -37,8 +41,12 @@ const apiLimiter = rateLimiter({
 const passwordResetLimiter = rateLimiter({
   windowMs: 15 * 60 * 1000,
   max: 10,
-  message:
-    'Too many requests from this IP address, please try again after 15 minutes',
+  // an object (not a string) so express-rate-limit's res.send() serializes
+  // it as JSON — the frontend's error parser reads error.response.data.msg
+  // and got nothing usable from a plain-text body
+  message: {
+    msg: 'Too many requests from this IP address, please try again after 15 minutes',
+  },
   skip: skipInTest,
 });
 
@@ -47,8 +55,12 @@ const passwordResetLimiter = rateLimiter({
 const approvalLimiter = rateLimiter({
   windowMs: 15 * 60 * 1000,
   max: 10,
-  message:
-    'Too many requests from this IP address, please try again after 15 minutes',
+  // an object (not a string) so express-rate-limit's res.send() serializes
+  // it as JSON — the frontend's error parser reads error.response.data.msg
+  // and got nothing usable from a plain-text body
+  message: {
+    msg: 'Too many requests from this IP address, please try again after 15 minutes',
+  },
   skip: skipInTest,
 });
 
