@@ -13,8 +13,8 @@ const baseContext = {
   user: {
     name: 'Alice',
     email: 'alice@example.com',
-    location: 'Berlin',
     team: 'Union Berlin',
+    emailRemindersEnabled: true,
   },
   isLoading: false,
   showAlert: false,
@@ -22,6 +22,33 @@ const baseContext = {
   updateUser: vi.fn(),
   updatePassword: vi.fn(),
 } as unknown as AppContextValue;
+
+describe('Profile settings', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useAppContext).mockReturnValue(baseContext);
+  });
+
+  it('starts with the email reminders checkbox checked', () => {
+    render(<Profile />);
+
+    expect(
+      screen.getByLabelText('Erinnerungs-E-Mails erhalten')
+    ).toBeChecked();
+  });
+
+  it('submits emailRemindersEnabled: false after unchecking it', async () => {
+    const user = userEvent.setup();
+    render(<Profile />);
+
+    await user.click(screen.getByLabelText('Erinnerungs-E-Mails erhalten'));
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(baseContext.updateUser).toHaveBeenCalledWith(
+      expect.objectContaining({ emailRemindersEnabled: false })
+    );
+  });
+});
 
 describe('Profile password change', () => {
   beforeEach(() => {

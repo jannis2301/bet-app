@@ -28,8 +28,8 @@ export interface User {
   _id: string;
   name: string;
   email: string;
-  location: string;
   team: string;
+  emailRemindersEnabled: boolean;
 }
 
 // Shape returned by GET /auth/getAllUsers, which only projects the fields
@@ -52,6 +52,7 @@ export interface Bet {
 export interface LeaderboardEntry {
   _id: string;
   name: string;
+  team: string;
   totalPoints: number;
   // number of exact-result bets (3-point hits) — tie-breaker when
   // totalPoints match, see betsController.ts's compareLeaderboardEntries

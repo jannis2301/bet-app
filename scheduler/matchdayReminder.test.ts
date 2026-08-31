@@ -98,6 +98,25 @@ describe('sendMatchdayReminders', () => {
     expect(reminder).not.toBeNull();
   });
 
+  it('does not email users who opted out of reminders', async () => {
+    fetchBundesligaMatches.mockResolvedValue({
+      matchData: [upcomingMatch(1, 5)],
+      matchdayToFetch: 3,
+    });
+    await createUser({
+      email: 'opted-out@example.com',
+      emailRemindersEnabled: false,
+    });
+    await createUser({ email: 'forgetful@example.com' });
+
+    await sendMatchdayReminders();
+
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+    expect(sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'forgetful@example.com' })
+    );
+  });
+
   it('does not send again once a reminder was already recorded for that matchday', async () => {
     fetchBundesligaMatches.mockResolvedValue({
       matchData: [upcomingMatch(1, 5)],

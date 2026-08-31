@@ -83,8 +83,8 @@ export interface AppContextValue extends AppState {
   updateUser: (currentUser: {
     name: string;
     email: string;
-    location: string;
     team: string;
+    emailRemindersEnabled: boolean;
   }) => Promise<void>;
   updatePassword: (args: {
     oldPassword: string;

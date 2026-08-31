@@ -1,6 +1,8 @@
 export interface RankingEntry {
   key: string;
   name: string;
+  // absent for archived seasons, which don't snapshot the user's team
+  team?: string;
   totalPoints: number;
   exactHits: number;
 }
@@ -36,7 +38,12 @@ const RankingTable = ({ entries }: RankingTableProps) => {
         {entries.map((entry, index) => (
           <tr key={entry.key}>
             <td className="ranking">{index + 1}</td>
-            <td>{entry.name}</td>
+            <td>
+              {entry.name}{' '}
+              {entry.team && (
+                <span className="team-badge">{entry.team}</span>
+              )}
+            </td>
             <td>{entry.totalPoints}</td>
             <td>{entry.exactHits}</td>
           </tr>

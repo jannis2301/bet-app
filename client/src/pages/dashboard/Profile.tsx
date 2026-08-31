@@ -25,14 +25,14 @@ const Profile = () => {
   const [values, setValues] = useState({
     name: currentUser.name,
     email: currentUser.email,
-    location: currentUser.location,
     team: currentUser.team,
+    emailRemindersEnabled: currentUser.emailRemindersEnabled,
   });
   const [passwordValues, setPasswordValues] = useState(initialPasswordValues);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-    setValues({ ...values, [name]: value });
+    const { value, name, type, checked } = e.target;
+    setValues({ ...values, [name]: type === 'checkbox' ? checked : value });
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -92,22 +92,24 @@ const Profile = () => {
             />
           </div>
           <div className="label-box">
-            <label htmlFor="location">Location</label>
-            <input
-              type="text"
-              id="location"
-              name="location"
-              value={values.location}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="label-box">
             <label htmlFor="team">Favorite Team</label>
             <input
               type="text"
               id="team"
               name="team"
               value={values.team}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="label-box label-box-checkbox">
+            <label htmlFor="emailRemindersEnabled">
+              Erinnerungs-E-Mails erhalten
+            </label>
+            <input
+              type="checkbox"
+              id="emailRemindersEnabled"
+              name="emailRemindersEnabled"
+              checked={values.emailRemindersEnabled}
               onChange={handleChange}
             />
           </div>

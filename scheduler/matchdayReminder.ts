@@ -40,7 +40,12 @@ export const sendMatchdayReminders = async (): Promise<void> => {
       matchDay: matchday,
       season,
     });
-    const usersToRemind = await User.find({ _id: { $nin: usersWhoBet } });
+    const usersToRemind = await User.find({
+      _id: { $nin: usersWhoBet },
+      // $ne (not $eq: true) also matches documents from before this field
+      // existed, which default to enabled
+      emailRemindersEnabled: { $ne: false },
+    });
 
     const { subject, text, html } = buildReminderEmail(matchday);
     const results = await Promise.allSettled(

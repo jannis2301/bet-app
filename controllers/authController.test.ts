@@ -282,7 +282,6 @@ describe('PATCH /api/auth/updateUser', () => {
       .send({
         name: 'Frank Updated',
         email: 'frank-updated@example.com',
-        location: 'Berlin',
         team: 'Union Berlin',
       });
 
@@ -290,10 +289,31 @@ describe('PATCH /api/auth/updateUser', () => {
     expect(res.body.user).toMatchObject({
       name: 'Frank Updated',
       email: 'frank-updated@example.com',
-      location: 'Berlin',
       team: 'Union Berlin',
     });
     expect(res.headers['set-cookie']?.[0]).toMatch(/^token=/);
+  });
+
+  it('persists emailRemindersEnabled when provided', async () => {
+    const user = await User.create({
+      name: 'Ida',
+      email: 'ida@example.com',
+      password: 'password123',
+    });
+    const token = signToken(user._id.toString());
+
+    const res = await request(app)
+      .patch('/api/auth/updateUser')
+      .set('Cookie', [`token=${token}`])
+      .send({
+        name: 'Ida',
+        email: 'ida@example.com',
+        team: 'Union Berlin',
+        emailRemindersEnabled: false,
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.user).toMatchObject({ emailRemindersEnabled: false });
   });
 
   it('rejects with 401 instead of crashing when the account no longer exists', async () => {
@@ -311,7 +331,6 @@ describe('PATCH /api/auth/updateUser', () => {
       .send({
         name: 'Grace',
         email: 'grace@example.com',
-        location: 'Berlin',
         team: 'Union Berlin',
       });
 
@@ -424,7 +443,7 @@ describe('GET /api/auth/getAllUsers', () => {
     expect(res.status).toBe(401);
   });
 
-  it('only exposes the name of other users, not their email/location/team', async () => {
+  it('only exposes the name of other users, not their email/team', async () => {
     const requester = await User.create({
       name: 'Heidi',
       email: 'heidi@example.com',
@@ -434,7 +453,6 @@ describe('GET /api/auth/getAllUsers', () => {
       name: 'Ivan',
       email: 'ivan@example.com',
       password: 'password123',
-      location: 'Munich',
       team: 'Bayern',
     });
     const token = signToken(requester._id.toString());

@@ -11,9 +11,10 @@ const VIEW_SEASON = 'season';
 const POLL_INTERVAL_MS = 5 * 60 * 1000;
 
 const toRankingEntries = (entries: LeaderboardEntry[]) =>
-  entries.map(({ _id, name, totalPoints, exactHits }) => ({
+  entries.map(({ _id, name, team, totalPoints, exactHits }) => ({
     key: _id,
     name,
+    team,
     totalPoints,
     exactHits,
   }));

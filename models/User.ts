@@ -11,9 +11,10 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
-  location: string;
   team: string;
   isApproved: boolean;
+  // opt-out for scheduler/matchdayReminder.ts's cron email
+  emailRemindersEnabled: boolean;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
   createdAt: Date;
@@ -56,12 +57,6 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>(
       minlength: 8,
       select: false,
     },
-    location: {
-      type: String,
-      trim: true,
-      maxlength: 20,
-      default: 'my city',
-    },
     team: {
       type: String,
       trim: true,
@@ -73,6 +68,10 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>(
     isApproved: {
       type: Boolean,
       default: false,
+    },
+    emailRemindersEnabled: {
+      type: Boolean,
+      default: true,
     },
     passwordResetToken: {
       type: String,

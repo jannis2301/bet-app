@@ -147,8 +147,8 @@ export const rejectUser = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  const { email, name, location, team } = req.body;
-  if (!email || !name || !location || !team) {
+  const { email, name, team, emailRemindersEnabled } = req.body;
+  if (!email || !name || !team) {
     throw new BadRequestError('Please provide all values');
   }
   const user = await User.findOne({ _id: req.user?.userId });
@@ -158,8 +158,10 @@ export const updateUser = async (req: Request, res: Response) => {
 
   user.email = email;
   user.name = name;
-  user.location = location;
   user.team = team;
+  if (emailRemindersEnabled !== undefined) {
+    user.emailRemindersEnabled = emailRemindersEnabled;
+  }
 
   await user.save();
 
@@ -205,7 +207,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 
 export const getAllUsers = async (_req: Request, res: Response) => {
   // Only the name is needed to label other users' bets in the UI — avoid
-  // leaking every registered user's email/location/team to any logged-in user.
+  // leaking every registered user's email/team to any logged-in user.
   const users = await User.find().select('name');
   res.status(StatusCodes.OK).json({ users });
 };

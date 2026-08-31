@@ -17,6 +17,17 @@
   grid-gap: var(--spaceMd);
 }
 
+.profile-box .label-box-checkbox {
+  grid-auto-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.profile-box .label-box-checkbox input {
+  inline-size: auto;
+  padding: 0;
+}
+
 .profile-box h1 {
   margin-block: var(--spaceLg);
 }

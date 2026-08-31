@@ -35,3 +35,11 @@ table td {
 .ranking {
   inline-size: 3.125rem;
 }
+
+.team-badge {
+  padding: 0 var(--spaceXs);
+  border-radius: var(--radius5);
+  background: var(--gray);
+  font-size: var(--fontXs);
+  white-space: nowrap;
+}

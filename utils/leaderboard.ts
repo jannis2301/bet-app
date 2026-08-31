@@ -10,6 +10,7 @@ export const EXACT_HIT_POINTS = 3;
 export interface LeaderboardEntry {
   _id: mongoose.Types.ObjectId;
   name: string;
+  team: string;
   totalPoints: number;
   exactHits: number;
 }
@@ -41,6 +42,7 @@ export const populateLeaderboard = async (
         return {
           _id: leader._id,
           name: user.name,
+          team: user.team,
           totalPoints: leader.totalPoints,
           exactHits: leader.exactHits,
         };

@@ -233,7 +233,13 @@ describe('GET /api/bets/leaderboard/:matchday', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.leaderboard).toEqual([
-      { _id: expect.any(String), name: 'Alice', totalPoints: 3, exactHits: 1 },
+      {
+        _id: expect.any(String),
+        name: 'Alice',
+        team: 'my team',
+        totalPoints: 3,
+        exactHits: 1,
+      },
     ]);
   });
 
@@ -308,9 +314,27 @@ describe('GET /api/bets/leaderboard/:matchday', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.leaderboard).toEqual([
-      { _id: expect.any(String), name: 'Anna', totalPoints: 4, exactHits: 1 },
-      { _id: expect.any(String), name: 'Zoe', totalPoints: 4, exactHits: 1 },
-      { _id: expect.any(String), name: 'Bert', totalPoints: 4, exactHits: 0 },
+      {
+        _id: expect.any(String),
+        name: 'Anna',
+        team: 'my team',
+        totalPoints: 4,
+        exactHits: 1,
+      },
+      {
+        _id: expect.any(String),
+        name: 'Zoe',
+        team: 'my team',
+        totalPoints: 4,
+        exactHits: 1,
+      },
+      {
+        _id: expect.any(String),
+        name: 'Bert',
+        team: 'my team',
+        totalPoints: 4,
+        exactHits: 0,
+      },
     ]);
   });
 
@@ -388,8 +412,20 @@ describe('GET /api/bets/leaderboard/season', () => {
     expect(res.status).toBe(200);
     expect(res.body.season).toBe(currentSeason);
     expect(res.body.leaderboard).toEqual([
-      { _id: expect.any(String), name: 'Alice', totalPoints: 4, exactHits: 1 },
-      { _id: expect.any(String), name: 'Bob', totalPoints: 3, exactHits: 1 },
+      {
+        _id: expect.any(String),
+        name: 'Alice',
+        team: 'my team',
+        totalPoints: 4,
+        exactHits: 1,
+      },
+      {
+        _id: expect.any(String),
+        name: 'Bob',
+        team: 'my team',
+        totalPoints: 3,
+        exactHits: 1,
+      },
     ]);
   });
 
@@ -417,7 +453,13 @@ describe('GET /api/bets/leaderboard/season', () => {
     expect(res.status).toBe(200);
     expect(res.body.season).toBe(oldSeason);
     expect(res.body.leaderboard).toEqual([
-      { _id: expect.any(String), name: 'Alice', totalPoints: 7, exactHits: 0 },
+      {
+        _id: expect.any(String),
+        name: 'Alice',
+        team: 'my team',
+        totalPoints: 7,
+        exactHits: 0,
+      },
     ]);
   });
 
@@ -475,8 +517,20 @@ describe('GET /api/bets/leaderboard/season', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.leaderboard).toEqual([
-      { _id: expect.any(String), name: 'Zoe', totalPoints: 3, exactHits: 1 },
-      { _id: expect.any(String), name: 'Anna', totalPoints: 3, exactHits: 0 },
+      {
+        _id: expect.any(String),
+        name: 'Zoe',
+        team: 'my team',
+        totalPoints: 3,
+        exactHits: 1,
+      },
+      {
+        _id: expect.any(String),
+        name: 'Anna',
+        team: 'my team',
+        totalPoints: 3,
+        exactHits: 0,
+      },
     ]);
   });
 });

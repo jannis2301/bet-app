@@ -10,8 +10,12 @@ vi.mock('../../context/appContext', () => ({
 }));
 
 const baseContext = {
-  leaderboard: [{ _id: '1', name: 'Alice', totalPoints: 9, exactHits: 2 }],
-  seasonLeaderboard: [{ _id: '2', name: 'Bob', totalPoints: 42, exactHits: 5 }],
+  leaderboard: [
+    { _id: '1', name: 'Alice', team: 'FCB', totalPoints: 9, exactHits: 2 },
+  ],
+  seasonLeaderboard: [
+    { _id: '2', name: 'Bob', team: 'BVB', totalPoints: 42, exactHits: 5 },
+  ],
   seasonLeaderboardYear: 2025,
   bundesligaMatchday: 3,
   fetchBundesligaMatches: vi.fn(),
@@ -31,6 +35,7 @@ describe('Leaderboard', () => {
 
     expect(screen.getByText('Tabelle 3. Spieltag')).toBeInTheDocument();
     expect(screen.getByText('Alice')).toBeInTheDocument();
+    expect(screen.getByText('FCB')).toBeInTheDocument();
     expect(baseContext.getSeasonLeaderboard).not.toHaveBeenCalled();
   });
 
