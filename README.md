@@ -22,11 +22,16 @@ Match and result data comes from the public
 
 ## Features
 
-- Registration/login, change password in the profile, password reset via email
+- Registration requires admin approval: new sign-ups email the admin an
+  approve/reject link and can't log in until approved
+- Login, change password in the profile, password reset via email
 - Place bets per matchday, locked as soon as a match kicks off
+- Bundesliga standings table, kept in sync with OpenLigaDB
 - Leaderboard per matchday and for the whole season, with a deterministic
   tie-breaker (points → exact hits → name)
-- Automatic point calculation via a cron job once a matchday has finished
+- Automatic point calculation once a matchday has finished — checked via cron
+  and once on every server start, so results land promptly even after an idle
+  period (see [Deployment](#deployment))
 - Reminder emails when a matchday is starting soon and a user hasn't bet yet
 - Automatic season archiving ~30 days after the last matchday: the final
   standings are saved (with PDF export) and that season's bets are cleaned up
@@ -90,23 +95,28 @@ cp .env.example .env    # see Environment Variables below
 
 In a `.env` file at the project root:
 
-| Variable       | Required | Description                                               |
-| -------------- | -------- | --------------------------------------------------------- |
-| `MONGODB_URI`  | yes      | Connection string for the MongoDB instance                |
-| `JWT_SECRET`   | yes      | Secret used to sign auth tokens                           |
-| `JWT_LIFETIME` | no       | Token lifetime (default: `1d`)                            |
-| `PORT`         | no       | Server port in dev (default: `5050`)                      |
-| `NODE_ENV`     | no       | `development` (default) or `production`                   |
-| `SMTP_HOST`    | no\*     | SMTP server for outbound mail (password reset, reminders) |
-| `SMTP_PORT`    | no\*     | SMTP port (e.g. `587`)                                    |
-| `SMTP_USER`    | no\*     | SMTP credentials                                          |
-| `SMTP_PASS`    | no\*     | SMTP credentials                                          |
-| `SMTP_FROM`    | no\*     | From address for outbound mail                            |
+| Variable            | Required | Description                                                                   |
+| ------------------- | -------- | ------------------------------------------------------------------------------ |
+| `MONGODB_URI`       | yes      | Connection string for the MongoDB instance                                    |
+| `JWT_SECRET`        | yes      | Secret used to sign auth tokens                                                |
+| `JWT_LIFETIME`      | no       | Token lifetime (default: `1d`)                                                |
+| `PORT`              | no       | Server port in dev (default: `5050`)                                          |
+| `NODE_ENV`          | no       | `development` (default) or `production`                                       |
+| `SMTP_HOST`         | no\*     | SMTP server for outbound mail (password reset, reminders)                     |
+| `SMTP_PORT`         | no\*     | SMTP port (e.g. `587`)                                                        |
+| `SMTP_USER`         | no\*     | SMTP credentials                                                               |
+| `SMTP_PASS`         | no\*     | SMTP credentials                                                               |
+| `SMTP_FROM`         | no\*     | From address for outbound mail                                                |
+| `ADMIN_EMAIL`       | no\*\*   | Receives the approve/reject link for every new registration                   |
+| `DAILY_EMAIL_LIMIT` | no       | Hard cap on emails sent per rolling 24h, across all mail types (default: `10`) |
 
 \* Without SMTP configured, sending mail fails and gets logged, but doesn't
 block any requests — forgot-password still responds generically, and reminder
 emails are simply skipped for that user. A free
 [Ethereal](https://ethereal.email/) test account works well for local testing.
+
+\*\* Without it, registration still succeeds, but there's no one to approve
+it — the account stays pending indefinitely.
 
 ## Development
 
@@ -156,6 +166,18 @@ typecheck, and both test suites on every push/PR to `main`.
 Configured for [Render](https://render.com) as a single web service
 ([render.yaml](render.yaml)): `pnpm run setup-production` builds the client
 and backend, `node dist/server.js` serves both the API and the built React
-app statically in production. `MONGODB_URI` and the `SMTP_*` variables need
-to be set manually in the Render dashboard (external services, not a Render
-add-on).
+app statically in production. `MONGODB_URI`, the `SMTP_*` variables, and
+`ADMIN_EMAIL` need to be set manually in the Render dashboard (external
+services, not a Render add-on).
+
+Render's free plan suspends the service after ~15 minutes without incoming
+HTTP traffic, which also pauses the in-process cron jobs (scoring, reminders).
+To work around this:
+
+- `server.ts` runs the scoring and reminder checks once on every boot, so any
+  request that wakes a sleeping instance triggers an immediate catch-up.
+- [.github/workflows/keep-alive.yml](.github/workflows/keep-alive.yml) pings
+  `/healthcheck` every 10 minutes to keep the service from going idle in the
+  first place.
+
+Neither is needed (or does any harm) on an always-on plan.
