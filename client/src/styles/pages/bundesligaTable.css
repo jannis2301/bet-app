@@ -4,3 +4,19 @@
   gap: var(--spaceSm);
   text-align: start;
 }
+
+@media (max-width: 420px) {
+  .bundesliga-table th,
+  .bundesliga-table td {
+    padding: var(--spaceXs) 2px;
+    font-size: var(--fontXs);
+  }
+
+  .bundesliga-table .team-cell {
+    gap: var(--spaceXs);
+  }
+
+  .bundesliga-table .club-icon {
+    --img-size: 1.25rem;
+  }
+}
