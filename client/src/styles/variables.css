@@ -37,4 +37,8 @@
   --fontMd: 1.25rem;
   --fontLg: 1.5rem;
   --fontXl: 2rem;
+
+  /* Tap targets — invisible ::after sized to the WCAG-recommended minimum,
+     for buttons whose visible content is smaller than that */
+  --minTapTarget: 3rem; /* 48px */
 }

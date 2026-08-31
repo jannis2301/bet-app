@@ -88,10 +88,9 @@ button:disabled {
 }
 
 .btn::after {
-  --minSize: 3rem;
   content: '';
-  inline-size: var(--minSize);
-  block-size: var(--minSize);
+  inline-size: var(--minTapTarget);
+  block-size: var(--minTapTarget);
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;

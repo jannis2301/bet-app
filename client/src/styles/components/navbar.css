@@ -119,10 +119,9 @@
 }
 
 .user-btn::after {
-  --minSize: 3rem;
   content: '';
-  inline-size: var(--minSize);
-  block-size: var(--minSize);
+  inline-size: var(--minTapTarget);
+  block-size: var(--minTapTarget);
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;
@@ -146,10 +145,9 @@
 }
 
 .dropdown-btn::after {
-  --minSize: 3rem;
   content: '';
-  inline-size: var(--minSize);
-  block-size: var(--minSize);
+  inline-size: var(--minTapTarget);
+  block-size: var(--minTapTarget);
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;
@@ -161,10 +159,9 @@
 }
 
 .placeBet-btn::after {
-  --minSize: 3rem;
   content: '';
-  inline-size: var(--minSize);
-  block-size: var(--minSize);
+  inline-size: var(--minTapTarget);
+  block-size: var(--minTapTarget);
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;
@@ -187,10 +184,9 @@
 }
 
 .bets-btn::after {
-  --minSize: 3rem;
   content: '';
-  inline-size: var(--minSize);
-  block-size: var(--minSize);
+  inline-size: var(--minTapTarget);
+  block-size: var(--minTapTarget);
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;
