@@ -353,15 +353,14 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     async (matchday) => {
       dispatch({ type: SET_LOADING });
       try {
-        const { data } = await authFetch<{ leaderboard: LeaderboardEntry[] }>(
+        const { data } = await authFetch<{ leaderboard?: LeaderboardEntry[] }>(
           `/bets/leaderboard/${matchday}`
         );
-        const { leaderboard } = data;
 
         dispatch({
           type: GET_LEADERBOARD,
           payload: {
-            leaderboard,
+            leaderboard: data.leaderboard ?? [],
           },
         });
       } catch (error) {

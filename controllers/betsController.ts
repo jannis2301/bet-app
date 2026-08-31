@@ -111,9 +111,10 @@ export const getLeaderboard = async (req: Request, res: Response) => {
   const season = getCurrentSeason();
   const bets = await Bet.find({ matchDay: matchday, season });
   if (bets.length === 0) {
-    return res
-      .status(StatusCodes.OK)
-      .json({ msg: `No bets have been placed for matchday ${matchday}!` });
+    return res.status(StatusCodes.OK).json({
+      leaderboard: [],
+      msg: `No bets have been placed for matchday ${matchday}!`,
+    });
   }
 
   const leaderboard = await Bet.aggregate([

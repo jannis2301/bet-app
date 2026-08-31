@@ -35,6 +35,9 @@ const Leaderboard = () => {
 
   useEffect(() => {
     fetchBundesligaMatches(bundesligaMatchday);
+    // bundesligaMatchday starts out empty until the fetch above resolves and
+    // populates it — the effect then reruns via the dependency below.
+    if (!bundesligaMatchday) return;
     getLeaderboard(bundesligaMatchday);
   }, [bundesligaMatchday, fetchBundesligaMatches, getLeaderboard]);
 
@@ -54,6 +57,7 @@ const Leaderboard = () => {
     const intervalId = setInterval(() => {
       if (view === VIEW_MATCHDAY) {
         fetchBundesligaMatches(bundesligaMatchday);
+        if (!bundesligaMatchday) return;
         getLeaderboard(bundesligaMatchday);
       } else {
         getSeasonLeaderboard();
