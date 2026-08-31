@@ -28,11 +28,13 @@ Match and result data comes from the public
 - Place bets per matchday, locked as soon as a match kicks off
 - Bundesliga standings table, kept in sync with OpenLigaDB
 - Leaderboard per matchday and for the whole season, with a deterministic
-  tie-breaker (points → exact hits → name)
+  tie-breaker (points → exact hits → name) and each user's favorite team shown
+  as a badge
 - Automatic point calculation once a matchday has finished — checked via cron
   and once on every server start, so results land promptly even after an idle
   period (see [Deployment](#deployment))
 - Reminder emails when a matchday is starting soon and a user hasn't bet yet
+  (opt-out per user in the profile)
 - Automatic season archiving ~30 days after the last matchday: the final
   standings are saved (with PDF export) and that season's bets are cleaned up
 - Installable as a PWA
