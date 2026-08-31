@@ -32,11 +32,6 @@ const Navbar = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/leaderboard" onClick={() => setIsMenuOpen(false)}>
-              Tabelle
-            </NavLink>
-          </li>
-          <li>
             <NavLink
               to="/bundesliga-table"
               onClick={() => setIsMenuOpen(false)}
@@ -45,8 +40,13 @@ const Navbar = () => {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/leaderboard" onClick={() => setIsMenuOpen(false)}>
+              Tipp-Tabelle
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/bets" onClick={() => setIsMenuOpen(false)}>
-              Tipps
+              Alle Tipps
             </NavLink>
           </li>
           <li>
