@@ -25,6 +25,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
+// Render terminates TLS at its own edge proxy and forwards requests with an
+// X-Forwarded-For header — without this, express-rate-limit rejects that
+// header (ERR_ERL_UNEXPECTED_X_FORWARDED_FOR) and req.ip/req.protocol would
+// report the proxy instead of the real client. Render sits behind exactly
+// one proxy hop, hence `1`.
+app.set('trust proxy', 1);
+
 if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
