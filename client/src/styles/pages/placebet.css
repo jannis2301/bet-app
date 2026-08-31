@@ -8,7 +8,7 @@
 }
 
 .placeBet-btn::after {
-  content: '';
+  content: "";
   inline-size: var(--minTapTarget);
   block-size: var(--minTapTarget);
   position: absolute;
@@ -37,6 +37,6 @@
 }
 
 /* Firefox */
-.input-number[type='number'] {
+.input-number[type="number"] {
   -moz-appearance: textfield;
 }

@@ -110,7 +110,7 @@
 
 .prev-btn::after,
 .next-btn::after {
-  content: '';
+  content: "";
   inline-size: var(--minTapTarget);
   block-size: var(--minTapTarget);
   position: absolute;

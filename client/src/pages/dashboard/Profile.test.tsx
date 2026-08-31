@@ -32,9 +32,7 @@ describe('Profile settings', () => {
   it('starts with the email reminders checkbox checked', () => {
     render(<Profile />);
 
-    expect(
-      screen.getByLabelText('Erinnerungs-E-Mails erhalten')
-    ).toBeChecked();
+    expect(screen.getByLabelText('Erinnerungs-E-Mails erhalten')).toBeChecked();
   });
 
   it('submits emailRemindersEnabled: false after unchecking it', async () => {

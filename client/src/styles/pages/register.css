@@ -30,7 +30,7 @@
 }
 
 .register-box .btn::after {
-  content: '';
+  content: "";
   inline-size: var(--minTapTarget);
   block-size: var(--minTapTarget);
   position: absolute;
@@ -44,7 +44,7 @@
 }
 
 .register-box .member-btn::after {
-  content: '';
+  content: "";
   inline-size: var(--minTapTarget);
   block-size: var(--minTapTarget);
   position: absolute;

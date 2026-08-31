@@ -102,7 +102,7 @@
 }
 
 .user-btn::after {
-  content: '';
+  content: "";
   inline-size: var(--minTapTarget);
   block-size: var(--minTapTarget);
   position: absolute;
@@ -128,7 +128,7 @@
 }
 
 .dropdown-btn::after {
-  content: '';
+  content: "";
   inline-size: var(--minTapTarget);
   block-size: var(--minTapTarget);
   position: absolute;

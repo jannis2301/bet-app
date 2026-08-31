@@ -40,9 +40,7 @@ const RankingTable = ({ entries }: RankingTableProps) => {
             <td className="ranking">{index + 1}</td>
             <td>
               {entry.name}{' '}
-              {entry.team && (
-                <span className="team-badge">{entry.team}</span>
-              )}
+              {entry.team && <span className="team-badge">{entry.team}</span>}
             </td>
             <td>{entry.totalPoints}</td>
             <td>{entry.exactHits}</td>
