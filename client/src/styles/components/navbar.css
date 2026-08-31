@@ -15,18 +15,11 @@
 
 .logo {
   margin: 0;
-  flex: 1;
 }
 
 .nav-links {
   --nav-height: 3.8125rem;
-}
-
-.nav-links {
-  flex: 5;
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--spaceMd);
+  display: none;
 }
 
 .nav-links a {
@@ -38,8 +31,24 @@
   color: yellow;
 }
 
+.nav-links.open {
+  display: block;
+  inline-size: 100%;
+  block-size: calc(100vh - var(--nav-height));
+  padding: var(--spaceXl) 0;
+  position: absolute;
+  inset-block-start: var(--nav-height);
+  inset-inline-start: 0;
+  background: var(--blue);
+  z-index: 10;
+}
+
+.nav-links li:not(:last-child) {
+  margin-block-end: var(--space3xl);
+}
+
 .hamburger-menu {
-  display: none;
+  display: block;
   border: none;
   background: none;
   cursor: pointer;
@@ -55,7 +64,7 @@
 
 .btn-container {
   position: relative;
-  flex: 2;
+  margin-inline-start: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -189,30 +198,6 @@
 }
 
 @media (max-width: 850px) {
-  .hamburger-menu {
-    display: block;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
-  .nav-links.open {
-    display: block;
-    inline-size: 100%;
-    block-size: calc(100vh - var(--nav-height));
-    padding: var(--spaceXl) 0;
-    position: absolute;
-    inset-block-start: var(--nav-height);
-    inset-inline-start: 0;
-    background: var(--blue);
-    z-index: 10;
-  }
-
-  .nav-links li:not(:last-child) {
-    margin-block-end: var(--space3xl);
-  }
-
   .user-bets-box {
     display: flex;
     justify-content: center;
