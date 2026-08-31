@@ -17,28 +17,19 @@ describe('initializeCron', () => {
     vi.mocked(compareScores).mockClear();
   });
 
-  it('schedules compareScores to run at midnight on Sunday and Wednesday', () => {
+  it('schedules compareScores to run every 3 hours', () => {
     initializeCron();
 
-    expect(cron.schedule).toHaveBeenNthCalledWith(
-      1,
-      '0 0 * * 0',
-      compareScores
-    );
-    expect(cron.schedule).toHaveBeenNthCalledWith(
-      2,
-      '0 0 * * 3',
-      compareScores
-    );
+    expect(cron.schedule).toHaveBeenCalledWith('0 */3 * * *', compareScores);
   });
 
-  it('invokes compareScores when a scheduled task fires', () => {
+  it('invokes compareScores when the scheduled task fires', () => {
     initializeCron();
 
     for (const [, task] of vi.mocked(cron.schedule).mock.calls) {
       (task as () => void)();
     }
 
-    expect(compareScores).toHaveBeenCalledTimes(2);
+    expect(compareScores).toHaveBeenCalledTimes(1);
   });
 });

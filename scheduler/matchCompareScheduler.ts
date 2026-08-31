@@ -1,13 +1,12 @@
 import cron from 'node-cron';
 import { compareScores } from './compareScores.js';
 
-// Midnight Sunday and midnight Wednesday, after the weekend and midweek
-// matchdays have finished. compareScores() catches its own errors, so no
-// error handling is needed here.
-const CRON_EXPRESSIONS = ['0 0 * * 0', '0 0 * * 3'];
+// Every 3 hours, as a backup for stretches where the app stays warm under
+// real traffic — server.ts's startup call is what actually catches results
+// promptly on Render's free plan (see comment there). compareScores()
+// catches its own errors, so no error handling is needed here.
+const CRON_EXPRESSION = '0 */3 * * *';
 
 export const initializeCron = (): void => {
-  for (const expression of CRON_EXPRESSIONS) {
-    cron.schedule(expression, compareScores);
-  }
+  cron.schedule(CRON_EXPRESSION, compareScores);
 };
