@@ -23,12 +23,12 @@ const Navbar = () => {
         <ul className={isMenuOpen ? 'nav-links open' : 'nav-links'}>
           <li>
             <NavLink to="/" onClick={() => setIsMenuOpen(false)}>
-              Home
+              Spieltag tippen
             </NavLink>
           </li>
           <li>
-            <NavLink to="/placebet" onClick={() => setIsMenuOpen(false)}>
-              Spieltag tippen
+            <NavLink to="/matchday" onClick={() => setIsMenuOpen(false)}>
+              Bundesliga-Spieltag
             </NavLink>
           </li>
           <li>

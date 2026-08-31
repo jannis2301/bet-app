@@ -8,9 +8,9 @@ import {
 } from './pages';
 import {
   BundesligaTable,
-  Home,
   Layout,
   Leaderboard,
+  Matchday,
   PastSeasons,
   PlaceBet,
   Profile,
@@ -29,8 +29,8 @@ const App = () => {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Home />} />
-          <Route path="/placebet" element={<PlaceBet />} />
+          <Route index element={<PlaceBet />} />
+          <Route path="/matchday" element={<Matchday />} />
           <Route path="/bets" element={<UserBets />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/bundesliga-table" element={<BundesligaTable />} />

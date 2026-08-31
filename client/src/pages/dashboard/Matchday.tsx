@@ -3,10 +3,15 @@ import { useEffect } from 'react';
 import { MatchdayHeadline, MatchRow } from '../../components';
 import { useAppContext } from '../../context/appContext';
 
-const Home = () => {
+// How often to re-check for a new current matchday / updated scores while
+// this page is open, so it doesn't stay stuck on a stale matchday.
+const POLL_INTERVAL_MS = 5 * 60 * 1000;
+
+const Matchday = () => {
   const {
     bundesligaMatches,
     bundesligaMatchday,
+    currentMatchday,
     fetchBundesligaMatches,
     isLoading,
   } = useAppContext();
@@ -14,6 +19,16 @@ const Home = () => {
   useEffect(() => {
     fetchBundesligaMatches();
   }, [fetchBundesligaMatches]);
+
+  // Only auto-refresh while viewing the current matchday — otherwise this
+  // would yank the user back from a manually browsed past/future matchday.
+  useEffect(() => {
+    if (bundesligaMatchday !== currentMatchday) return;
+    const intervalId = setInterval(() => {
+      fetchBundesligaMatches();
+    }, POLL_INTERVAL_MS);
+    return () => clearInterval(intervalId);
+  }, [bundesligaMatchday, currentMatchday, fetchBundesligaMatches]);
 
   return (
     <section>
@@ -69,4 +84,4 @@ const Home = () => {
     </section>
   );
 };
-export default Home;
+export default Matchday;

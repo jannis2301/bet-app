@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AppContextValue } from '../../context/appContext';
 import { useAppContext } from '../../context/appContext';
 import type { Match } from '../../types';
-import Home from './Home';
+import Matchday from './Matchday';
 
 vi.mock('../../context/appContext', () => ({
   useAppContext: vi.fn(),
@@ -26,7 +26,7 @@ const upcomingMatch: Match = {
   group: { groupOrderID: 1 },
 };
 
-describe('Home', () => {
+describe('Matchday', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -39,7 +39,7 @@ describe('Home', () => {
       isLoading: false,
     } as unknown as AppContextValue);
 
-    render(<Home />);
+    render(<Matchday />);
 
     expect(screen.getByText(/20:30/)).toBeInTheDocument();
     expect(screen.queryByText(/22:30/)).not.toBeInTheDocument();
