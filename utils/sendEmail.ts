@@ -63,6 +63,7 @@ export const sendEmail = async ({
     text,
     html,
   });
+  console.log(`Email sent to ${to}: ${subject}`);
 
   await EmailLog.create({});
 };

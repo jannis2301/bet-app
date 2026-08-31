@@ -55,7 +55,7 @@ export const register = async (req: Request, res: Response) => {
     });
   } catch (error) {
     // never let a mail-provider failure block the registration itself
-    console.error(error);
+    console.error('Failed to send registration notification email:', error);
   }
 
   res.status(StatusCodes.CREATED).json({
@@ -251,7 +251,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
   } catch (error) {
     // never let a mail-provider failure leak whether the account exists, or
     // surface as a 500 — same generic response either way, just logged
-    console.error(error);
+    console.error('Failed to send password reset email:', error);
   }
 
   res.status(StatusCodes.OK).json(genericResponse);
