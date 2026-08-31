@@ -3,6 +3,20 @@
   place-items: center;
 }
 
+.placeBet-btn {
+  margin-block: var(--spaceLg);
+}
+
+.placeBet-btn::after {
+  content: '';
+  inline-size: var(--minTapTarget);
+  block-size: var(--minTapTarget);
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .placebets-box label {
   display: none;
 }

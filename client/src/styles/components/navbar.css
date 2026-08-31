@@ -74,8 +74,7 @@
   visibility: visible;
 }
 
-.dropdown,
-.user-bets {
+.dropdown {
   position: absolute;
   inset-block-start: 0.125rem;
   inset-inline-start: 0px;
@@ -85,22 +84,6 @@
   visibility: hidden;
   border-radius: var(--radius5);
   z-index: 12;
-}
-
-.user-bets {
-  display: grid;
-  max-inline-size: 8rem;
-  inline-size: 100dvw;
-  inset-block-start: 2rem;
-  inset-inline-start: 50%;
-  transform: translateX(-50%);
-  gap: var(--spaceMd);
-  box-shadow: var(--boxShadow);
-  background: var(--lightBlue);
-}
-
-.user-bets.show-user-bets {
-  visibility: visible;
 }
 
 .user-btn {
@@ -154,57 +137,7 @@
   transform: translate(-50%, -50%);
 }
 
-.placeBet-btn {
-  margin-block: var(--spaceLg);
-}
-
-.placeBet-btn::after {
-  content: '';
-  inline-size: var(--minTapTarget);
-  block-size: var(--minTapTarget);
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.user-bets-box {
-  position: relative;
-}
-
-.bets-btn {
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  background: transparent;
-  color: var(--text-clr);
-  cursor: pointer;
-}
-
-.bets-btn::after {
-  content: '';
-  inline-size: var(--minTapTarget);
-  block-size: var(--minTapTarget);
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: 50%;
-  transform: translate(-50%, -50%);
-}
-
 @media (max-width: 850px) {
-  .user-bets-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .user-bets {
-    background: var(--blue);
-    box-shadow: none;
-  }
-
   .user-btn-name {
     max-inline-size: 5rem;
   }
