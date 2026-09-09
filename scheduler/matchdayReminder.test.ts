@@ -61,11 +61,25 @@ describe('sendMatchdayReminders', () => {
       matchdayToFetch: 3,
     });
     await createUser({ email: 'forgetful@example.com' });
+    await createUser({
+      email: 'telegram-user@example.com',
+      telegramChatId: '12345',
+    });
 
     await sendMatchdayReminders();
 
     expect(sendEmail).toHaveBeenCalledWith(
-      expect.objectContaining({ text: expect.stringContaining('https://example.com') })
+      expect.objectContaining({
+        text: expect.stringContaining('https://example.com'),
+        html: expect.stringContaining('<a href="https://example.com">'),
+      })
+    );
+    // Telegram messages are sent with parse_mode: 'HTML' (sendTelegramMessage.ts),
+    // so the link uses the same <a>-under-a-label markup as the email's html field
+    expect(sendTelegramMessage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        text: expect.stringContaining('<a href="https://example.com">'),
+      })
     );
   });
 

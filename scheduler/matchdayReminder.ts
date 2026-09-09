@@ -19,15 +19,25 @@ const REMINDER_WINDOW_MS = 24 * 60 * 60 * 1000;
 const getAppUrl = (): string | undefined =>
   process.env.APP_URL || process.env.RENDER_EXTERNAL_URL;
 
+const LINK_LABEL = 'Gehe jetzt zur Tippy-App';
+
 const buildReminderMessage = (matchday: number) => {
   const question = `Der ${matchday}. Spieltag startet bald. Hast du schon getippt?`;
   const appUrl = getAppUrl();
   return {
     subject: `Spieltag ${matchday} startet bald`,
-    text: appUrl ? `${question}\n\n${appUrl}` : question,
+    // plain text can't render a hyperlink under a label, so the email's
+    // text fallback spells out the URL instead
+    text: appUrl ? `${question}\n\n${LINK_LABEL}: ${appUrl}` : question,
     html: appUrl
-      ? `<p>${question}</p><p><a href="${appUrl}">${appUrl}</a></p>`
+      ? `<p>${question}</p><p><a href="${appUrl}">${LINK_LABEL}</a></p>`
       : `<p>${question}</p>`,
+    // Telegram messages are sent with parse_mode: 'HTML' (see
+    // sendTelegramMessage.ts), so this can use the same link-under-a-label
+    // markup as the email's html field
+    telegramText: appUrl
+      ? `${question}\n\n<a href="${appUrl}">${LINK_LABEL}</a>`
+      : question,
   };
 };
 
@@ -59,7 +69,7 @@ export const sendMatchdayReminders = async (): Promise<void> => {
       _id: { $nin: usersWhoBet },
     });
 
-    const { subject, text, html } = buildReminderMessage(matchday);
+    const { subject, text, html, telegramText } = buildReminderMessage(matchday);
     const emailResults = await Promise.allSettled(
       usersToRemind
         // $ne (not $eq: true) also matches documents from before this field
@@ -77,7 +87,7 @@ export const sendMatchdayReminders = async (): Promise<void> => {
         .map((user) =>
           sendTelegramMessageModule.sendTelegramMessage({
             chatId: user.telegramChatId as string,
-            text,
+            text: telegramText,
           })
         )
     );

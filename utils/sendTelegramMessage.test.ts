@@ -33,6 +33,7 @@ describe('sendTelegramMessage', () => {
         body: JSON.stringify({
           chat_id: '12345',
           text: messageArgs.text,
+          parse_mode: 'HTML',
         }),
       })
     );

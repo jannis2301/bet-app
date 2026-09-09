@@ -37,7 +37,11 @@ export const sendTelegramMessage = async ({
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text }),
+      // parse_mode 'HTML' lets callers (e.g. matchdayReminder.ts) send a
+      // clickable <a> link under a readable label instead of a bare URL —
+      // safe here since every caller's text is our own static copy, never
+      // untrusted input that would need escaping
+      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
       signal: AbortSignal.timeout(10_000),
     }
   );
