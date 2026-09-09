@@ -111,7 +111,7 @@ const Profile = () => {
           {currentUser.telegramChatId ? (
             <div className="label-box label-box-checkbox">
               <label htmlFor="telegramRemindersEnabled">
-                Telegram verbunden ✅ — Erinnerungen erhalten
+                Telegram-Erinnerungen erhalten
               </label>
               <input
                 type="checkbox"
