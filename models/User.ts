@@ -7,6 +7,9 @@ import validator from 'validator';
 // how long a password reset token stays valid after being issued
 const PASSWORD_RESET_TOKEN_LIFETIME_MS = 10 * 60 * 1000;
 
+// how long a Telegram account-linking token stays valid after being issued
+const TELEGRAM_LINK_TOKEN_LIFETIME_MS = 15 * 60 * 1000;
+
 export interface IUser {
   name: string;
   email: string;
@@ -21,6 +24,8 @@ export interface IUser {
   // opt-out for scheduler/matchdayReminder.ts's cron telegram message —
   // irrelevant until telegramChatId is set
   telegramRemindersEnabled: boolean;
+  telegramLinkToken?: string;
+  telegramLinkTokenExpires?: Date;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
   createdAt: Date;
@@ -33,6 +38,10 @@ interface IUserMethods {
   // hashes and stores a reset token on the document (caller must still save()),
   // returns the unhashed token to hand to the user
   createPasswordResetToken(): string;
+  // same idea as createPasswordResetToken, but short enough (and restricted
+  // to a safe charset) to survive Telegram's t.me/<bot>?start=<payload> deep
+  // link, which caps the payload at 64 chars from [A-Za-z0-9_-]
+  createTelegramLinkToken(): string;
 }
 
 type UserModel = mongoose.Model<IUser, Record<string, never>, IUserMethods>;
@@ -86,6 +95,14 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>(
       type: Boolean,
       default: true,
     },
+    telegramLinkToken: {
+      type: String,
+      select: false,
+    },
+    telegramLinkTokenExpires: {
+      type: Date,
+      select: false,
+    },
     passwordResetToken: {
       type: String,
       select: false,
@@ -129,6 +146,17 @@ UserSchema.methods.createPasswordResetToken = function (): string {
     Date.now() + PASSWORD_RESET_TOKEN_LIFETIME_MS
   );
   return resetToken;
+};
+
+UserSchema.methods.createTelegramLinkToken = function (): string {
+  // hex (0-9a-f) is a subset of the charset Telegram allows in a deep-link
+  // payload, and 32 chars comfortably clears its 64-char cap
+  const linkToken = randomBytes(16).toString('hex');
+  this.telegramLinkToken = createHash('sha256').update(linkToken).digest('hex');
+  this.telegramLinkTokenExpires = new Date(
+    Date.now() + TELEGRAM_LINK_TOKEN_LIFETIME_MS
+  );
+  return linkToken;
 };
 
 const User =

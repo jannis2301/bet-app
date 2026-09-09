@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import app from '../app.js';
 import User from '../models/User.js';
 import * as sendTelegramMessageModule from '../utils/sendTelegramMessage.js';
-import { signTelegramLinkToken } from '../utils/telegramLinkToken.js';
 
 const sendTelegramMessage = vi.spyOn(
   sendTelegramMessageModule,
@@ -47,6 +46,12 @@ describe('GET /api/telegram/link-token', () => {
 
     expect(res.status).toBe(302);
     expect(res.headers.location).toMatch(/^https:\/\/t\.me\/TippyBot\?start=.+/);
+    // Telegram's t.me/<bot>?start=<payload> deep link only allows up to 64
+    // characters from [A-Za-z0-9_-] — anything else (e.g. a raw JWT, with
+    // its dots and 100+ chars) gets silently mangled by Telegram
+    const linkToken = res.headers.location.split('start=')[1];
+    expect(linkToken.length).toBeLessThanOrEqual(64);
+    expect(linkToken).toMatch(/^[A-Za-z0-9_-]+$/);
   });
 });
 
@@ -67,7 +72,8 @@ describe('POST /api/telegram/webhook', () => {
 
   it('links the chat id to the user identified by a valid token', async () => {
     const user = await createUser();
-    const linkToken = signTelegramLinkToken(user._id.toString());
+    const linkToken = user.createTelegramLinkToken();
+    await user.save({ validateBeforeSave: false });
 
     const res = await sendUpdate({
       message: { text: `/start ${linkToken}`, chat: { id: 987654321 } },
@@ -79,6 +85,21 @@ describe('POST /api/telegram/webhook', () => {
     expect(sendTelegramMessage).toHaveBeenCalledWith(
       expect.objectContaining({ chatId: '987654321' })
     );
+  });
+
+  it('responds 200 without linking anything on an expired token', async () => {
+    const user = await createUser();
+    const linkToken = user.createTelegramLinkToken();
+    user.telegramLinkTokenExpires = new Date(Date.now() - 1000);
+    await user.save({ validateBeforeSave: false });
+
+    const res = await sendUpdate({
+      message: { text: `/start ${linkToken}`, chat: { id: 555 } },
+    });
+
+    expect(res.status).toBe(200);
+    const stored = await User.findById(user._id);
+    expect(stored?.telegramChatId).toBeUndefined();
   });
 
   it('responds 200 without linking anything on an invalid token', async () => {

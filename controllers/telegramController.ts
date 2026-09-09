@@ -1,13 +1,11 @@
+import { createHash } from 'node:crypto';
 import type { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { UnAuthenticatedError } from '../errors/index.js';
 import User from '../models/User.js';
 // imported via namespace (not destructured) so tests can vi.spyOn the
 // exported binding directly — see betsController.test.ts for the same pattern
 import * as sendTelegramMessageModule from '../utils/sendTelegramMessage.js';
-import {
-  signTelegramLinkToken,
-  verifyTelegramLinkToken,
-} from '../utils/telegramLinkToken.js';
 
 interface TelegramUpdate {
   message?: {
@@ -23,7 +21,14 @@ interface TelegramUpdate {
 // routinely (if inconsistently) block since it no longer runs inside the
 // click's user-activation window
 export const getLinkToken = async (req: Request, res: Response) => {
-  const token = signTelegramLinkToken(req.user?.userId as string);
+  const user = await User.findOne({ _id: req.user?.userId });
+  if (!user) {
+    throw new UnAuthenticatedError('Authentication Invalid');
+  }
+
+  const token = user.createTelegramLinkToken();
+  await user.save({ validateBeforeSave: false });
+
   res.redirect(
     `https://t.me/${process.env.TELEGRAM_BOT_USERNAME}?start=${token}`
   );
@@ -49,17 +54,26 @@ export const telegramWebhook = async (req: Request, res: Response) => {
 
     if (text?.startsWith('/start') && chatId) {
       const linkToken = text.split(' ')[1];
-      const userId = linkToken ? verifyTelegramLinkToken(linkToken) : null;
+      const hashedToken = linkToken
+        ? createHash('sha256').update(linkToken).digest('hex')
+        : null;
+      const user = hashedToken
+        ? await User.findOne({
+            telegramLinkToken: hashedToken,
+            telegramLinkTokenExpires: { $gt: new Date() },
+          }).select('+telegramLinkToken +telegramLinkTokenExpires')
+        : null;
 
-      if (!userId) {
+      if (!user) {
         await sendTelegramMessageModule.sendTelegramMessage({
           chatId: String(chatId),
           text: 'Dieser Link ist ungültig oder abgelaufen. Fordere in deinen Profil-Einstellungen einen neuen an.',
         });
       } else {
-        await User.findByIdAndUpdate(userId, {
-          telegramChatId: String(chatId),
-        });
+        user.telegramChatId = String(chatId);
+        user.telegramLinkToken = undefined;
+        user.telegramLinkTokenExpires = undefined;
+        await user.save({ validateBeforeSave: false });
         await sendTelegramMessageModule.sendTelegramMessage({
           chatId: String(chatId),
           text: 'Dein Telegram-Account ist jetzt verknüpft — du bekommst ab jetzt Erinnerungen zu neuen Spieltagen hier.',
