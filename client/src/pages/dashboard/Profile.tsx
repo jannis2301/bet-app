@@ -108,20 +108,22 @@ const Profile = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="label-box">
-            <label htmlFor="telegram">Telegram-Erinnerungen</label>
-            {currentUser.telegramChatId ? (
-              <div className="label-box-checkbox">
-                <span>Telegram verbunden ✅</span>
-                <input
-                  type="checkbox"
-                  id="telegramRemindersEnabled"
-                  name="telegramRemindersEnabled"
-                  checked={values.telegramRemindersEnabled}
-                  onChange={handleChange}
-                />
-              </div>
-            ) : (
+          {currentUser.telegramChatId ? (
+            <div className="label-box label-box-checkbox">
+              <label htmlFor="telegramRemindersEnabled">
+                Telegram verbunden ✅ — Erinnerungen erhalten
+              </label>
+              <input
+                type="checkbox"
+                id="telegramRemindersEnabled"
+                name="telegramRemindersEnabled"
+                checked={values.telegramRemindersEnabled}
+                onChange={handleChange}
+              />
+            </div>
+          ) : (
+            <div className="label-box">
+              <label htmlFor="telegram">Telegram-Erinnerungen</label>
               <a
                 id="telegram"
                 className="btn"
@@ -131,8 +133,8 @@ const Profile = () => {
               >
                 Mit Telegram verbinden
               </a>
-            )}
-          </div>
+            </div>
+          )}
         </div>
         <button type="submit" className="btn" disabled={isLoading}>
           Submit
