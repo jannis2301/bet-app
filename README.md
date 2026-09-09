@@ -114,6 +114,7 @@ In a `.env` file at the project root:
 | `TELEGRAM_BOT_USERNAME`  | no\*\*\*  | The bot's `@username`, used to build the account-linking deep link          |
 | `TELEGRAM_WEBHOOK_SECRET`| no\*\*\*  | Shared secret Telegram echoes back per update; must match the `secret_token` passed to `setWebhook` |
 | `DAILY_TELEGRAM_LIMIT`   | no        | Hard cap on Telegram messages sent per rolling 24h (default: `50`)          |
+| `APP_URL`                | no\*\*\*\* | Public URL linked in matchday reminders; not needed on Render — falls back to its auto-set `RENDER_EXTERNAL_URL` |
 
 \* Without it configured, sending mail fails and gets logged, but doesn't
 block any requests — forgot-password still responds generically, and reminder
@@ -130,6 +131,9 @@ without a linked chat. Once set, the webhook also needs to be registered once
 with Telegram (not something `.env` alone handles):
 `curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://<your-domain>/api/telegram/webhook&secret_token=<TELEGRAM_WEBHOOK_SECRET>"`
 — see [controllers/telegramController.ts](controllers/telegramController.ts).
+
+\*\*\*\* Without it (and outside Render), reminders are simply sent without a
+link to the app.
 
 ## Development
 
