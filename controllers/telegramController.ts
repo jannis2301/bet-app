@@ -16,11 +16,17 @@ interface TelegramUpdate {
   };
 }
 
+// a plain GET redirect (not a JSON response fetched then window.open()'d) —
+// so the browser treats opening the deep link as a direct result of the
+// user's click on the <a target="_blank"> in Profile.tsx, rather than a
+// window.open() call after an async round-trip, which popup blockers
+// routinely (if inconsistently) block since it no longer runs inside the
+// click's user-activation window
 export const getLinkToken = async (req: Request, res: Response) => {
   const token = signTelegramLinkToken(req.user?.userId as string);
-  res.status(StatusCodes.OK).json({
-    linkUrl: `https://t.me/${process.env.TELEGRAM_BOT_USERNAME}?start=${token}`,
-  });
+  res.redirect(
+    `https://t.me/${process.env.TELEGRAM_BOT_USERNAME}?start=${token}`
+  );
 };
 
 // Hit by Telegram's servers, not the SPA — authenticated via the shared

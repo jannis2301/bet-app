@@ -11,15 +11,8 @@ const initialPasswordValues = {
 };
 
 const Profile = () => {
-  const {
-    user,
-    showAlert,
-    displayAlert,
-    updateUser,
-    updatePassword,
-    getTelegramLinkUrl,
-    isLoading,
-  } = useAppContext();
+  const { user, showAlert, displayAlert, updateUser, updatePassword, isLoading } =
+    useAppContext();
   // Profile is only ever reached through ProtectedRoute, which already
   // guarantees a logged-in user before rendering its children.
   const currentUser = user as User;
@@ -31,11 +24,6 @@ const Profile = () => {
     telegramRemindersEnabled: currentUser.telegramRemindersEnabled,
   });
   const [passwordValues, setPasswordValues] = useState(initialPasswordValues);
-
-  const handleTelegramLink = async () => {
-    const linkUrl = await getTelegramLinkUrl();
-    if (linkUrl) window.open(linkUrl, '_blank', 'noopener,noreferrer');
-  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name, type, checked } = e.target;
@@ -134,14 +122,15 @@ const Profile = () => {
                 />
               </div>
             ) : (
-              <button
-                type="button"
+              <a
                 id="telegram"
                 className="btn"
-                onClick={handleTelegramLink}
+                href="/api/telegram/link-token"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Mit Telegram verbinden
-              </button>
+              </a>
             )}
           </div>
         </div>

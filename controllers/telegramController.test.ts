@@ -30,25 +30,23 @@ beforeEach(() => {
   process.env.TELEGRAM_WEBHOOK_SECRET = 'test-webhook-secret';
 });
 
-describe('POST /api/telegram/link-token', () => {
+describe('GET /api/telegram/link-token', () => {
   it('rejects an unauthenticated request', async () => {
-    const res = await request(app).post('/api/telegram/link-token');
+    const res = await request(app).get('/api/telegram/link-token');
 
     expect(res.status).toBe(401);
   });
 
-  it('returns a deep link containing a verifiable token', async () => {
+  it('redirects to a deep link containing a verifiable token', async () => {
     const user = await createUser();
     const token = signToken(user._id.toString());
 
     const res = await request(app)
-      .post('/api/telegram/link-token')
+      .get('/api/telegram/link-token')
       .set('Cookie', [`token=${token}`]);
 
-    expect(res.status).toBe(200);
-    expect(res.body.linkUrl).toMatch(
-      /^https:\/\/t\.me\/TippyBot\?start=.+/
-    );
+    expect(res.status).toBe(302);
+    expect(res.headers.location).toMatch(/^https:\/\/t\.me\/TippyBot\?start=.+/);
   });
 });
 

@@ -27,7 +27,7 @@ const linkTokenLimiter = rateLimiter({
   skip: skipInTest,
 });
 
-router.route('/link-token').post(linkTokenLimiter, authenticateUser, getLinkToken);
+router.route('/link-token').get(linkTokenLimiter, authenticateUser, getLinkToken);
 router.route('/webhook').post(telegramWebhook);
 
 export default router;

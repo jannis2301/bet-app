@@ -91,7 +91,6 @@ export interface AppContextValue extends AppState {
     oldPassword: string;
     newPassword: string;
   }) => Promise<void>;
-  getTelegramLinkUrl: () => Promise<string | null>;
   createBet: (bets: BetFormEntry[], userId: string) => Promise<void>;
   getUserBetsByMatchday: (matchday: number | '') => Promise<void>;
   getAllUsers: () => Promise<void>;
@@ -308,23 +307,6 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     },
     [clearAlert]
   );
-
-  const getTelegramLinkUrl: AppContextValue['getTelegramLinkUrl'] =
-    useCallback(async () => {
-      try {
-        const { data } = await authFetch.post<{ linkUrl: string }>(
-          '/telegram/link-token'
-        );
-        return data.linkUrl;
-      } catch (error) {
-        dispatch({
-          type: SET_ERROR,
-          payload: { msg: getErrorMessage(error) },
-        });
-        clearAlert();
-        return null;
-      }
-    }, [clearAlert]);
 
   const createBet: AppContextValue['createBet'] = useCallback(
     async (bets, userId) => {
@@ -569,7 +551,6 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
         handleChange,
         updateUser,
         updatePassword,
-        getTelegramLinkUrl,
         createBet,
         getUserBetsByMatchday,
         getAllUsers,
