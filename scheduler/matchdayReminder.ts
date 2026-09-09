@@ -11,11 +11,25 @@ import * as sendTelegramMessageModule from '../utils/sendTelegramMessage.js';
 // send once the upcoming matchday's earliest kickoff falls within this window
 const REMINDER_WINDOW_MS = 24 * 60 * 60 * 1000;
 
-const buildReminderMessage = (matchday: number) => ({
-  subject: `Spieltag ${matchday} startet bald`,
-  text: `Der ${matchday}. Spieltag startet bald. Hast du schon getippt?`,
-  html: `<p>Der <strong>${matchday}. Spieltag</strong> startet bald. Hast du schon getippt?</p>`,
-});
+// no incoming request here (this runs off a cron tick, not an HTTP handler)
+// to derive a host from, unlike e.g. authController.ts's forgotPassword —
+// RENDER_EXTERNAL_URL is set automatically for every Render web service, so
+// production needs no extra config; APP_URL overrides it (e.g. for local
+// testing). Without either, the reminder is just sent without a link.
+const getAppUrl = (): string | undefined =>
+  process.env.APP_URL || process.env.RENDER_EXTERNAL_URL;
+
+const buildReminderMessage = (matchday: number) => {
+  const question = `Der ${matchday}. Spieltag startet bald. Hast du schon getippt?`;
+  const appUrl = getAppUrl();
+  return {
+    subject: `Spieltag ${matchday} startet bald`,
+    text: appUrl ? `${question}\n\n${appUrl}` : question,
+    html: appUrl
+      ? `<p>${question}</p><p><a href="${appUrl}">${appUrl}</a></p>`
+      : `<p>${question}</p>`,
+  };
+};
 
 export const sendMatchdayReminders = async (): Promise<void> => {
   try {

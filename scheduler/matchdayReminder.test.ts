@@ -48,6 +48,41 @@ describe('sendMatchdayReminders', () => {
     sendEmail.mockResolvedValue(undefined);
     sendTelegramMessage.mockReset();
     sendTelegramMessage.mockResolvedValue(undefined);
+    // process.env.X = undefined stringifies to "undefined" in Node rather
+    // than clearing the key, so these must be deleted instead
+    delete process.env.APP_URL;
+    delete process.env.RENDER_EXTERNAL_URL;
+  });
+
+  it('includes a link to the app when APP_URL is configured', async () => {
+    process.env.APP_URL = 'https://example.com';
+    fetchBundesligaMatches.mockResolvedValue({
+      matchData: [upcomingMatch(1, 5)],
+      matchdayToFetch: 3,
+    });
+    await createUser({ email: 'forgetful@example.com' });
+
+    await sendMatchdayReminders();
+
+    expect(sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ text: expect.stringContaining('https://example.com') })
+    );
+  });
+
+  it('omits the link when neither APP_URL nor RENDER_EXTERNAL_URL is set', async () => {
+    fetchBundesligaMatches.mockResolvedValue({
+      matchData: [upcomingMatch(1, 5)],
+      matchdayToFetch: 3,
+    });
+    await createUser({ email: 'forgetful@example.com' });
+
+    await sendMatchdayReminders();
+
+    expect(sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        text: 'Der 3. Spieltag startet bald. Hast du schon getippt?',
+      })
+    );
   });
 
   it('does nothing when no upcoming matches remain', async () => {
