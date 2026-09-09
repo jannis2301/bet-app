@@ -20,6 +20,7 @@ import authRouter from './routes/authRoutes.js';
 import betsRouter from './routes/betsRoutes.js';
 import matchesRouter from './routes/matchesRoutes.js';
 import tableRouter from './routes/tableRoutes.js';
+import telegramRouter from './routes/telegramRoutes.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -83,6 +84,7 @@ app.use('/api/bets', betsRouter);
 app.use('/api/matches', matchesRouter);
 app.use('/api/table', tableRouter);
 app.use('/api/archive', archiveRouter);
+app.use('/api/telegram', telegramRouter);
 
 if (process.env.NODE_ENV === 'production') {
   // registered after the API routers so it only catches what they didn't —

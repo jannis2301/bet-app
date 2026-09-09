@@ -17,6 +17,7 @@ const Profile = () => {
     displayAlert,
     updateUser,
     updatePassword,
+    getTelegramLinkUrl,
     isLoading,
   } = useAppContext();
   // Profile is only ever reached through ProtectedRoute, which already
@@ -27,8 +28,14 @@ const Profile = () => {
     email: currentUser.email,
     team: currentUser.team,
     emailRemindersEnabled: currentUser.emailRemindersEnabled,
+    telegramRemindersEnabled: currentUser.telegramRemindersEnabled,
   });
   const [passwordValues, setPasswordValues] = useState(initialPasswordValues);
+
+  const handleTelegramLink = async () => {
+    const linkUrl = await getTelegramLinkUrl();
+    if (linkUrl) window.open(linkUrl, '_blank', 'noopener,noreferrer');
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name, type, checked } = e.target;
@@ -112,6 +119,30 @@ const Profile = () => {
               checked={values.emailRemindersEnabled}
               onChange={handleChange}
             />
+          </div>
+          <div className="label-box">
+            <label htmlFor="telegram">Telegram-Erinnerungen</label>
+            {currentUser.telegramChatId ? (
+              <div className="label-box-checkbox">
+                <span>Telegram verbunden ✅</span>
+                <input
+                  type="checkbox"
+                  id="telegramRemindersEnabled"
+                  name="telegramRemindersEnabled"
+                  checked={values.telegramRemindersEnabled}
+                  onChange={handleChange}
+                />
+              </div>
+            ) : (
+              <button
+                type="button"
+                id="telegram"
+                className="btn"
+                onClick={handleTelegramLink}
+              >
+                Mit Telegram verbinden
+              </button>
+            )}
           </div>
         </div>
         <button type="submit" className="btn" disabled={isLoading}>

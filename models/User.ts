@@ -15,6 +15,12 @@ export interface IUser {
   isApproved: boolean;
   // opt-out for scheduler/matchdayReminder.ts's cron email
   emailRemindersEnabled: boolean;
+  // set once the user links their Telegram account via
+  // controllers/telegramController.ts's webhook; absent until then
+  telegramChatId?: string;
+  // opt-out for scheduler/matchdayReminder.ts's cron telegram message —
+  // irrelevant until telegramChatId is set
+  telegramRemindersEnabled: boolean;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
   createdAt: Date;
@@ -70,6 +76,13 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>(
       default: false,
     },
     emailRemindersEnabled: {
+      type: Boolean,
+      default: true,
+    },
+    telegramChatId: {
+      type: String,
+    },
+    telegramRemindersEnabled: {
       type: Boolean,
       default: true,
     },

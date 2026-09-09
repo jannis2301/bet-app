@@ -6,11 +6,12 @@ import { getCurrentSeason } from '../utils/season.js';
 // imported via namespace (not destructured) so tests can vi.spyOn the
 // exported binding directly — see betsController.test.ts for the same pattern
 import * as sendEmailModule from '../utils/sendEmail.js';
+import * as sendTelegramMessageModule from '../utils/sendTelegramMessage.js';
 
 // send once the upcoming matchday's earliest kickoff falls within this window
 const REMINDER_WINDOW_MS = 24 * 60 * 60 * 1000;
 
-const buildReminderEmail = (matchday: number) => ({
+const buildReminderMessage = (matchday: number) => ({
   subject: `Spieltag ${matchday} startet bald`,
   text: `Der ${matchday}. Spieltag startet bald. Hast du schon getippt?`,
   html: `<p>Der <strong>${matchday}. Spieltag</strong> startet bald. Hast du schon getippt?</p>`,
@@ -42,18 +43,31 @@ export const sendMatchdayReminders = async (): Promise<void> => {
     });
     const usersToRemind = await User.find({
       _id: { $nin: usersWhoBet },
-      // $ne (not $eq: true) also matches documents from before this field
-      // existed, which default to enabled
-      emailRemindersEnabled: { $ne: false },
     });
 
-    const { subject, text, html } = buildReminderEmail(matchday);
-    const results = await Promise.allSettled(
-      usersToRemind.map((user) =>
-        sendEmailModule.sendEmail({ to: user.email, subject, text, html })
-      )
+    const { subject, text, html } = buildReminderMessage(matchday);
+    const emailResults = await Promise.allSettled(
+      usersToRemind
+        // $ne (not $eq: true) also matches documents from before this field
+        // existed, which default to enabled
+        .filter((user) => user.emailRemindersEnabled !== false)
+        .map((user) =>
+          sendEmailModule.sendEmail({ to: user.email, subject, text, html })
+        )
     );
-    for (const result of results) {
+    const telegramResults = await Promise.allSettled(
+      usersToRemind
+        .filter(
+          (user) => user.telegramChatId && user.telegramRemindersEnabled !== false
+        )
+        .map((user) =>
+          sendTelegramMessageModule.sendTelegramMessage({
+            chatId: user.telegramChatId as string,
+            text,
+          })
+        )
+    );
+    for (const result of [...emailResults, ...telegramResults]) {
       if (result.status === 'rejected') console.error(result.reason);
     }
 

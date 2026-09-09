@@ -147,7 +147,8 @@ export const rejectUser = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  const { email, name, team, emailRemindersEnabled } = req.body;
+  const { email, name, team, emailRemindersEnabled, telegramRemindersEnabled } =
+    req.body;
   if (!email || !name || !team) {
     throw new BadRequestError('Please provide all values');
   }
@@ -161,6 +162,9 @@ export const updateUser = async (req: Request, res: Response) => {
   user.team = team;
   if (emailRemindersEnabled !== undefined) {
     user.emailRemindersEnabled = emailRemindersEnabled;
+  }
+  if (telegramRemindersEnabled !== undefined) {
+    user.telegramRemindersEnabled = telegramRemindersEnabled;
   }
 
   await user.save();

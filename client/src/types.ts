@@ -30,6 +30,8 @@ export interface User {
   email: string;
   team: string;
   emailRemindersEnabled: boolean;
+  telegramChatId?: string;
+  telegramRemindersEnabled: boolean;
 }
 
 // Shape returned by GET /auth/getAllUsers, which only projects the fields

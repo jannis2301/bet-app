@@ -6,10 +6,15 @@ import User from '../models/User.js';
 import * as fetchMatches from '../utils/fetchMatches.js';
 import { getCurrentSeason } from '../utils/season.js';
 import * as sendEmailModule from '../utils/sendEmail.js';
+import * as sendTelegramMessageModule from '../utils/sendTelegramMessage.js';
 import { sendMatchdayReminders } from './matchdayReminder.js';
 
 const fetchBundesligaMatches = vi.spyOn(fetchMatches, 'fetchBundesligaMatches');
 const sendEmail = vi.spyOn(sendEmailModule, 'sendEmail');
+const sendTelegramMessage = vi.spyOn(
+  sendTelegramMessageModule,
+  'sendTelegramMessage'
+);
 
 const placeholderTeams = {
   team1: { teamId: 1, shortName: 'FCB', teamIconUrl: 'bayern.png' },
@@ -41,6 +46,8 @@ describe('sendMatchdayReminders', () => {
     fetchBundesligaMatches.mockReset();
     sendEmail.mockReset();
     sendEmail.mockResolvedValue(undefined);
+    sendTelegramMessage.mockReset();
+    sendTelegramMessage.mockResolvedValue(undefined);
   });
 
   it('does nothing when no upcoming matches remain', async () => {
@@ -115,6 +122,41 @@ describe('sendMatchdayReminders', () => {
     expect(sendEmail).toHaveBeenCalledWith(
       expect.objectContaining({ to: 'forgetful@example.com' })
     );
+  });
+
+  it('also messages users who linked their Telegram account', async () => {
+    fetchBundesligaMatches.mockResolvedValue({
+      matchData: [upcomingMatch(1, 5)],
+      matchdayToFetch: 3,
+    });
+    await createUser({
+      email: 'telegram-user@example.com',
+      telegramChatId: '12345',
+    });
+
+    await sendMatchdayReminders();
+
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+    expect(sendTelegramMessage).toHaveBeenCalledTimes(1);
+    expect(sendTelegramMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ chatId: '12345' })
+    );
+  });
+
+  it('does not message users who opted out of telegram reminders', async () => {
+    fetchBundesligaMatches.mockResolvedValue({
+      matchData: [upcomingMatch(1, 5)],
+      matchdayToFetch: 3,
+    });
+    await createUser({
+      email: 'opted-out@example.com',
+      telegramChatId: '12345',
+      telegramRemindersEnabled: false,
+    });
+
+    await sendMatchdayReminders();
+
+    expect(sendTelegramMessage).not.toHaveBeenCalled();
   });
 
   it('does not send again once a reminder was already recorded for that matchday', async () => {
