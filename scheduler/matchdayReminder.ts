@@ -69,7 +69,8 @@ export const sendMatchdayReminders = async (): Promise<void> => {
       _id: { $nin: usersWhoBet },
     });
 
-    const { subject, text, html, telegramText } = buildReminderMessage(matchday);
+    const { subject, text, html, telegramText } =
+      buildReminderMessage(matchday);
     const emailResults = await Promise.allSettled(
       usersToRemind
         // $ne (not $eq: true) also matches documents from before this field
@@ -82,7 +83,8 @@ export const sendMatchdayReminders = async (): Promise<void> => {
     const telegramResults = await Promise.allSettled(
       usersToRemind
         .filter(
-          (user) => user.telegramChatId && user.telegramRemindersEnabled !== false
+          (user) =>
+            user.telegramChatId && user.telegramRemindersEnabled !== false
         )
         .map((user) =>
           sendTelegramMessageModule.sendTelegramMessage({

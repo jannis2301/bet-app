@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import TelegramLog from '../models/TelegramLog.js';
 import {
-  TelegramLimitExceededError,
   sendTelegramMessage,
+  TelegramLimitExceededError,
 } from './sendTelegramMessage.js';
 
 const fetchMock = vi

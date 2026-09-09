@@ -11,8 +11,14 @@ const initialPasswordValues = {
 };
 
 const Profile = () => {
-  const { user, showAlert, displayAlert, updateUser, updatePassword, isLoading } =
-    useAppContext();
+  const {
+    user,
+    showAlert,
+    displayAlert,
+    updateUser,
+    updatePassword,
+    isLoading,
+  } = useAppContext();
   // Profile is only ever reached through ProtectedRoute, which already
   // guarantees a logged-in user before rendering its children.
   const currentUser = user as User;

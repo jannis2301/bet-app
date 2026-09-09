@@ -45,7 +45,9 @@ describe('GET /api/telegram/link-token', () => {
       .set('Cookie', [`token=${token}`]);
 
     expect(res.status).toBe(302);
-    expect(res.headers.location).toMatch(/^https:\/\/t\.me\/TippyBot\?start=.+/);
+    expect(res.headers.location).toMatch(
+      /^https:\/\/t\.me\/TippyBot\?start=.+/
+    );
     // Telegram's t.me/<bot>?start=<payload> deep link only allows up to 64
     // characters from [A-Za-z0-9_-] — anything else (e.g. a raw JWT, with
     // its dots and 100+ chars) gets silently mangled by Telegram
