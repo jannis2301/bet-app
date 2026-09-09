@@ -33,8 +33,9 @@ Match and result data comes from the public
 - Automatic point calculation once a matchday has finished — checked via cron
   and once on every server start, so results land promptly even after an idle
   period (see [Deployment](#deployment))
-- Reminder emails when a matchday is starting soon and a user hasn't bet yet
-  (opt-out per user in the profile)
+- Reminders when a matchday is starting soon and a user hasn't bet yet, sent
+  by email and/or Telegram (each opt-out per user in the profile; Telegram
+  requires linking the account first via a one-tap deep link)
 - Automatic season archiving ~30 days after the last matchday: the final
   standings are saved (with PDF export) and that season's bets are cleaned up
 - Installable as a PWA
@@ -42,7 +43,8 @@ Match and result data comes from the public
 ## Tech Stack
 
 **Backend**: Node.js, Express 5, TypeScript, MongoDB/Mongoose, JWT auth,
-node-cron, Nodemailer, pdfkit
+node-cron, Resend (mail) and the Telegram Bot API (chat notifications),
+pdfkit
 
 **Frontend**: React 19, TypeScript, Vite, React Router, Context API + reducer
 for global state
@@ -108,6 +110,10 @@ In a `.env` file at the project root:
 | `EMAIL_FROM`        | no\*     | From address for outbound mail                                                |
 | `ADMIN_EMAIL`       | no\*\*   | Receives the approve/reject link for every new registration                   |
 | `DAILY_EMAIL_LIMIT` | no       | Hard cap on emails sent per rolling 24h, across all mail types (default: `10`) |
+| `TELEGRAM_BOT_TOKEN`     | no\*\*\*  | Bot token from [@BotFather](https://t.me/BotFather), for Telegram reminders |
+| `TELEGRAM_BOT_USERNAME`  | no\*\*\*  | The bot's `@username`, used to build the account-linking deep link          |
+| `TELEGRAM_WEBHOOK_SECRET`| no\*\*\*  | Shared secret Telegram echoes back per update; must match the `secret_token` passed to `setWebhook` |
+| `DAILY_TELEGRAM_LIMIT`   | no        | Hard cap on Telegram messages sent per rolling 24h (default: `50`)          |
 
 \* Without it configured, sending mail fails and gets logged, but doesn't
 block any requests — forgot-password still responds generically, and reminder
@@ -117,6 +123,13 @@ entirely — see [utils/sendEmail.ts](utils/sendEmail.ts).
 
 \*\* Without it, registration still succeeds, but there's no one to approve
 it — the account stays pending indefinitely.
+
+\*\*\* Optional, additive to email — without it, the "Connect Telegram"
+button in the profile just fails and reminders are simply skipped for users
+without a linked chat. Once set, the webhook also needs to be registered once
+with Telegram (not something `.env` alone handles):
+`curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://<your-domain>/api/telegram/webhook&secret_token=<TELEGRAM_WEBHOOK_SECRET>"`
+— see [controllers/telegramController.ts](controllers/telegramController.ts).
 
 ## Development
 
@@ -167,8 +180,8 @@ Configured for [Render](https://render.com) as a single web service
 ([render.yaml](render.yaml)): `pnpm run setup-production` builds the client
 and backend, `node dist/server.js` serves both the API and the built React
 app statically in production. `MONGODB_URI`, `RESEND_API_KEY`/`EMAIL_FROM`,
-and `ADMIN_EMAIL` need to be set manually in the Render dashboard (external
-services, not a Render add-on).
+`ADMIN_EMAIL`, and (if used) the `TELEGRAM_*` variables need to be set
+manually in the Render dashboard (external services, not a Render add-on).
 
 Render's free plan suspends the service after ~15 minutes without incoming
 HTTP traffic, which also pauses the in-process cron jobs (scoring, reminders).
